@@ -17,8 +17,7 @@ type CardInput = {
 const WIDTH = 1080;
 const HEIGHT = 1920;
 const INK = "#171717";
-const RED = "#e62b1e";
-const PAPER = "#fffefa";
+const RED = "#f33123";
 
 function wrapText(
   ctx: CanvasRenderingContext2D,
@@ -62,18 +61,66 @@ function wrapText(
   return lines;
 }
 
-function line(
-  ctx: CanvasRenderingContext2D,
-  points: [number, number][],
-  color: string,
-  width = 2,
-) {
-  ctx.beginPath();
-  ctx.moveTo(...points[0]);
-  for (const point of points.slice(1)) ctx.lineTo(...point);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = width;
-  ctx.stroke();
+function withTimeout<T>(
+  task: Promise<T>,
+  message: string,
+  milliseconds = 7000,
+): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeout = window.setTimeout(
+      () => reject(new Error(message)),
+      milliseconds,
+    );
+    task.then(
+      (value) => {
+        window.clearTimeout(timeout);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timeout);
+        reject(error);
+      },
+    );
+  });
+}
+
+function loadArtwork(path: string): Promise<HTMLImageElement> {
+  return withTimeout(
+    new Promise<HTMLImageElement>((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => {
+        image.decode().then(
+          () => resolve(image),
+          () =>
+            reject(
+              new Error(
+                "The card artwork could not be read. Try again or copy the letter link.",
+              ),
+            ),
+        );
+      };
+      image.onerror = () =>
+        reject(
+          new Error(
+            "The card artwork could not be loaded. Try again or copy the letter link.",
+          ),
+        );
+      image.src = path;
+    }),
+    "The card artwork took too long to load. Try again or copy the letter link.",
+  );
+}
+
+let artwork: Promise<[HTMLImageElement, HTMLImageElement]> | undefined;
+function cardArtwork(): Promise<[HTMLImageElement, HTMLImageElement]> {
+  artwork ??= Promise.all([
+    loadArtwork("/art/black-paper.webp"),
+    loadArtwork("/art/letter-paper.webp"),
+  ]).catch((error) => {
+    artwork = undefined;
+    throw error;
+  });
+  return artwork;
 }
 
 function filenameFromUrl(value: string): string {
@@ -93,13 +140,19 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
   if (!input.excerpt.trim())
     throw new Error("Choose a sentence before making a card.");
 
-  // Explicit loads matter: a canvas family may not have appeared in the DOM.
-  // A rejected font load can use the defined serif/sans fallbacks instead.
-  await Promise.allSettled([
-    document.fonts.load("400 66px LetterSerif"),
-    document.fonts.load("700 78px CampaignSans"),
+  const [images] = await Promise.all([
+    cardArtwork(),
+    withTimeout(
+      Promise.all([
+        document.fonts.load("800 112px CampaignDisplay"),
+        document.fonts.load("400 60px LetterTypewriter"),
+        document.fonts.load("400 24px CampaignSans"),
+        document.fonts.load("400 44px Handwritten"),
+        document.fonts.ready,
+      ]),
+      "The card fonts took too long to load. Try again or copy the letter link.",
+    ),
   ]);
-  await document.fonts.ready;
 
   const canvas = document.createElement("canvas");
   canvas.width = WIDTH;
@@ -110,118 +163,111 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
       "This browser could not create an image. Copy the letter link instead.",
     );
 
-  ctx.fillStyle = "#f0efeb";
+  const [board, paper] = images;
+  ctx.fillStyle = "#101010";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-  // A real paper-and-envelope composition, rather than an app screenshot.
-  ctx.fillStyle = PAPER;
-  ctx.fillRect(61, 188, 958, 1478);
-  line(
-    ctx,
-    [
-      [62, 188],
-      [1018, 188],
-      [1018, 1666],
-      [62, 1666],
-      [62, 188],
-    ],
-    "#dedbd4",
-    2,
+  // One original black-paper texture, cropped rather than stretched.
+  const boardScale = Math.max(
+    WIDTH / board.naturalWidth,
+    HEIGHT / board.naturalHeight,
+  );
+  const boardWidth = board.naturalWidth * boardScale;
+  const boardHeight = board.naturalHeight * boardScale;
+  ctx.drawImage(
+    board,
+    (WIDTH - boardWidth) / 2,
+    (HEIGHT - boardHeight) / 2,
+    boardWidth,
+    boardHeight,
   );
 
-  ctx.fillStyle = INK;
+  // Hand-arranged condensed lettering belongs to the board, not the letter.
+  // Its safe-area position leaves room for Story controls above and below.
+  ctx.fillStyle = "#fffdf7";
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
-  ctx.font = "700 78px CampaignSans, Arial, sans-serif";
-  ctx.fillText("Letters", 132, 307);
-  ctx.fillText("to Grow", 132, 390);
-
-  // Postmark: a small material cue, not an invented metric or official stamp.
+  ctx.font = "800 112px CampaignDisplay, Impact, sans-serif";
   ctx.save();
-  ctx.translate(854, 315);
-  ctx.rotate(-0.12);
-  ctx.strokeStyle = RED;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.arc(0, 0, 59, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.fillStyle = RED;
-  ctx.textAlign = "center";
-  ctx.font = "700 19px CampaignSans, Arial, sans-serif";
-  ctx.fillText("STILL,", 0, -3);
-  ctx.fillText("WE GROW", 0, 22);
+  ctx.translate(136, 316);
+  ctx.rotate(-0.025);
+  ctx.fillText("LETTERS", 0, 0);
+  ctx.fillText("TO GROW.", 36, 112);
   ctx.restore();
 
-  ctx.fillStyle = "#575550";
-  ctx.font = "400 27px LetterSerif, Georgia, serif";
-  const salutationLines = wrapText(ctx, input.salutation, 796);
+  ctx.save();
+  ctx.translate(833, 335);
+  ctx.rotate(0.09);
+  ctx.fillStyle = RED;
+  ctx.font = "400 44px Handwritten, cursive";
+  ctx.fillText("Still,", -80, -8);
+  ctx.fillText("We Grow.", -80, 28);
+  ctx.restore();
+
+  // The generated sheet has real alpha edges and fine paper fibers.
+  // Keep its geometry upright so the excerpt stays comfortable to read.
+  ctx.drawImage(paper, 104, 476, 872, 1114);
+
+  // A small irregular strip holds the page to the board. It never covers text.
+  ctx.save();
+  ctx.translate(551, 491);
+  ctx.rotate(-0.075);
+  ctx.fillStyle = RED;
+  ctx.beginPath();
+  ctx.moveTo(-132, -31);
+  ctx.lineTo(126, -28);
+  ctx.lineTo(132, -19);
+  ctx.lineTo(126, -8);
+  ctx.lineTo(133, 2);
+  ctx.lineTo(126, 14);
+  ctx.lineTo(130, 29);
+  ctx.lineTo(-127, 32);
+  ctx.lineTo(-132, 20);
+  ctx.lineTo(-126, 9);
+  ctx.lineTo(-133, -2);
+  ctx.lineTo(-127, -13);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 0.14;
+  ctx.fillStyle = "#fffdf7";
+  ctx.fillRect(-118, -19, 235, 2);
+  ctx.fillRect(-116, 14, 232, 1);
+  ctx.restore();
+
+  const left = 173;
+  const textWidth = 734;
+  ctx.fillStyle = INK;
+  ctx.font = '400 29px LetterTypewriter, "Courier New", monospace';
+  const salutationLines = wrapText(ctx, input.salutation, textWidth);
   salutationLines.forEach((text, index) =>
-    ctx.fillText(text, 134, 536 + index * 38),
+    ctx.fillText(text, left, 640 + index * 40),
   );
 
-  const quoteTop = Math.max(656, 578 + salutationLines.length * 38);
-  const quoteBottom = 1194;
+  const quoteTop = Math.max(762, 692 + salutationLines.length * 40);
+  const quoteBottom = 1406;
   const availableHeight = quoteBottom - quoteTop;
-  let quoteSize = 66;
+  let quoteSize = 60;
   let quoteLines: string[] = [];
   for (; quoteSize >= 24; quoteSize -= 2) {
-    ctx.font = `400 ${quoteSize}px LetterSerif, Georgia, serif`;
-    quoteLines = wrapText(ctx, input.excerpt, 796);
-    if (quoteLines.length * quoteSize * 1.32 <= availableHeight) break;
+    ctx.font = `400 ${quoteSize}px LetterTypewriter, "Courier New", monospace`;
+    quoteLines = wrapText(ctx, input.excerpt, textWidth);
+    if (quoteLines.length * quoteSize * 1.29 <= availableHeight) break;
   }
-  if (quoteSize < 24) {
+  if (quoteSize < 24)
     throw new Error(
       "This excerpt is too long for a Story card. Choose a shorter sentence.",
     );
-  }
-  ctx.fillStyle = INK;
-  const lineHeight = quoteSize * 1.32;
+  const lineHeight = quoteSize * 1.29;
   quoteLines.forEach((text, index) =>
-    ctx.fillText(text, 134, quoteTop + quoteSize + index * lineHeight),
+    ctx.fillText(text, left, quoteTop + quoteSize + index * lineHeight),
   );
 
-  // Red folded envelope. All content stays above/below its fold for readability.
-  const envelopeTop = 1280;
-  const envelopeBottom = 1534;
-  ctx.fillStyle = RED;
-  ctx.fillRect(102, envelopeTop, 876, envelopeBottom - envelopeTop);
-  line(
-    ctx,
-    [
-      [102, envelopeTop],
-      [540, 1462],
-      [978, envelopeTop],
-    ],
-    "#fffefa",
-    3,
-  );
-  line(
-    ctx,
-    [
-      [102, envelopeBottom],
-      [394, 1401],
-    ],
-    "#c31d12",
-    2,
-  );
-  line(
-    ctx,
-    [
-      [978, envelopeBottom],
-      [686, 1401],
-    ],
-    "#c31d12",
-    2,
-  );
-
-  ctx.fillStyle = INK;
-  ctx.textAlign = "left";
-  ctx.font = "400 24px CampaignSans, Arial, sans-serif";
-  ctx.fillText("TEDxUniversitasIndonesia", 134, 1601);
-  ctx.fillStyle = "#575550";
-  ctx.textAlign = "right";
-  ctx.font = "400 20px CampaignSans, Arial, sans-serif";
-  ctx.fillText("Example letter", 946, 1601);
+  // Quiet editorial disclosure on paper, with sender attribution on the board.
+  ctx.fillStyle = "#57534c";
+  ctx.font = '400 23px LetterTypewriter, "Courier New", monospace';
+  ctx.fillText("Example letter", left, 1512);
+  ctx.fillStyle = "#fffdf7";
+  ctx.font = "400 25px CampaignSans, Arial, sans-serif";
+  ctx.fillText("TEDxUniversitasIndonesia", 134, 1662);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(

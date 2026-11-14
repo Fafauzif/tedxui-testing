@@ -182,7 +182,7 @@ function App() {
         Skip to the letter
       </a>
       <header className="site-header">
-        <div className="sender">
+        <div className="sender" aria-label="TEDxUniversitasIndonesia">
           <span className="ted">
             TED<span className="ted-x">x</span>
           </span>
@@ -194,95 +194,79 @@ function App() {
           aria-label="About this project"
           onClick={() => setModal("about")}
         >
-          <span>About this project</span>
-          <Info size={18} />
+          About <Info size={17} />
         </button>
       </header>
-      <main id="letter">
-        <div className="masthead" aria-label="Letters to Grow">
+      <main id="letter" className="workbench">
+        <div className="identity">
           <h1>
-            Letters{" "}
-            <span>
-              to Grow<span className="wordmark-dot">.</span>
+            <span>LETTERS</span>
+            <span className="outline-word">
+              TO GROW<span className="wordmark-dot">.</span>
             </span>
           </h1>
-          <span className="masthead-note">Still, We Grow.</span>
+          <p className="theme-note">Still, We Grow.</p>
+          <img
+            className="chalk-envelope"
+            src="/art/envelope-chalk.webp"
+            alt=""
+            width="420"
+            height="420"
+            aria-hidden="true"
+          />
         </div>
-        {letter ? (
-          <div className="correspondence">
-            <div className="envelope-back" aria-hidden="true">
-              <div className="envelope-line" />
-            </div>
-            <article
-              className="letter"
-              key={id}
-              aria-labelledby="letter-salutation"
-            >
-              <div className="letter-meta">
-                <span className="example-label">Example letter</span>
-                <span className="letter-topic">{letter.topic}</span>
-              </div>
-              <div className="postmark" aria-hidden="true">
-                <span>STILL,</span>
-                <span>WE GROW.</span>
-                <EnvelopeSimple size={23} weight="light" />
-              </div>
-              <div className="letter-body">
-                <h2 id="letter-salutation" tabIndex={-1} ref={heading}>
-                  {letter.salutation}
-                </h2>
-                {letter.paragraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-                <p className="signoff">{letter.signoff}</p>
-              </div>
-              <div className="letter-actions">
+        <div className="reading-column">
+          {letter ? (
+            <>
+              <article
+                className="letter"
+                key={id}
+                aria-labelledby="letter-salutation"
+              >
+                <div className="paper-tape" aria-hidden="true" />
+                <div className="letter-meta">
+                  <span className="example-label">Example letter</span>
+                  <span className="letter-topic">{letter.topic}</span>
+                </div>
+                <div className="letter-body">
+                  <h2 id="letter-salutation" tabIndex={-1} ref={heading}>
+                    {letter.salutation}
+                  </h2>
+                  {letter.paragraphs.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                  <p className="signoff">{letter.signoff}</p>
+                </div>
+              </article>
+              <nav className="reader-actions" aria-label="Letter actions">
+                <button className="next-button" onClick={nextLetter}>
+                  Read another <ArrowRight size={23} />
+                </button>
                 <button className="save-letter" onClick={openShare}>
-                  <ShareNetwork size={19} />
-                  <span>Save or share</span>
+                  <ShareNetwork size={18} />
+                  Save or share
                 </button>
-                <button className="copy-letter" onClick={handleCopy}>
-                  <LinkSimple size={18} />
-                  <span>Copy letter link</span>
-                </button>
-              </div>
-            </article>
-            <div className="next-row">
-              <span className="next-note">A different letter each time.</span>
+              </nav>
+            </>
+          ) : (
+            <div className="not-found">
+              <EnvelopeSimple size={44} />
+              <h2>This letter isn’t here.</h2>
+              <p>The link may be incomplete. Try another letter.</p>
               <button className="next-button" onClick={nextLetter}>
-                Read another letter
-                <ArrowRight size={23} />
+                Read a letter
+                <ArrowRight size={22} />
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="not-found">
-            <EnvelopeSimple size={48} />
-            <h2>This letter isn’t here.</h2>
-            <p>The link may be incomplete. There are other letters to read.</p>
-            <button className="next-button" onClick={nextLetter}>
-              Read a letter
-              <ArrowRight size={22} />
-            </button>
-          </div>
-        )}
-        <p className="page-status" role="status" aria-live="polite">
-          {smallNote}
-        </p>
-        {manualLink && !modal && (
-          <label className="manual-link page-link">
-            Letter link
-            <input
-              readOnly
-              value={letterUrl}
-              onFocus={(e) => e.currentTarget.select()}
-            />
-          </label>
-        )}
+          )}
+          <p className="page-status" role="status" aria-live="polite">
+            {smallNote}
+          </p>
+        </div>
       </main>
       <footer className="site-footer">
-        <span>A campaign experiment by TEDxUniversitasIndonesia.</span>
-        <span>Preview · All letters are fictional examples.</span>
+        <span>Letters to Grow · A TEDxUniversitasIndonesia campaign</span>
+        <span>Preview. All letters are fictional examples.</span>
       </footer>
       <dialog
         ref={dialog}
@@ -320,17 +304,16 @@ function App() {
             />
             <h2 id="dialog-title">Letters to Grow.</h2>
             <p>
-              Read a letter about something someone is still figuring out. Then
-              try another.
+              A few letters about things we’re still figuring out. Read one, or
+              stay for another.
             </p>
             <p>
               This is a campaign experiment for TEDxUniversitasIndonesia 2027,
               under <em>Still, We Grow.</em>
             </p>
             <p>
-              The letters in this preview are fictional editorial examples. They
-              explore choices, everyday discoveries, and experiences that change
-              how we see things.
+              The letters in this preview are fictional editorial examples. Real
+              contributions can replace them later.
             </p>
             <div className="about-footnote">
               <p>
@@ -368,9 +351,9 @@ function App() {
               )}
             </div>
             <div className="share-content">
-              <h2 id="dialog-title">Save or share.</h2>
+              <h2 id="dialog-title">Save or share</h2>
               <p className="share-description">
-                An excerpt from this letter, ready for your Story.
+                An image for your Story. The preview is what you’ll save.
               </p>
               <div className="share-actions">
                 <button

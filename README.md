@@ -1,6 +1,12 @@
-# Letters to Grow
+# Letters to Grow · revision 2
 
 An English-language campaign proof of concept for TEDxUniversitasIndonesia 2027, under **Still, We Grow**. It opens straight into a letter. Eight fictional editorial examples, one at a time. No homepage, accounts, database, analytics, or submission service.
+
+## Replace your current version
+
+This archive has the same root structure as the previous ZIP. Extract it **inside your existing repository folder**, choose **Replace all** when asked, then commit/upload the changed files. `package.json` and `src` must remain at the repo root, not inside another nested folder. No files need deleting. Existing Vercel settings can stay the same; redeploy after updating the repo. No secrets or environment files are included or overwritten.
+
+This revision rebuilds the visual interface with a textured black background, original chalk artwork, rough paper, condensed display type and typewriter letters. It also rebuilds the Story image and simplifies sharing to a single panel.
 
 ## Deploy on Vercel
 
@@ -45,7 +51,7 @@ Some in-app browsers handle downloading and sharing differently. Real iOS/Androi
 - `src/letters.ts`: eight letters, salutations, signoffs, topics, and exact excerpts. Keep stable IDs after sharing/printing URLs. Each body is 150–250 words. The example disclosure is intentional: replace it only after replacing the demonstration content with permissioned real contributions.
 - `src/main.tsx`: reading and sharing UI; About copy.
 - `src/style.css`: visual tokens, typography, layouts, responsive treatment, reduced motion, focus states.
-- `src/share.ts`: image design and capability-based sharing/download/clipboard fallbacks. The `RED`, `PAPER`, and `INK` constants here are explicitly adapted export colours; update with the visual palette if you change it.
+- `src/share.ts`: image design and capability-based sharing/download/clipboard fallbacks. Its export palette and local artwork follow the revised reader.
 - `public/fonts`: local fonts and their Open Font Licenses. No external font request at runtime.
 - `DESIGN.md`: durable design context for later edits.
 
@@ -59,4 +65,4 @@ There is no decorative or fake Submit button in this build. Add a backend and an
 
 Concept and code created for this project. Visual references: Reasons to Stay (immediate reading and paper), Unlikely Collaborators (graphic character), and Inspo reference captures (typographic restraint). No letters or artwork copied from those websites. Demo letters are original fictional editorial examples.
 
-Fonts: Archivo Black, DM Sans, Source Serif 4. Their upstream Open Font Licenses are included in `public/fonts`.
+Fonts: Barlow Condensed, Courier Prime, Caveat, DM Sans. Earlier fonts remain for replacement compatibility. Their upstream Open Font Licenses are included in `public/fonts`. Original generated artwork and prompts are documented in `ART-CREDITS.md`.
