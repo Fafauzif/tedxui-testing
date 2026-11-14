@@ -61,66 +61,81 @@ function wrapText(
   return lines;
 }
 
-function withTimeout<T>(
+/** Decoration is optional: never make an image wait on the network. */
+function settleWithin<T>(
   task: Promise<T>,
-  message: string,
-  milliseconds = 7000,
+  fallback: T,
+  milliseconds = 1000,
 ): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = window.setTimeout(
-      () => reject(new Error(message)),
-      milliseconds,
-    );
+  return new Promise<T>((resolve) => {
+    const timeout = window.setTimeout(() => resolve(fallback), milliseconds);
     task.then(
       (value) => {
         window.clearTimeout(timeout);
         resolve(value);
       },
-      (error) => {
+      () => {
         window.clearTimeout(timeout);
-        reject(error);
+        resolve(fallback);
       },
     );
   });
 }
 
-function loadArtwork(path: string): Promise<HTMLImageElement> {
-  return withTimeout(
-    new Promise<HTMLImageElement>((resolve, reject) => {
+const loadedArtwork = new Map<string, HTMLImageElement>();
+const pendingArtwork = new Map<string, Promise<HTMLImageElement | null>>();
+function optionalArtwork(path: string): Promise<HTMLImageElement | null> {
+  const ready = loadedArtwork.get(path);
+  if (ready) return Promise.resolve(ready);
+  let pending = pendingArtwork.get(path);
+  if (!pending) {
+    pending = new Promise<HTMLImageElement | null>((resolve) => {
       const image = new Image();
       image.onload = () => {
-        image.decode().then(
-          () => resolve(image),
-          () =>
-            reject(
-              new Error(
-                "The card artwork could not be read. Try again or copy the letter link.",
-              ),
-            ),
+        const decoded =
+          typeof image.decode === "function"
+            ? image.decode()
+            : Promise.resolve();
+        decoded.then(
+          () => {
+            loadedArtwork.set(path, image);
+            resolve(image);
+          },
+          () => resolve(null),
         );
       };
-      image.onerror = () =>
-        reject(
-          new Error(
-            "The card artwork could not be loaded. Try again or copy the letter link.",
-          ),
-        );
+      image.onerror = () => resolve(null);
       image.src = path;
-    }),
-    "The card artwork took too long to load. Try again or copy the letter link.",
-  );
+    });
+    pendingArtwork.set(path, pending);
+    void pending.then(() => pendingArtwork.delete(path));
+  }
+  // If loading finishes after this deadline, cache it for the next card.
+  return settleWithin(pending, null);
 }
 
-let artwork: Promise<[HTMLImageElement, HTMLImageElement]> | undefined;
-function cardArtwork(): Promise<[HTMLImageElement, HTMLImageElement]> {
-  artwork ??= Promise.all([
-    loadArtwork("/art/black-paper.webp"),
-    loadArtwork("/art/letter-paper.webp"),
-  ]).catch((error) => {
-    artwork = undefined;
-    throw error;
-  });
-  return artwork;
+const availableFonts = new Set<string>();
+async function optionalFonts(): Promise<void> {
+  if (!document.fonts || typeof document.fonts.load !== "function") return;
+  const specs = [
+    ["CampaignDisplay", "800 112px CampaignDisplay"],
+    ["LetterTypewriter", "400 60px LetterTypewriter"],
+    ["CampaignSans", "400 24px CampaignSans"],
+    ["Handwritten", "400 44px Handwritten"],
+  ];
+  const loading = Promise.all(
+    specs.map(async ([family, specification]) => {
+      if (availableFonts.has(family)) return;
+      try {
+        const faces = await document.fonts.load(specification);
+        if (faces.some((face) => face.status === "loaded"))
+          availableFonts.add(family);
+      } catch {
+        // The system font is part of the design's readable fallback.
+      }
+    }),
+  ).then(() => undefined);
+  await settleWithin(loading, undefined);
 }
 
 function filenameFromUrl(value: string): string {
@@ -140,19 +155,23 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
   if (!input.excerpt.trim())
     throw new Error("Choose a sentence before making a card.");
 
-  const [images] = await Promise.all([
-    cardArtwork(),
-    withTimeout(
-      Promise.all([
-        document.fonts.load("800 112px CampaignDisplay"),
-        document.fonts.load("400 60px LetterTypewriter"),
-        document.fonts.load("400 24px CampaignSans"),
-        document.fonts.load("400 44px Handwritten"),
-        document.fonts.ready,
-      ]),
-      "The card fonts took too long to load. Try again or copy the letter link.",
-    ),
+  const [board, paper] = await Promise.all([
+    optionalArtwork("/art/black-paper.webp"),
+    optionalArtwork("/art/letter-paper.webp"),
+    optionalFonts(),
   ]);
+  const displayFamily = availableFonts.has("CampaignDisplay")
+    ? "CampaignDisplay"
+    : "Arial";
+  const readingFamily = availableFonts.has("LetterTypewriter")
+    ? "LetterTypewriter"
+    : '"Courier New"';
+  const handFamily = availableFonts.has("Handwritten")
+    ? "Handwritten"
+    : '"Courier New"';
+  const uiFamily = availableFonts.has("CampaignSans")
+    ? "CampaignSans"
+    : "Arial";
 
   const canvas = document.createElement("canvas");
   canvas.width = WIDTH;
@@ -163,30 +182,42 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
       "This browser could not create an image. Copy the letter link instead.",
     );
 
-  const [board, paper] = images;
   ctx.fillStyle = "#101010";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  // One original black-paper texture, cropped rather than stretched.
-  const boardScale = Math.max(
-    WIDTH / board.naturalWidth,
-    HEIGHT / board.naturalHeight,
-  );
-  const boardWidth = board.naturalWidth * boardScale;
-  const boardHeight = board.naturalHeight * boardScale;
-  ctx.drawImage(
-    board,
-    (WIDTH - boardWidth) / 2,
-    (HEIGHT - boardHeight) / 2,
-    boardWidth,
-    boardHeight,
-  );
+  // Keep the solid board if its decorative texture is unavailable.
+  if (board && board.naturalWidth && board.naturalHeight) {
+    const boardScale = Math.max(
+      WIDTH / board.naturalWidth,
+      HEIGHT / board.naturalHeight,
+    );
+    const boardWidth = board.naturalWidth * boardScale;
+    const boardHeight = board.naturalHeight * boardScale;
+    ctx.drawImage(
+      board,
+      (WIDTH - boardWidth) / 2,
+      (HEIGHT - boardHeight) / 2,
+      boardWidth,
+      boardHeight,
+    );
+  }
 
   // Hand-arranged condensed lettering belongs to the board, not the letter.
   // Its safe-area position leaves room for Story controls above and below.
   ctx.fillStyle = "#fffdf7";
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
-  ctx.font = "800 112px CampaignDisplay, Impact, sans-serif";
+  let displaySize = 112;
+  do {
+    ctx.font = `800 ${displaySize}px ${displayFamily}, Arial, sans-serif`;
+    if (
+      Math.max(
+        ctx.measureText("LETTERS").width,
+        ctx.measureText("TO GROW.").width + 36,
+      ) <= 594
+    )
+      break;
+    displaySize -= 2;
+  } while (displaySize > 60);
   ctx.save();
   ctx.translate(136, 316);
   ctx.rotate(-0.025);
@@ -198,14 +229,29 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
   ctx.translate(833, 335);
   ctx.rotate(0.09);
   ctx.fillStyle = RED;
-  ctx.font = "400 44px Handwritten, cursive";
+  ctx.font = `400 44px ${handFamily}, monospace`;
   ctx.fillText("Still,", -80, -8);
   ctx.fillText("We Grow.", -80, 28);
   ctx.restore();
 
-  // The generated sheet has real alpha edges and fine paper fibers.
-  // Keep its geometry upright so the excerpt stays comfortable to read.
-  ctx.drawImage(paper, 104, 476, 872, 1114);
+  // Always paint a cream page first, including when every asset is blocked.
+  // The base sits inside the texture's alpha edge when artwork is available.
+  ctx.fillStyle = "#f3eee4";
+  ctx.beginPath();
+  ctx.moveTo(132, 502);
+  ctx.lineTo(943, 498);
+  ctx.lineTo(953, 525);
+  ctx.lineTo(949, 918);
+  ctx.lineTo(954, 1318);
+  ctx.lineTo(943, 1565);
+  ctx.lineTo(132, 1562);
+  ctx.lineTo(124, 1310);
+  ctx.lineTo(130, 922);
+  ctx.lineTo(125, 535);
+  ctx.closePath();
+  ctx.fill();
+  if (paper && paper.naturalWidth && paper.naturalHeight)
+    ctx.drawImage(paper, 104, 476, 872, 1114);
 
   // A small irregular strip holds the page to the board. It never covers text.
   ctx.save();
@@ -236,7 +282,7 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
   const left = 173;
   const textWidth = 734;
   ctx.fillStyle = INK;
-  ctx.font = '400 29px LetterTypewriter, "Courier New", monospace';
+  ctx.font = `400 29px ${readingFamily}, monospace`;
   const salutationLines = wrapText(ctx, input.salutation, textWidth);
   salutationLines.forEach((text, index) =>
     ctx.fillText(text, left, 640 + index * 40),
@@ -248,7 +294,7 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
   let quoteSize = 60;
   let quoteLines: string[] = [];
   for (; quoteSize >= 24; quoteSize -= 2) {
-    ctx.font = `400 ${quoteSize}px LetterTypewriter, "Courier New", monospace`;
+    ctx.font = `400 ${quoteSize}px ${readingFamily}, monospace`;
     quoteLines = wrapText(ctx, input.excerpt, textWidth);
     if (quoteLines.length * quoteSize * 1.29 <= availableHeight) break;
   }
@@ -256,6 +302,7 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
     throw new Error(
       "This excerpt is too long for a Story card. Choose a shorter sentence.",
     );
+  ctx.fillStyle = INK;
   const lineHeight = quoteSize * 1.29;
   quoteLines.forEach((text, index) =>
     ctx.fillText(text, left, quoteTop + quoteSize + index * lineHeight),
@@ -263,10 +310,10 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
 
   // Quiet editorial disclosure on paper, with sender attribution on the board.
   ctx.fillStyle = "#57534c";
-  ctx.font = '400 23px LetterTypewriter, "Courier New", monospace';
+  ctx.font = `400 23px ${readingFamily}, monospace`;
   ctx.fillText("Example letter", left, 1512);
   ctx.fillStyle = "#fffdf7";
-  ctx.font = "400 25px CampaignSans, Arial, sans-serif";
+  ctx.font = `400 25px ${uiFamily}, Arial, sans-serif`;
   ctx.fillText("TEDxUniversitasIndonesia", 134, 1662);
 
   const blob = await new Promise<Blob>((resolve, reject) => {

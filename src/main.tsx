@@ -53,6 +53,26 @@ function App() {
       })()
     : window.location.href;
   useEffect(() => {
+    // Reading never waits for fonts. Only expand the wordmark after its
+    // condensed face is available, so a wider system font cannot overlap.
+    let active = true;
+    if (document.fonts) {
+      void document.fonts
+        .load("800 82px CampaignDisplay")
+        .then((faces) => {
+          if (active && faces.some((face) => face.status === "loaded")) {
+            document.documentElement.classList.add("display-font-ready");
+          }
+        })
+        .catch(() => {
+          /* Keep the fitted system-font wordmark. */
+        });
+    }
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
     const onPop = () => {
       const next = getId();
       setId(letters.some((l) => l.id === next) ? next! : "not-found");
@@ -213,6 +233,9 @@ function App() {
             width="420"
             height="420"
             aria-hidden="true"
+            onError={(event) => {
+              event.currentTarget.style.visibility = "hidden";
+            }}
           />
         </div>
         <div className="reading-column">

@@ -1,4 +1,4 @@
-# Letters to Grow · revision 2
+# Letters to Grow · revision 3
 
 An English-language campaign proof of concept for TEDxUniversitasIndonesia 2027, under **Still, We Grow**. It opens straight into a letter. Eight fictional editorial examples, one at a time. No homepage, accounts, database, analytics, or submission service.
 
@@ -6,7 +6,9 @@ An English-language campaign proof of concept for TEDxUniversitasIndonesia 2027,
 
 This archive has the same root structure as the previous ZIP. Extract it **inside your existing repository folder**, choose **Replace all** when asked, then commit/upload the changed files. `package.json` and `src` must remain at the repo root, not inside another nested folder. No files need deleting. Existing Vercel settings can stay the same; redeploy after updating the repo. No secrets or environment files are included or overwritten.
 
-This revision rebuilds the visual interface with a textured black background, original chalk artwork, rough paper, condensed display type and typewriter letters. It also rebuilds the Story image and simplifies sharing to a single panel.
+This revision fixes reading before artwork loads: a solid cream sheet sits beneath the optional paper texture. The letter stays readable if every artwork request fails. Text is larger, spacing is more open, and the title has a fitted system-font fallback to prevent overlap while its condensed font loads.
+
+The three artwork files now total 208,768 bytes, down from 3,737,248 bytes in revision 2. Paper edges use separate slices so they keep their scale as the letter grows. Story export also works without images or custom fonts: decoration has a one-second deadline and the readable image is generated locally.
 
 ## Deploy on Vercel
 

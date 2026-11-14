@@ -1,4 +1,4 @@
-# Letters to Grow, revision 2
+# Letters to Grow, revision 3
 
 ## Purpose
 
@@ -6,7 +6,7 @@ English-only frontend campaign piece for TEDxUniversitasIndonesia 2027 / Still, 
 
 ## Approved revision
 
-The user rejected the clean publication-like paper/serif interface. They asked for a major revision closer to Unlikely Collaborators' illustrated, graphic UI while retaining the intimate paper feel of Reasons to Stay. This is a new composition, not a replica of either site's art.
+Retain the black/chalk/paper direction established in revision 2. Fix its critical loading-state defect: dark ink must always have a cream surface, even when all art requests fail. Increase reading type and remove negative tracking. Artwork remains optional decoration; the letter is never hidden while assets load. This is an original composition informed by the references.
 
 ## Direction
 
@@ -18,11 +18,11 @@ src/style.css :root owns UI colours and type roles: --board #101010, --paper #f5
 
 ## Artwork
 
-Original imagegen assets in public/art: black-paper.webp, letter-paper.webp and envelope-chalk.webp. Lossless format conversion only. Source prompts recorded in ART-CREDITS.md. Text stays selectable HTML; no rasterized letter paragraphs. Texture stronger outside the reading surface. Paper alpha edge stretches with natural content height. No decorative text sits behind or across body text or controls.
+Original imagegen assets in public/art: black-paper.webp, letter-paper.webp and envelope-chalk.webp. Revision 3 resizes and compresses WebP assets for delivery while retaining the original source images separately. The three runtime images total 208,768 bytes. Source prompts recorded in ART-CREDITS.md. Text stays selectable HTML; no rasterized letter paragraphs. Texture stronger outside the reading surface. A clipped solid-cream ::before layer provides the permanent reading surface. A separate ::after border-image supplies the optional texture and deckled edges, with corners kept at a fixed scale rather than stretching the complete sheet. Text is inset safely inside both surfaces. No decorative text sits behind or across body text or controls.
 
 ## Layout
 
-Identity rail plus reader on desktop; stacked composition at <=740px. Reader letter grows naturally for content. Metadata in flex normal flow; tape alone absolute, safely above content. Actions occupy a separate row below the complete sheet. No rotated backing envelope or bottom caption. Sharing is one-column preview/actions rather than a professional split panel.
+Identity rail plus reader on desktop; stacked composition at <=740px. Reader letter grows naturally for content. Metadata in flex normal flow; tape alone absolute, safely above content and crossing the sheet edge. Body type is 18px on desktop and 17px on mobile, with normal letter spacing. A smaller system-font wordmark is the default until the condensed face successfully loads; reading is independent of that state. Failed chalk illustration requests are hidden without collapsing their reserved space. Actions occupy a separate row below the complete sheet. No rotated backing envelope or bottom caption. Sharing is one-column preview/actions rather than a professional split panel.
 
 ## Interaction and accessibility
 
@@ -30,7 +30,7 @@ Stable ?letter= IDs retained for existing QR and shared links. Random draw avoid
 
 ## Sharing
 
-1080x1920 actual PNG prepared locally before native Share click. Same texture/paper design, adaptive excerpt layout. Native file-sharing capability detection; unsupported/error path downloads; cancellation never downloads. Clipboard failure exposes a selectable URL. Manual Instagram instructions explain photo upload and separate link sticker. OS/Instagram app availability is not promised.
+1080x1920 actual PNG prepared locally before native Share click. Same texture/paper design, adaptive excerpt layout. Solid dark board and cream paper are always painted before any optional image. Fonts and artwork load in parallel with a one-second deadline; unavailable decoration never rejects an otherwise valid export. Successful late assets cache for later cards. Native file-sharing capability detection; unsupported/error path downloads; cancellation never downloads. Clipboard failure exposes a selectable URL. Manual Instagram instructions explain photo upload and separate link sticker. OS/Instagram app availability is not promised.
 
 ## Packaging contract
 

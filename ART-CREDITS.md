@@ -1,6 +1,6 @@
 # Artwork and fonts
 
-Original project assets generated for this revision using built-in image generation, then converted losslessly to WebP for website delivery. Generated imagery contains no contributor portraits or real handwriting. All letter text and UI labels remain HTML.
+Original project assets generated for this revision using built-in image generation, then resized and compressed to WebP for website delivery. Revision 3 uses a 1024px board texture, 928×1200px paper and 560px chalk envelope. Original generated PNG sources are retained outside the deployment ZIP. Generated imagery contains no contributor portraits or real handwriting. All letter text and UI labels remain HTML.
 
 ## Asset prompts
 
