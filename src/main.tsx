@@ -1,453 +1,638 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ArrowRight,
   ArrowLeft,
+  ArrowRight,
+  Shuffle,
+  X,
   DownloadSimple,
   ShareNetwork,
   LinkSimple,
-  X,
-  Check,
-  EnvelopeSimple,
+  PencilSimple,
   Info,
+  Check,
 } from "@phosphor-icons/react";
 import { letters } from "./letters";
+import type { EntryPathId, Letter } from "./letters";
 import { createShareCard, downloadCard, shareCard, copyLink } from "./share";
 import type { ShareCard } from "./share";
+import WriteLetter from "./WriteLetter";
 import "./style.css";
 
-const getId = () => new URLSearchParams(window.location.search).get("letter");
-const initial = () => {
-  const id = getId();
-  return (
-    letters.find((l) => l.id === id)?.id ??
-    (id ? "not-found" : letters[Math.floor(Math.random() * letters.length)].id)
-  );
+type View =
+  | { kind: "entry" }
+  | { kind: "read"; id: string }
+  | { kind: "write" }
+  | { kind: "missing" };
+const choices: { id: EntryPathId; label: string; short: string }[] = [
+  {
+    id: "starting-again",
+    label: "Ready to start again",
+    short: "Starting again",
+  },
+  {
+    id: "out-of-place",
+    label: "A little out of place",
+    short: "Finding your place",
+  },
+  { id: "stretched-thin", label: "Stretched thin", short: "Doing too much" },
+  { id: "curious", label: "Curious", short: "Following a question" },
+];
+const entryKey = "letters-to-grow-entry-seen-v4";
+const seenEntry = () => {
+  try {
+    return sessionStorage.getItem(entryKey) === "yes";
+  } catch {
+    return false;
+  }
 };
-
+const readLocation = (): View => {
+  const q = new URLSearchParams(location.search);
+  if (q.has("write")) return { kind: "write" };
+  const id = q.get("letter");
+  if (id)
+    return letters.some((l) => l.id === id)
+      ? { kind: "read", id }
+      : { kind: "missing" };
+  if (q.has("letter")) return { kind: "missing" };
+  return { kind: "entry" };
+};
+const randomLetter = (pool: Letter[]) =>
+  pool[Math.floor(Math.random() * pool.length)];
+function Botanical({
+  className = "",
+  flower = false,
+}: {
+  className?: string;
+  flower?: boolean;
+}) {
+  return (
+    <img
+      className={"botanical " + className}
+      src={flower ? "/art/white-flower.webp" : "/art/botanical-sprig.webp"}
+      alt=""
+      aria-hidden="true"
+      width={flower ? 600 : 840}
+      height={flower ? 900 : 560}
+      onError={(e) => {
+        e.currentTarget.style.visibility = "hidden";
+      }}
+    />
+  );
+}
 function App() {
-  const [id, setId] = useState(initial);
-  const [modal, setModal] = useState<"share" | "about" | null>(null);
-  const [card, setCard] = useState<ShareCard | null>(null);
-  const [status, setStatus] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [shareBusy, setShareBusy] = useState(false);
-  const [manualLink, setManualLink] = useState(false);
-  const [smallNote, setSmallNote] = useState("");
-  const [error, setError] = useState("");
-  const [cycle, setCycle] = useState<string[]>(() =>
-    id === "not-found" ? [] : [id],
+  const [view, setView] = useState<View>(readLocation);
+  const [animateEntry, setAnimateEntry] = useState(
+    () => readLocation().kind === "entry" && !seenEntry(),
   );
+  const [opening, setOpening] = useState<EntryPathId | "any" | null>(null);
+  const [path, setPath] = useState<EntryPathId | null>(null);
+  const cycle = useRef<string[]>([]);
+  const timer = useRef<number | undefined>(undefined);
+  const openingRef = useRef(false);
+  const firstMount = useRef(true);
+  const [modal, setModal] = useState<"about" | "share" | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
-  const heading = useRef<HTMLHeadingElement>(null);
   const savedFocus = useRef<HTMLElement | null>(null);
-  const requestToken = useRef(0);
-  const letter = letters.find((l) => l.id === id);
+  const request = useRef(0);
+  const cardRef = useRef<ShareCard | null>(null);
+  const [card, setCard] = useState<ShareCard | null>(null);
+  const [excerptIndex, setExcerptIndex] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [status, setStatus] = useState("");
+  const [error, setError] = useState("");
+  const [manualLink, setManualLink] = useState(false);
+  const letter =
+    view.kind === "read" ? letters.find((l) => l.id === view.id) : undefined;
   const letterUrl = letter
-    ? (() => {
-        const url = new URL(window.location.href);
-        url.search = "";
-        url.hash = "";
-        url.searchParams.set("letter", letter.id);
-        return url.href;
-      })()
-    : window.location.href;
-  useEffect(() => {
-    // Reading never waits for fonts. Only expand the wordmark after its
-    // condensed face is available, so a wider system font cannot overlap.
-    let active = true;
-    if (document.fonts) {
-      void document.fonts
-        .load("800 82px CampaignDisplay")
-        .then((faces) => {
-          if (active && faces.some((face) => face.status === "loaded")) {
-            document.documentElement.classList.add("display-font-ready");
-          }
-        })
-        .catch(() => {
-          /* Keep the fitted system-font wordmark. */
-        });
-    }
-    return () => {
-      active = false;
-    };
-  }, []);
-  useEffect(() => {
-    const onPop = () => {
-      const next = getId();
-      setId(letters.some((l) => l.id === next) ? next! : "not-found");
-      setModal(null);
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, []);
-  useEffect(() => {
-    if (letter) {
-      document.title = `${letter.salutation.replace(/,$/, "")} · Letters to Grow`;
-      const url = new URL(window.location.href);
-      if (!url.searchParams.has("letter")) {
-        url.searchParams.set("letter", id);
-        history.replaceState(null, "", url);
-      }
-    }
-  }, [id, letter]);
-  useEffect(() => {
-    const el = dialog.current;
-    if (!el) return;
-    if (modal) {
-      savedFocus.current = document.activeElement as HTMLElement;
-      el.showModal();
-    } else if (el.open) {
-      el.close();
-      savedFocus.current?.focus();
-    }
-    return () => {
-      if (el.open) el.close();
-    };
-  }, [modal]);
-  useEffect(() => {
-    return () => {
-      if (card) URL.revokeObjectURL(card.url);
-    };
-  }, [card]);
-  useEffect(
-    () => () => {
-      requestToken.current++;
-    },
-    [],
-  );
-  const close = () => {
-    requestToken.current++;
-    setModal(null);
+    ? new URL("?letter=" + letter.id, location.href).href
+    : location.href;
+  const clearCard = () => {
+    if (cardRef.current) URL.revokeObjectURL(cardRef.current.url);
+    cardRef.current = null;
     setCard(null);
+  };
+  const closeModal = () => {
+    request.current++;
+    setModal(null);
+    clearCard();
     setBusy(false);
     setStatus("");
     setError("");
     setManualLink(false);
   };
-  const nextLetter = () => {
-    let pool = letters.filter((l) => l.id !== id && !cycle.includes(l.id));
-    if (!pool.length) pool = letters.filter((l) => l.id !== id);
-    const next = pool[Math.floor(Math.random() * pool.length)].id;
-    setCycle(
-      pool.length === letters.length - 1 ? [id, next] : [...cycle, next],
-    );
-    setId(next);
-    const url = new URL(window.location.href);
-    url.searchParams.set("letter", next);
-    history.pushState(null, "", url);
-    setSmallNote("");
-    window.scrollTo({ top: 0, behavior: "instant" });
-    window.setTimeout(() => heading.current?.focus({ preventScroll: true }), 0);
+  const cancelOpening = () => {
+    if (timer.current !== undefined) window.clearTimeout(timer.current);
+    openingRef.current = false;
+    setOpening(null);
   };
-  const openShare = async () => {
+  const navigate = (next: View) => {
+    cancelOpening();
+    closeModal();
+    if (next.kind !== "entry") setAnimateEntry(false);
+    const url = new URL(location.href);
+    url.search = "";
+    url.hash = "";
+    if (next.kind === "read") url.searchParams.set("letter", next.id);
+    if (next.kind === "write") url.searchParams.set("write", "1");
+    history.pushState(null, "", url);
+    setView(next);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+  useEffect(() => {
+    const onPop = () => {
+      setAnimateEntry(false);
+      cancelOpening();
+      closeModal();
+      setPath(null);
+      setView(readLocation());
+      window.scrollTo({ top: 0, behavior: "instant" });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      if (timer.current !== undefined) window.clearTimeout(timer.current);
+      request.current++;
+      if (cardRef.current) URL.revokeObjectURL(cardRef.current.url);
+    };
+  }, []);
+  useEffect(() => {
+    if (view.kind === "entry") {
+      try {
+        sessionStorage.setItem(entryKey, "yes");
+      } catch {
+        /* optional session preference */
+      }
+    }
+    document.title = letter
+      ? `${letter.salutation.replace(/,$/, "")} · Letters to Grow`
+      : view.kind === "write"
+        ? "Write a letter · Letters to Grow"
+        : "Letters to Grow · Still, We Grow";
+    if (firstMount.current) {
+      firstMount.current = false;
+      return;
+    }
+    const target =
+      view.kind === "read"
+        ? "letter-salutation"
+        : view.kind === "write"
+          ? "writer-heading"
+          : "entry-heading";
+    const raf = requestAnimationFrame(() =>
+      document.getElementById(target)?.focus({ preventScroll: true }),
+    );
+    return () => cancelAnimationFrame(raf);
+  }, [view, letter]);
+  useEffect(() => {
+    const el = dialog.current;
+    if (!el) return;
+    if (modal && !el.open) {
+      savedFocus.current = document.activeElement as HTMLElement;
+      el.showModal();
+    }
+    if (!modal && el.open) {
+      el.close();
+      savedFocus.current?.focus({ preventScroll: true });
+    }
+  }, [modal]);
+  const openLetter = (selected: EntryPathId | "any") => {
+    if (openingRef.current) return;
+    openingRef.current = true;
+    setOpening(selected);
+    setPath(selected === "any" ? null : selected);
+    const pool =
+      selected === "any"
+        ? letters
+        : letters.filter((l) => l.paths.includes(selected));
+    const chosen = randomLetter(pool);
+    cycle.current = [chosen.id];
+    const finish = () => {
+      setAnimateEntry(false);
+      navigate({ kind: "read", id: chosen.id });
+    };
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) finish();
+    else timer.current = window.setTimeout(finish, 320);
+  };
+  const nextLetter = () => {
     if (!letter) return;
+    const pool = path ? letters.filter((l) => l.paths.includes(path)) : letters;
+    let available = pool.filter(
+      (l) => l.id !== letter.id && !cycle.current.includes(l.id),
+    );
+    if (!available.length) {
+      cycle.current = [letter.id];
+      available = pool.filter((l) => l.id !== letter.id);
+    }
+    const chosen = randomLetter(
+      available.length ? available : letters.filter((l) => l.id !== letter.id),
+    );
+    cycle.current.push(chosen.id);
+    navigate({ kind: "read", id: chosen.id });
+  };
+  const openShare = () => {
+    setExcerptIndex(0);
+    setStatus("");
+    setError("");
+    setManualLink(false);
     setModal("share");
+  };
+  useEffect(() => {
+    if (modal !== "share" || !letter) return;
+    const token = ++request.current;
     setBusy(true);
     setError("");
-    setStatus("");
-    setManualLink(false);
-    const token = ++requestToken.current;
-    try {
-      const result = await createShareCard({
-        excerpt: letter.excerpt,
-        salutation: letter.salutation,
-        letterUrl,
-      });
-      if (token !== requestToken.current) {
-        URL.revokeObjectURL(result.url);
-        return;
-      }
-      setCard(result);
-    } catch {
-      if (token === requestToken.current)
-        setError(
-          "The image could not be made. You can still copy the letter link.",
-        );
-    } finally {
-      if (token === requestToken.current) setBusy(false);
-    }
-  };
-  const handleShare = () => {
-    if (!card || shareBusy) return;
-    setShareBusy(true);
-    shareCard(card)
+    clearCard();
+    void createShareCard({
+      excerpt: letter.excerpts[excerptIndex] ?? letter.excerpt,
+      salutation: letter.salutation,
+      letterUrl,
+    })
       .then((result) => {
-        if (result === "downloaded")
-          setStatus(
-            "Image download started. Open Instagram, choose Story, and add it from your photos or downloads.",
-          );
-        if (result === "shared")
-          setStatus("Image handed to your device’s share menu.");
-        if (result === "cancelled")
-          setStatus("Sharing cancelled. Your image is still here.");
+        if (token !== request.current) {
+          URL.revokeObjectURL(result.url);
+          return;
+        }
+        cardRef.current = result;
+        setCard(result);
       })
+      .catch(() => {
+        if (token === request.current)
+          setError(
+            "The image could not be made. You can still copy the letter link.",
+          );
+      })
+      .finally(() => {
+        if (token === request.current) setBusy(false);
+      });
+    return () => {
+      request.current++;
+    };
+  }, [modal, letter, excerptIndex, letterUrl]);
+  const onShare = () => {
+    if (!card || sharing) return;
+    setSharing(true);
+    setError("");
+    void shareCard(card)
+      .then((result) =>
+        setStatus(
+          result === "cancelled"
+            ? "Sharing cancelled. Your image is still here."
+            : result === "downloaded"
+              ? "Image download started. You can add it to your Story from photos or downloads."
+              : "Image handed to your device’s share menu.",
+        ),
+      )
       .catch(() => setError("Sharing did not work. Try Save image instead."))
-      .finally(() => setShareBusy(false));
+      .finally(() => setSharing(false));
   };
-  const handleCopy = async () => {
+  const onCopy = async () => {
     const ok = await copyLink(letterUrl);
-    if (ok) {
-      setStatus("Letter link copied.");
-      setSmallNote("Letter link copied.");
-    } else {
-      setManualLink(true);
-      setStatus("Select and copy the link below.");
-      if (!modal) setSmallNote("Select and copy the link below.");
-    }
+    setStatus(ok ? "Letter link copied." : "Select and copy the link below.");
+    setManualLink(!ok);
   };
   return (
-    <>
-      <a href="#letter" className="skip">
-        Skip to the letter
+    <div className={"app view-" + view.kind}>
+      <a className="skip" href="#main">
+        Skip to the content
       </a>
       <header className="site-header">
-        <div className="sender" aria-label="TEDxUniversitasIndonesia">
-          <span className="ted">
-            TED<span className="ted-x">x</span>
-          </span>
-          <span className="university">UniversitasIndonesia</span>
-          <span className="sender-note">independently organized TED event</span>
-        </div>
         <button
-          className="about-button"
-          aria-label="About this project"
-          onClick={() => setModal("about")}
+          className="brand-home"
+          aria-label="Letters to Grow opening"
+          onClick={() => navigate({ kind: "entry" })}
         >
-          About <Info size={17} />
-        </button>
-      </header>
-      <main id="letter" className="workbench">
-        <div className="identity">
-          <h1>
-            <span>LETTERS</span>
-            <span className="outline-word">
-              TO GROW<span className="wordmark-dot">.</span>
-            </span>
-          </h1>
-          <p className="theme-note">Still, We Grow.</p>
           <img
-            className="chalk-envelope"
-            src="/art/envelope-chalk.webp"
-            alt=""
-            width="420"
-            height="420"
-            aria-hidden="true"
+            src="/art/tedx-logo.png"
+            alt="TEDxUniversitasIndonesia independently organized TED event"
+            width="260"
+            height="64"
             onError={(event) => {
-              event.currentTarget.style.visibility = "hidden";
+              event.currentTarget.hidden = true;
             }}
           />
-        </div>
-        <div className="reading-column">
-          {letter ? (
-            <>
+          <span className="logo-fallback" aria-hidden="true">
+            <b>TEDx</b>
+            <span>UniversitasIndonesia</span>
+          </span>
+        </button>
+        <nav className="header-actions" aria-label="Project">
+          <button
+            className="write-button"
+            onClick={() => navigate({ kind: "write" })}
+          >
+            <PencilSimple size={17} />
+            Write a letter
+          </button>
+          <button
+            className="about-button"
+            aria-label="About this project"
+            onClick={() => setModal("about")}
+          >
+            <Info size={19} />
+            <span>About</span>
+          </button>
+        </nav>
+      </header>
+      <main id="main">
+        {view.kind === "entry" && (
+          <section
+            className={
+              "entry " +
+              (animateEntry ? "first-entrance " : "") +
+              (opening ? "is-opening" : "")
+            }
+            aria-labelledby="entry-heading"
+          >
+            <Botanical className="entry-sprig" />
+            <Botanical className="entry-flower" flower />
+            <div className="entry-title">
+              <p className="theme-label">Still, We Grow.</p>
+              <h1 id="entry-heading" tabIndex={-1}>
+                What are you
+                <br />
+                <em>still figuring out?</em>
+              </h1>
+              <p className="entry-prompt">I’m feeling…</p>
+            </div>
+            <div className="thoughts" aria-label="Choose a starting point">
+              {choices.map((choice, i) => (
+                <button
+                  key={choice.id}
+                  disabled={opening !== null}
+                  className={
+                    "thought thought-" +
+                    i +
+                    (opening === choice.id ? " selected" : "")
+                  }
+                  onClick={() => openLetter(choice.id)}
+                >
+                  <span>{choice.label}</span>
+                  <ArrowRight size={20} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+            <div className="entry-bottom">
+              <button
+                className="any-letter"
+                disabled={opening !== null}
+                onClick={() => openLetter("any")}
+              >
+                <Shuffle size={17} />
+                Read any letter
+              </button>
+              <p>A letter from someone still working things out.</p>
+            </div>
+          </section>
+        )}
+        {view.kind === "read" && letter && (
+          <section className="reader-shell" aria-label="Letter reader">
+            <aside className="reader-aside">
+              <button
+                className="back-link"
+                onClick={() => navigate({ kind: "entry" })}
+              >
+                <ArrowLeft size={17} />
+                Choose a starting point
+              </button>
+              <p className="letter-wordmark">
+                Letters
+                <br />
+                <em>to Grow</em>
+                <span>.</span>
+              </p>
+              <p className="reader-theme">Still, We Grow.</p>
+              <Botanical className="reader-flower" flower />
+            </aside>
+            <div className="reading-column">
               <article
                 className="letter"
-                key={id}
+                key={letter.id}
                 aria-labelledby="letter-salutation"
               >
-                <div className="paper-tape" aria-hidden="true" />
+                <span className="paper-fastener" aria-hidden="true" />
                 <div className="letter-meta">
                   <span className="example-label">Example letter</span>
-                  <span className="letter-topic">{letter.topic}</span>
+                  <span>{letter.topic}</span>
                 </div>
                 <div className="letter-body">
-                  <h2 id="letter-salutation" tabIndex={-1} ref={heading}>
+                  <h1 id="letter-salutation" tabIndex={-1}>
                     {letter.salutation}
-                  </h2>
-                  {letter.paragraphs.map((p, i) => (
-                    <p key={i}>{p}</p>
+                  </h1>
+                  {letter.paragraphs.map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
                   ))}
                   <p className="signoff">{letter.signoff}</p>
                 </div>
               </article>
               <nav className="reader-actions" aria-label="Letter actions">
-                <button className="next-button" onClick={nextLetter}>
-                  Read another <ArrowRight size={23} />
+                <button className="paper-button" onClick={nextLetter}>
+                  Read another
+                  <ArrowRight size={20} />
                 </button>
                 <button className="save-letter" onClick={openShare}>
                   <ShareNetwork size={18} />
-                  Save or share
+                  Save a line
                 </button>
               </nav>
-            </>
-          ) : (
-            <div className="not-found">
-              <EnvelopeSimple size={44} />
-              <h2>This letter isn’t here.</h2>
-              <p>The link may be incomplete. Try another letter.</p>
-              <button className="next-button" onClick={nextLetter}>
-                Read a letter
-                <ArrowRight size={22} />
-              </button>
+              <p className="after-letter">
+                Have something of your own to write?{" "}
+                <button onClick={() => navigate({ kind: "write" })}>
+                  Write a letter <ArrowRight size={15} />
+                </button>
+              </p>
             </div>
-          )}
-          <p className="page-status" role="status" aria-live="polite">
-            {smallNote}
-          </p>
-        </div>
+          </section>
+        )}
+        {view.kind === "write" && (
+          <WriteLetter onBack={() => navigate({ kind: "entry" })} />
+        )}
+        {view.kind === "missing" && (
+          <section className="not-found">
+            <h1 id="entry-heading" tabIndex={-1}>
+              This letter isn’t here.
+            </h1>
+            <p>The link may be incomplete. There are other letters to read.</p>
+            <button
+              className="paper-button"
+              onClick={() => navigate({ kind: "entry" })}
+            >
+              Find a letter
+              <ArrowRight size={20} />
+            </button>
+          </section>
+        )}
       </main>
       <footer className="site-footer">
-        <span>Letters to Grow · A TEDxUniversitasIndonesia campaign</span>
-        <span>Preview. All letters are fictional examples.</span>
+        <span>Letters to Grow · TEDxUniversitasIndonesia</span>
+        <span>Preview collection · Fictional example letters</span>
       </footer>
       <dialog
         ref={dialog}
-        className={`dialog ${modal === "share" ? "share-dialog" : "about-dialog"}`}
+        className={
+          "dialog " + (modal === "share" ? "share-dialog" : "about-dialog")
+        }
+        aria-labelledby="dialog-title"
         onCancel={(e) => {
           e.preventDefault();
-          close();
+          closeModal();
         }}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
-            const r = e.currentTarget.getBoundingClientRect();
+            const b = e.currentTarget.getBoundingClientRect();
             if (
-              e.clientX < r.left ||
-              e.clientX > r.right ||
-              e.clientY < r.top ||
-              e.clientY > r.bottom
+              e.clientX < b.left ||
+              e.clientX > b.right ||
+              e.clientY < b.top ||
+              e.clientY > b.bottom
             )
-              close();
+              closeModal();
           }
         }}
-        aria-labelledby="dialog-title"
         onClose={() => {
-          if (modal) close();
+          if (modal) closeModal();
         }}
       >
-        <button className="close-dialog" onClick={close} aria-label="Close">
-          <X size={23} />
+        <button
+          className="close-dialog"
+          aria-label="Close"
+          onClick={closeModal}
+        >
+          <X size={22} />
         </button>
-        {modal === "about" ? (
+        {modal === "about" && (
           <div className="about-content">
-            <EnvelopeSimple
-              size={36}
-              weight="light"
-              className="about-envelope"
-            />
-            <h2 id="dialog-title">Letters to Grow.</h2>
+            <p className="theme-label">Still, We Grow.</p>
+            <h2 id="dialog-title">Letters to Grow</h2>
             <p>
-              A few letters about things we’re still figuring out. Read one, or
-              stay for another.
+              A few letters about things we’re still figuring out. Choose a
+              starting point, or read whatever comes your way.
             </p>
             <p>
-              This is a campaign experiment for TEDxUniversitasIndonesia 2027,
-              under <em>Still, We Grow.</em>
+              A campaign experiment by TEDxUniversitasIndonesia 2027. The
+              collection contains fictional editorial examples.
             </p>
             <p>
-              The letters in this preview are fictional editorial examples. Real
-              contributions can replace them later.
+              You can write a private draft and keep it on your device. This
+              frontend preview does not accept or publish submissions. Reading,
+              writing and image exports do not send your text to a server.
             </p>
-            <div className="about-footnote">
-              <p>
-                No accounts, submissions, or tracking. Saving and sharing happen
-                on your device.
-              </p>
-              <p>
-                More campaign and Main Event information will be added when
-                ready.
-              </p>
-            </div>
-            <button className="text-action" onClick={close}>
-              <ArrowLeft size={18} />
-              Back to the letter
+            <button className="text-button" onClick={closeModal}>
+              <ArrowLeft size={17} />
+              Back
             </button>
           </div>
-        ) : (
-          <div className="share-layout">
-            <div className="card-preview">
-              {busy ? (
-                <div className="preview-loading" role="status">
-                  Making your image…
-                </div>
-              ) : card ? (
-                <img
-                  src={card.url}
-                  alt={`Story image preview: ${letter?.excerpt}`}
-                  width="1080"
-                  height="1920"
-                />
-              ) : (
-                <div className="preview-loading">
-                  Your image will appear here.
-                </div>
-              )}
-            </div>
-            <div className="share-content">
-              <h2 id="dialog-title">Save or share</h2>
-              <p className="share-description">
-                An image for your Story. The preview is what you’ll save.
-              </p>
-              <div className="share-actions">
-                <button
-                  className="primary-button"
-                  disabled={!card || shareBusy}
-                  onClick={handleShare}
-                >
-                  <ShareNetwork size={20} />
-                  {shareBusy ? "Opening…" : "Share image"}
-                </button>
-                <button
-                  className="secondary-button"
-                  disabled={!card}
-                  onClick={() => {
-                    if (card) {
-                      try {
-                        downloadCard(card);
-                        setStatus(
-                          "Image download started. Find it in your downloads.",
-                        );
-                      } catch {
-                        setError(
-                          "The image could not be saved. Try Share image.",
-                        );
-                      }
-                    }
-                  }}
-                >
-                  <DownloadSimple size={20} />
-                  Save image
-                </button>
-                <button className="secondary-button" onClick={handleCopy}>
-                  <LinkSimple size={20} />
-                  Copy letter link
-                </button>
-              </div>
-              <div className="instagram-note">
-                <strong>For Instagram Stories</strong>
-                <p>
-                  Save the image, open Instagram, and add it to your Story. Add
-                  a link sticker with this letter’s link.
-                </p>
-                <p>Your phone may also offer Instagram in its share menu.</p>
-              </div>
-              <p className="share-status" role="status" aria-live="polite">
-                {status && <Check size={17} />}
-                <span>{status}</span>
-              </p>
-              {error && (
-                <p className="share-error" role="alert">
-                  {error}
-                </p>
-              )}
-              {manualLink && (
-                <label className="manual-link">
-                  Letter link
-                  <input
-                    readOnly
-                    value={letterUrl}
-                    onFocus={(e) => e.currentTarget.select()}
+        )}
+        {modal === "share" && letter && (
+          <div className="share-content">
+            <h2 id="dialog-title">Keep a line.</h2>
+            <p className="share-description">
+              Choose the part you’d like to send to someone.
+            </p>
+            <div className="share-body">
+              <div className="card-preview">
+                {busy ? (
+                  <div className="preview-loading" role="status">
+                    Making your image…
+                  </div>
+                ) : card ? (
+                  <img
+                    src={card.url}
+                    width="1080"
+                    height="1920"
+                    alt={"Story card: " + letter.excerpts[excerptIndex]}
                   />
-                </label>
-              )}
+                ) : (
+                  <div className="preview-loading">
+                    Your image will appear here.
+                  </div>
+                )}
+              </div>
+              <fieldset className="excerpt-options">
+                <legend>Choose a line</legend>
+                {letter.excerpts.map((excerpt, i) => (
+                  <label
+                    key={excerpt}
+                    className={excerptIndex === i ? "chosen" : ""}
+                  >
+                    <input
+                      type="radio"
+                      name="excerpt"
+                      value={i}
+                      checked={excerptIndex === i}
+                      onChange={() => {
+                        setExcerptIndex(i);
+                        setStatus("");
+                      }}
+                      disabled={sharing}
+                    />
+                    <span>{excerpt}</span>
+                  </label>
+                ))}
+              </fieldset>
             </div>
+            <div className="share-actions">
+              <button
+                className="paper-button"
+                disabled={!card || busy || sharing}
+                onClick={onShare}
+              >
+                <ShareNetwork size={18} />
+                {sharing ? "Opening…" : "Share image"}
+              </button>
+              <button
+                className="outline-button"
+                disabled={!card || busy}
+                onClick={() => {
+                  if (card)
+                    try {
+                      downloadCard(card);
+                      setStatus(
+                        "Image download started. Find it in your downloads.",
+                      );
+                    } catch {
+                      setError("Could not save the image. Try Share image.");
+                    }
+                }}
+              >
+                <DownloadSimple size={18} />
+                Save image
+              </button>
+              <button className="text-button copy-link" onClick={onCopy}>
+                <LinkSimple size={17} />
+                Copy letter link
+              </button>
+            </div>
+            <p className="instagram-note">
+              For Instagram, add the saved image to your Story. Add this
+              letter’s link with a separate link sticker.
+            </p>
+            <p className="share-status" role="status" aria-live="polite">
+              {status && <Check size={16} />}
+              <span>{status}</span>
+            </p>
+            {error && (
+              <p className="share-error" role="alert">
+                {error}
+              </p>
+            )}
+            {manualLink && (
+              <label className="manual-link">
+                Letter link
+                <input
+                  value={letterUrl}
+                  readOnly
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+              </label>
+            )}
           </div>
         )}
       </dialog>
-    </>
+    </div>
   );
 }
-
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />

@@ -1,26 +1,23 @@
-# Letters to Grow · revision 3
+# Letters to Grow · revision 4
 
-An English-language campaign proof of concept for TEDxUniversitasIndonesia 2027, under **Still, We Grow**. It opens straight into a letter. Eight fictional editorial examples, one at a time. No homepage, accounts, database, analytics, or submission service.
+An English campaign proof of concept for **TEDxUniversitasIndonesia 2027**, under **Still, We Grow**. The opening asks “What are you still figuring out?” Four everyday starting points lead to twelve fictional letters. People can also write a private draft and save an excerpt from a demonstration letter as a Story image.
 
-## Replace your current version
+The green botanical direction follows the Instagram references supplied for this project: olive, cream paper, flowing serif type and a few plant cutouts. This is a campaign experience, with no conventional homepage, marketing sections, accounts, database, analytics or submission service.
 
-This archive has the same root structure as the previous ZIP. Extract it **inside your existing repository folder**, choose **Replace all** when asked, then commit/upload the changed files. `package.json` and `src` must remain at the repo root, not inside another nested folder. No files need deleting. Existing Vercel settings can stay the same; redeploy after updating the repo. No secrets or environment files are included or overwritten.
+## Replace the current repository files
 
-This revision fixes reading before artwork loads: a solid cream sheet sits beneath the optional paper texture. The letter stays readable if every artwork request fails. Text is larger, spacing is more open, and the title has a fitted system-font fallback to prevent overlap while its condensed font loads.
+Extract the ZIP **inside your existing repository folder** and choose **Replace all**. `package.json`, `index.html`, `src` and `public` must stay at the repository root, not inside a nested folder. Commit/upload the changed files and redeploy Vercel. No deletion step is required; older unused assets may remain. The archive does not replace your Git history, installed dependencies or environment files.
 
-The three artwork files now total 208,768 bytes, down from 3,737,248 bytes in revision 2. Paper edges use separate slices so they keep their scale as the letter grows. Story export also works without images or custom fonts: decoration has a one-second deadline and the readable image is generated locally.
+Existing Vercel settings can stay the same. This is source code, so double-clicking `index.html` does not run the app.
 
 ## Deploy on Vercel
 
-1. Extract this ZIP.
-2. Upload the **contents** of this folder to your Git repository. `package.json`, `index.html`, `src`, and `public` belong at the repository root. Do not upload the ZIP as the only file.
-3. Import the repository into Vercel.
-4. Select **Vite** if Vercel does not detect it. Build command: `npm run build`. Output directory: `dist`. Node.js: 22 or 24.
-5. Deploy. No environment variables or database setup required.
+1. Put the extracted **contents** in the Git repository. Do not upload the ZIP as the only file.
+2. Import the repository into Vercel, or redeploy its existing project.
+3. Use the **Vite** framework, build command `npm run build` and output directory `dist`. Node.js 22 or 24 is suitable.
+4. Deploy. No environment variables or database setup are needed.
 
-This is a source project: double-clicking `index.html` will not run the app. Use Vercel or the local commands below.
-
-## Local development
+## Run locally
 
 ```sh
 npm ci
@@ -33,38 +30,48 @@ npm run build
 npm run preview
 ```
 
-Use `npx vite --host 127.0.0.1` if a restricted development environment does not allow network-interface discovery.
+If a restricted development environment prevents network-interface discovery, use `npx vite --host 127.0.0.1`.
 
-## Share a letter
+## Read and write
 
-Every letter has a stable `?letter=` URL. Sharing a letter link or using it in a printed QR opens that exact letter. For example, append `?letter=the-old-staircase` to your deployed URL. The browser Back button returns to previous letters.
+The root URL opens **I’m feeling…**, with these starting points: **Ready to start again**, **A little out of place**, **Stretched thin** and **Curious**. Each of the first three has several relevant letters. Curious and **Read any letter** draw from the full collection. Another-letter draws avoid the current letter and repeats within the active cycle. The short entrance runs once per session and respects reduced motion.
 
-**Save or share** prepares a real 1080 × 1920 PNG with an excerpt. The displayed preview is the actual exported image.
+Every letter keeps a stable `?letter=` URL. Shared links and printed QR codes open that exact letter, bypassing the selector. For example, append `?letter=the-old-staircase` to the deployed URL. Existing eight-letter links still work. Browser Back and Forward restore previous routes.
 
-- **Share image:** uses native file sharing when `navigator.canShare()` reports support. Installed apps and targets depend on the phone/browser. The app does not publish to Instagram or any account on your behalf.
-- **Save image:** downloads the PNG. Open Instagram, choose Story, and add it from your photos/downloads. Copy the letter link and add an Instagram link sticker separately. A saved PNG has no clickable link.
-- Unsupported or failed native sharing starts an image download. Cancelling the native share menu leaves the image in the preview without downloading.
-- **Copy letter link:** copies the URL. If clipboard access is unavailable, the app exposes a selectable URL instead.
+**Write a letter** opens at `?write=1`. It supports editing, previewing and downloading a UTF-8 `.txt` file. Unsaved words remain in memory while navigating within the app. The browser is asked to warn before leaving or refreshing with unsaved changes, but a reload or closed tab can still lose them. **Keep draft on this device** explicitly saves a copy in that browser’s local storage. There is no automatic server save and no public Submit button. A saved copy can be removed without clearing the current text. On a shared device, download the letter and remove its saved copy when finished.
 
-Some in-app browsers handle downloading and sharing differently. Real iOS/Android Instagram handoff and photo-library placement require device testing. Use the regular browser if an in-app browser cannot save the image.
+## Save or share an excerpt
 
-## Edit content and design
+**Save a line** offers three curated excerpts from the current letter and creates a real **1080 × 1920 PNG** locally. The preview shows the actual image to be exported.
 
-- `src/letters.ts`: eight letters, salutations, signoffs, topics, and exact excerpts. Keep stable IDs after sharing/printing URLs. Each body is 150–250 words. The example disclosure is intentional: replace it only after replacing the demonstration content with permissioned real contributions.
-- `src/main.tsx`: reading and sharing UI; About copy.
-- `src/style.css`: visual tokens, typography, layouts, responsive treatment, reduced motion, focus states.
-- `src/share.ts`: image design and capability-based sharing/download/clipboard fallbacks. Its export palette and local artwork follow the revised reader.
-- `public/fonts`: local fonts and their Open Font Licenses. No external font request at runtime.
-- `DESIGN.md`: durable design context for later edits.
+- **Share image** opens native file sharing when the browser reports support. The available apps depend on the device. Unsupported or failed native sharing falls back to an image download; cancelling the share menu does not download anything.
+- **Save image** downloads the PNG. To post it on Instagram, add the saved image to a Story, then use **Copy letter link** to add a separate link sticker. The PNG has no clickable link and the app does not publish on someone’s behalf.
+- **Copy letter link** exposes a selectable URL if clipboard access is unavailable.
 
-The page has `noindex,nofollow` while it is a fictional-content preview. Change that in `index.html` when preparing a real public launch. No event date, venue, speaker lineup, ticket link or stock is invented.
+Some in-app browsers handle file sharing and downloads differently. Actual Instagram handoff and photo-library placement depend on the device/browser and require device testing. The regular browser is a fallback when an in-app browser cannot save the image.
 
-## Later, if you want public contributions
+## Edit the project
 
-There is no decorative or fake Submit button in this build. Add a backend and an editorial review workflow separately before accepting letters. Private text should never silently become a public contribution. This prototype makes no network request to collect or store writing.
+| File | Responsibility |
+| --- | --- |
+| `src/letters.ts` | Twelve fictional letters, stable IDs, topics, route tags and three exact excerpt choices each. |
+| `src/main.tsx` | Entry, reader, routes, About and excerpt-sharing dialog. |
+| `src/WriteLetter.tsx`, `src/writer.css` | Private draft editing, preview, local save and text download. |
+| `src/style.css` | Colour/type tokens, layout, motion, focus states and responsive treatment. |
+| `src/share.ts` | PNG design, native sharing, download and clipboard fallbacks. |
+| `public/art`, `public/fonts` | Local artwork, fonts and font licences. No third-party font service is called at runtime. |
+| `DESIGN.md`, `PROJECT-CONTEXT.md` | Design intent, boundaries and continuity for later work. |
+
+Keep letter IDs stable after sharing or printing links. Keep the example-fiction disclosure until the collection has been replaced with permissioned contributions. Letter text is selectable HTML, and the reader has a permanent cream surface even if artwork fails. Image export also paints a readable background before optional textures or fonts load.
+
+The preview uses `noindex,nofollow` in `index.html`. Review that before a real public launch. No event date, venue, speaker lineup, ticket price or ticket link is invented.
+
+## Future public contributions
+
+This build cannot receive, moderate or publish letters. Public contributions need a separate submission service, consent wording and editorial review workflow. Saving a private draft must never silently turn it into a public contribution.
 
 ## Credits
 
-Concept and code created for this project. Visual references: Reasons to Stay (immediate reading and paper), Unlikely Collaborators (graphic character), and Inspo reference captures (typographic restraint). No letters or artwork copied from those websites. Demo letters are original fictional editorial examples.
+The user’s Instagram references guide the current brand direction. Earlier interaction and visual references include Reasons to Stay, Unlikely Collaborators and Inspo reference captures. No letters or artwork were copied from those websites. The demonstration letters are original fictional editorial examples.
 
-Fonts: Barlow Condensed, Courier Prime, Caveat, DM Sans. Earlier fonts remain for replacement compatibility. Their upstream Open Font Licenses are included in `public/fonts`. Original generated artwork and prompts are documented in `ART-CREDITS.md`.
+Artwork provenance and local font licences are documented in `ART-CREDITS.md`.

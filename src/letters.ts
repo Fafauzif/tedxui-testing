@@ -1,6 +1,9 @@
-/** Fictional editorial examples for this frontend proof of concept.
- * Replace with permissioned contributions before presenting these as real letters.
+/** Original fictional editorial examples for this frontend proof of concept.
+ * They are not audience submissions. Keep the example disclosure when publishing.
  */
+export type EntryPathId =
+  "starting-again" | "out-of-place" | "stretched-thin" | "curious";
+
 export interface Letter {
   id: string;
   salutation: string;
@@ -8,6 +11,9 @@ export interface Letter {
   signoff: string;
   excerpt: string;
   topic: string;
+  paths: EntryPathId[];
+  /** Curated verbatim options for the locally generated share card. */
+  excerpts: string[];
 }
 
 export const letters: Letter[] = [
@@ -25,10 +31,16 @@ export const letters: Letter[] = [
     signoff: "Someone who still takes the old staircase",
     excerpt:
       "I liked the new subjects. I was also having a pretty lonely Tuesday. Both things were happening.",
+    paths: ["starting-again", "out-of-place", "curious"],
+    excerpts: [
+      "I liked the new subjects. I was also having a pretty lonely Tuesday. Both things were happening.",
+      "I missed having someone save me a seat. I even missed a lecturer I'd spent months complaining about.",
+      "This morning I went to the right building, though. Didn't even check my phone.",
+    ],
   },
   {
     id: "the-last-page",
-    salutation: "To the person thinking about staying,",
+    salutation: "To someone thinking of leaving the team,",
     topic: "Commitment",
     paragraphs: [
       "Our student magazine had eleven files called some version of FINAL. I was checking captions on a Sunday night when someone uploaded FINAL_ACTUALLY_FINAL. I nearly threw my phone.",
@@ -40,6 +52,12 @@ export const letters: Letter[] = [
     signoff: "The person who kept the interviews",
     excerpt:
       "A couple of people said they hadn't known I was doing those things. I wanted to say they should've noticed, but I also hadn't told them.",
+    paths: ["stretched-thin", "curious"],
+    excerpts: [
+      "A couple of people said they hadn't known I was doing those things. I wanted to say they should've noticed, but I also hadn't told them.",
+      "We cut four pages from the next issue. Someone else took the captions.",
+      "For now, I've got an interview on Thursday and somebody else is chasing the photograph.",
+    ],
   },
   {
     id: "outside-the-feed",
@@ -55,6 +73,12 @@ export const letters: Letter[] = [
     signoff: "Someone whose desk is still a mess",
     excerpt:
       "I could've told you about its traffic problems. Couldn't have told you much else. I followed its community page.",
+    paths: ["curious"],
+    excerpts: [
+      "I could've told you about its traffic problems. Couldn't have told you much else. I followed its community page.",
+      "At first I thought that account was a bit boring. Now I look for the tree when I pass that street.",
+      "The missing cat came home, by the way. It was hiding behind a shoe rack two doors down.",
+    ],
   },
   {
     id: "one-stop-earlier",
@@ -70,6 +94,12 @@ export const letters: Letter[] = [
     signoff: "A passenger who keeps sending screenshots",
     excerpt:
       "I'd been getting past it by walking in the road for a few seconds. Easy for me. I'd left that part out of my helpful screenshot.",
+    paths: ["curious"],
+    excerpts: [
+      "I'd been getting past it by walking in the road for a few seconds. Easy for me. I'd left that part out of my helpful screenshot.",
+      "But I'm asking different questions in the group now. I added some photos of the shortcut too.",
+      "Last week somebody suggested fixing the pavement before arguing about the stop again. Quite a few of us liked that message.",
+    ],
   },
   {
     id: "the-extra-chairs",
@@ -85,6 +115,12 @@ export const letters: Letter[] = [
     signoff: "Someone who spent too long on the poster",
     excerpt:
       "I wasn't sure what to put in our project update either. 'Read six pages, got corrected by an eight-year-old' didn't sound very impressive.",
+    paths: ["curious"],
+    excerpts: [
+      "I wasn't sure what to put in our project update either. 'Read six pages, got corrected by an eight-year-old' didn't sound very impressive.",
+      "I went back the next week without bringing anything. Felt strange coming through the door empty-handed.",
+      "There was a dog I'd completely missed. He thought this was very funny.",
+    ],
   },
   {
     id: "the-question-about-the-moon",
@@ -101,6 +137,12 @@ export const letters: Letter[] = [
     signoff: "An older sibling who's been told to stop advising",
     excerpt:
       "Someone mentions a rehearsal, I ask about the competition. Someone starts running, I ask about their time.",
+    paths: ["curious"],
+    excerpts: [
+      "Someone mentions a rehearsal, I ask about the competition. Someone starts running, I ask about their time.",
+      "She'd just felt like drawing the moon.",
+      "I don't mean to make everything into a test. I'm genuinely interested. But those are the questions that come out first.",
+    ],
   },
   {
     id: "the-word-on-the-board",
@@ -116,6 +158,12 @@ export const letters: Letter[] = [
     signoff: "The person who nodded a bit too much",
     excerpt:
       "We'd been agreeing with each other for weeks. We spent most of that meeting working out what we'd agreed to.",
+    paths: ["curious"],
+    excerpts: [
+      "We'd been agreeing with each other for weeks. We spent most of that meeting working out what we'd agreed to.",
+      "I opened a blank document, typed the heading and went to make toast. Came back, changed the font, made more toast.",
+      "Yesterday somebody used an abbreviation I didn't know and I let it go because we were nearly finished.",
+    ],
   },
   {
     id: "a-different-table",
@@ -131,5 +179,94 @@ export const letters: Letter[] = [
     signoff: "Someone who sometimes chooses the quieter table",
     excerpt:
       "I quite like having someone I can sit next to without arranging anything. Last time we talked about his broken umbrella for ten minutes.",
+    paths: ["out-of-place", "curious"],
+    excerpts: [
+      "I quite like having someone I can sit next to without arranging anything. Last time we talked about his broken umbrella for ten minutes.",
+      "I finished my lunch while it was still warm. That hadn't happened much lately.",
+      "I think I'd been assuming they were judging me much more closely than they were.",
+    ],
+  },
+  {
+    id: "the-second-saturday",
+    salutation: "To someone standing at the edge of the court,",
+    topic: "Joining in",
+    paragraphs: [
+      "I joined a Saturday badminton session and spent the first ten minutes pretending to tie my shoes. Everyone seemed to have a partner already. Mine were tied. I checked them again.",
+      "A woman holding three rackets asked if I was waiting for someone. I said I was new. She pointed at a court and said they needed a fourth. I hadn't played since school. I told her this twice.",
+      "We lost. Quite badly. I kept apologising until my partner said she'd rather I called the shots that were going out. That gave me something useful to do. I was wrong about several of those as well.",
+      "Afterwards, somebody added me to a group chat full of shuttlecock orders and arguments about the booking fee. I didn't know any of their names yet, so I saved my partner as 'yellow racket'.",
+      "I went back the next Saturday. She wasn't there, and I nearly left. Then someone asked if I could help move a bench. I stayed. I've learnt four names now. The group has two people called Kevin, which isn't helping.",
+    ],
+    signoff: "Someone who checks their shoelaces too much",
+    excerpt:
+      "She wasn't there, and I nearly left. Then someone asked if I could help move a bench. I stayed.",
+    paths: ["starting-again", "out-of-place", "curious"],
+    excerpts: [
+      "She wasn't there, and I nearly left. Then someone asked if I could help move a bench. I stayed.",
+      "I kept apologising until my partner said she'd rather I called the shots that were going out. That gave me something useful to do.",
+      "I didn't know any of their names yet, so I saved my partner as 'yellow racket'.",
+    ],
+  },
+  {
+    id: "the-wrong-friday",
+    salutation: "To the person checking two calendars,",
+    topic: "Making room",
+    paragraphs: [
+      "I put my work shifts in one calendar and my classes in another. This seemed organised until I agreed to cover a Friday shift during a presentation. Both calendars looked quite reasonable on their own.",
+      "I kept looking for someone to swap with. One person had an exam. Another had already covered for me. I considered asking my project group to move the presentation, which tells you how tired I was.",
+      "In the end, I called my manager. I expected a speech about reliability. She asked which Fridays I could actually work. I said I'd check. She told me to check properly this time.",
+      "We changed my availability. It means fewer hours some weeks, so I'm keeping an eye on what I spend. The answer wasn't as simple as clearing my whole schedule. I still need the job. I also need to turn up for the things I've said I'll do.",
+      "I've put everything in one calendar now, including the bus home. Yesterday I nearly offered to take another shift, then opened it first. I said I could do Sunday. My manager sent back a thumbs-up. I went to my presentation.",
+    ],
+    signoff: "Someone who finally included the bus journey",
+    excerpt: "Both calendars looked quite reasonable on their own.",
+    paths: ["stretched-thin", "curious"],
+    excerpts: [
+      "Both calendars looked quite reasonable on their own.",
+      "Yesterday I nearly offered to take another shift, then opened it first. I said I could do Sunday.",
+      "I still need the job. I also need to turn up for the things I've said I'll do.",
+    ],
+  },
+  {
+    id: "the-voice-note",
+    salutation: "To someone with a few replies still waiting,",
+    topic: "Keeping in touch",
+    paragraphs: [
+      "My friend sent me a seven-minute voice note. I listened to the first minute on the bus, then someone called. For three days, I kept moving it to tomorrow in my head.",
+      "By then I thought I needed to send seven minutes back, preferably with a proper update. Nothing I'd done seemed worth reporting. I'd been going to class, helping at home and losing a long argument with a spreadsheet.",
+      "She messaged again to ask about the rice cooker she'd lent me. I thought she was annoyed about the voice note. She was having people over and needed the rice cooker. There were several separate things happening, apparently.",
+      "When I took it round, I said I hadn't had the energy to reply properly. She said she hadn't expected a report. Most of her recording was about a neighbour's noisy motorbike. We listened to that bit together because she wanted me to hear her impression of it.",
+      "I've still got messages waiting. Yesterday I sent her a photograph of my spreadsheet with 'nearly won' underneath. She sent me a thumbs-down because two columns were blank. It was nice to talk without first assembling a version of my week that sounded interesting.",
+    ],
+    signoff: "The person who did return the rice cooker",
+    excerpt:
+      "It was nice to talk without first assembling a version of my week that sounded interesting.",
+    paths: ["stretched-thin", "curious"],
+    excerpts: [
+      "It was nice to talk without first assembling a version of my week that sounded interesting.",
+      "By then I thought I needed to send seven minutes back, preferably with a proper update.",
+      "When I took it round, I said I hadn't had the energy to reply properly. She said she hadn't expected a report.",
+    ],
+  },
+  {
+    id: "the-shallow-end",
+    salutation: "To anyone looking for their old goggles,",
+    topic: "Returning",
+    paragraphs: [
+      "I found my old swimming goggles in a drawer with some dead batteries. The strap snapped when I tried them on. That was the first part of getting back into swimming.",
+      "At the pool, I chose a lane labelled slow and still managed to get in someone's way. I used to swim at school. I'd remembered the swimming and forgotten how much standing at the wall was involved.",
+      "The lifeguard pointed me towards a quieter lane. I did one length, stopped, then did another. An older man in the next lane was walking through the water. We kept arriving at the shallow end together. He asked if the clock had stopped. It hadn't.",
+      "I went again a few days later. I wanted to see whether it felt less awkward if I knew where the lockers were. It did, a little. I also brought a bag for my wet things, which improved the bus journey considerably.",
+      "I'm counting lengths in the notes on my phone. Nothing impressive so far. There's a reminder underneath to buy shampoo. The man who walks was there last time too. He'd brought a friend, and they were still talking when I left.",
+    ],
+    signoff: "Someone with a separate bag for wet things",
+    excerpt:
+      "I wanted to see whether it felt less awkward if I knew where the lockers were. It did, a little.",
+    paths: ["starting-again", "curious"],
+    excerpts: [
+      "I wanted to see whether it felt less awkward if I knew where the lockers were. It did, a little.",
+      "I'd remembered the swimming and forgotten how much standing at the wall was involved.",
+      "I'm counting lengths in the notes on my phone. Nothing impressive so far. There's a reminder underneath to buy shampoo.",
+    ],
   },
 ];

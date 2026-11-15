@@ -1,37 +1,47 @@
-# Letters to Grow, revision 3
+# Letters to Grow · design context, revision 4
 
-## Purpose
+## Purpose and audience
 
-English-only frontend campaign piece for TEDxUniversitasIndonesia 2027 / Still, We Grow. A reader opens straight into a 150–250-word fictional example letter, can draw another, and save/share a Story image. No homepage, database, account, public collection, writing form, analytics, tickets, or new network service.
+An English-only campaign experience for TEDxUniversitasIndonesia 2027 / **Still, We Grow**, intended for people arriving from campus QR posters, activations, ambassadors and shared letter links. It offers a small encounter with someone else’s everyday uncertainty. The experience should feel personal, readable and tactile. It should not resemble an event sales site or a wellbeing assessment.
 
-## Approved revision
+## Current direction
 
-Retain the black/chalk/paper direction established in revision 2. Fix its critical loading-state defect: dark ink must always have a cream surface, even when all art requests fail. Increase reading type and remove negative tracking. Artwork remains optional decoration; the letter is never hidden while assets load. This is an original composition informed by the references.
+Revision 4 replaces the former black chalkboard direction with olive/moss green, warm cream paper, flowing serif headings, a genuine project logo and restrained botanical collage. This direction is inferred from the Instagram screenshots supplied by the user. The supplied references do not establish exact official colour values or typefaces, so the implementation uses a coherent working palette and quality local font substitutes.
 
-## Direction
+The root is a single campaign opening, not a homepage. “What are you still figuring out?” introduces **I’m feeling…** and four readable choices: Ready to start again, A little out of place, Stretched thin and Curious. They are everyday states, not diagnoses. They select an editorially tagged letter rather than promising personalised advice. A direct `?letter=` link bypasses this opening.
 
-Textured black sketchbook surface, original chalk envelope illustration, rough-edged paper and red tape. Heavy condensed lettering in a compact side composition on desktop; compact identity above the letter on mobile. A typewriter letter with handwritten topic/signature. The letter is already open. No envelope-opening gate. No marketing sections or decorative numbered counters.
+## Materials and typography
 
-## Tokens and ownership
+`src/style.css` owns the main visual tokens. Current values include olive `#57652e`, ground `#89954f`, paper `#fffbed`, paper ink `#302b20`, ground ink `#11170b`, cream `#fffde9` and restrained red `#ca301d`. `src/share.ts` adapts this palette for image export.
 
-src/style.css :root owns UI colours and type roles: --board #101010, --paper #f5f0e7, --ink #24221f, --white #f5f2e9, --muted #b9b5ab, --red #f44331. CampaignDisplay: Barlow Condensed 800. CampaignSans: DM Sans 400. LetterTypewriter: Courier Prime regular/italic. Handwritten: Caveat. Fonts bundled locally with their OFLs. src/share.ts has explicit adapted export colours and uses the same local art/fonts.
+- **LetterDisplay:** Cormorant Garamond medium, regular and italic. Used for flowing headings, wordmarks and signatures, with Georgia fallback.
+- **LetterTypewriter:** Courier Prime. Used for letter paragraphs and excerpt choices, with Courier New fallback.
+- **CampaignSans:** DM Sans. Used for controls, labels and supporting copy, with Arial fallback.
 
-## Artwork
+Fonts are local. Body text remains live, selectable HTML. Decorative artwork never contains the functional labels or letter paragraphs. The reading sheet always has a solid cream layer below the optional paper texture, so ink remains readable when art is delayed or blocked. Plant cutouts sit at the edges rather than across reading text or controls. Earlier unused assets remain only for replacement compatibility.
 
-Original imagegen assets in public/art: black-paper.webp, letter-paper.webp and envelope-chalk.webp. Revision 3 resizes and compresses WebP assets for delivery while retaining the original source images separately. The three runtime images total 208,768 bytes. Source prompts recorded in ART-CREDITS.md. Text stays selectable HTML; no rasterized letter paragraphs. Texture stronger outside the reading surface. A clipped solid-cream ::before layer provides the permanent reading surface. A separate ::after border-image supplies the optional texture and deckled edges, with corners kept at a fixed scale rather than stretching the complete sheet. Text is inset safely inside both surfaces. No decorative text sits behind or across body text or controls.
+## Layout and interaction
 
-## Layout
+The opening has four still, clickable paper shapes. Desktop uses a loose two-column composition; mobile stacks the choices. The reader has a compact identity rail on wider screens and a stacked identity on small screens. The full letter scrolls naturally, with actions below the complete sheet. The writing flow uses the same readable paper treatment.
 
-Identity rail plus reader on desktop; stacked composition at <=740px. Reader letter grows naturally for content. Metadata in flex normal flow; tape alone absolute, safely above content and crossing the sheet edge. Body type is 18px on desktop and 17px on mobile, with normal letter spacing. A smaller system-font wordmark is the default until the condensed face successfully loads; reading is independent of that state. Failed chalk illustration requests are hidden without collapsing their reserved space. Actions occupy a separate row below the complete sheet. No rotated backing envelope or bottom caption. Sharing is one-column preview/actions rather than a professional split panel.
+The entrance uses a short opacity/translation sequence once per session. A selected starting point makes a brief transition into its letter. No continuous floating targets, particles, typewriter reveal, scroll hijacking or required animation gate. Reduced-motion preference removes decorative animation and transition delays.
 
-## Interaction and accessibility
+Keep semantic buttons, visible focus states, keyboard access and native-dialog focus isolation. About and share dialogs support Escape and focus restoration. Stable letter URLs, missing-link recovery and browser Back/Forward are part of the experience.
 
-Stable ?letter= IDs retained for existing QR and shared links. Random draw avoids repeats within a cycle and immediately excludes the current ID. Browser Back restores prior letter. Native dialog provides focus isolation, Escape and focus restoration. Visible focus, semantic controls, minimum ~44px controls, natural reading scroll. Reduced motion disables sheet entry animation. Source copy clearly marks example fiction.
+## Content and writing
+
+The collection contains twelve clearly disclosed fictional editorial examples. Each letter is a small concrete story, with ordinary details and an unresolved or modest ending. Avoid slogans, fabricated testimonials, generic reassurance, inflated campaign language or claims that a letter understands a reader’s emotional state. Each letter has three exact excerpts, chosen from its own text.
+
+**Write a letter** must remain visible. This frontend version permits editing, preview, explicit local draft save, saved-copy removal and `.txt` download. It does not submit or publish a letter. Unsaved words survive in-app navigation through memory; only an explicit save persists them in browser local storage. Explain this distinction plainly. Never imply the draft is saved online.
 
 ## Sharing
 
-1080x1920 actual PNG prepared locally before native Share click. Same texture/paper design, adaptive excerpt layout. Solid dark board and cream paper are always painted before any optional image. Fonts and artwork load in parallel with a one-second deadline; unavailable decoration never rejects an otherwise valid export. Successful late assets cache for later cards. Native file-sharing capability detection; unsupported/error path downloads; cancellation never downloads. Clipboard failure exposes a selectable URL. Manual Instagram instructions explain photo upload and separate link sticker. OS/Instagram app availability is not promised.
+**Save a line** prepares a local 1080 × 1920 PNG with one of three curated excerpt choices. The displayed preview is the actual export. Solid green and cream are painted before optional art. Fonts and textures have a one-second deadline; unavailable decoration must not prevent a readable export.
 
-## Packaging contract
+Native sharing is files-only and capability-based. Unsupported/error paths download; cancellation does not. Clipboard failure exposes a selectable URL. The interface explains that posting on Instagram requires adding the image to a Story and adding the copied URL separately as a link sticker. Do not promise a clickable exported image or direct Instagram publishing.
 
-The replacement ZIP contains files at repository-root-relative paths, matching revision 1. Extract into the current repo and replace existing files. All previous files remain safe if unused. No deleting repository or dotgit, node_modules, or environment files is required. No deployment or external repository mutation performed by the assistant.
+## Scope and handoff
+
+React, TypeScript and Vite, frontend only. No database, accounts, public submissions, analytics, ticket integration or new collection service. No automatic uploads of user writing. Event facts remain absent unless supplied and confirmed.
+
+The delivery contract is a repository-root replacement ZIP: extract inside the existing repo and replace files, with no nested project folder or deletion step. Deployment uses the existing Vercel Vite configuration. Do not introduce an unrelated hosting or backend dependency during routine edits.

@@ -16,8 +16,10 @@ type CardInput = {
 
 const WIDTH = 1080;
 const HEIGHT = 1920;
-const INK = "#171717";
-const RED = "#f33123";
+const INK = "#302b20";
+const MOSS = "#69783e";
+const CREAM = "#fffbe9";
+const RED = "#d8311f";
 
 function wrapText(
   ctx: CanvasRenderingContext2D,
@@ -118,10 +120,9 @@ const availableFonts = new Set<string>();
 async function optionalFonts(): Promise<void> {
   if (!document.fonts || typeof document.fonts.load !== "function") return;
   const specs = [
-    ["CampaignDisplay", "800 112px CampaignDisplay"],
+    ["LetterDisplay", "italic 500 140px LetterDisplay"],
     ["LetterTypewriter", "400 60px LetterTypewriter"],
     ["CampaignSans", "400 24px CampaignSans"],
-    ["Handwritten", "400 44px Handwritten"],
   ];
   const loading = Promise.all(
     specs.map(async ([family, specification]) => {
@@ -151,23 +152,47 @@ function filenameFromUrl(value: string): string {
   }
 }
 
+/** Keep the collage natural without stretching its flowers or leaves. */
+function drawContained(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement | null,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): void {
+  if (!image?.naturalWidth || !image.naturalHeight) return;
+  const scale = Math.min(
+    width / image.naturalWidth,
+    height / image.naturalHeight,
+  );
+  const drawnWidth = image.naturalWidth * scale;
+  const drawnHeight = image.naturalHeight * scale;
+  ctx.drawImage(
+    image,
+    x + (width - drawnWidth) / 2,
+    y + (height - drawnHeight) / 2,
+    drawnWidth,
+    drawnHeight,
+  );
+}
+
 export async function createShareCard(input: CardInput): Promise<ShareCard> {
   if (!input.excerpt.trim())
     throw new Error("Choose a sentence before making a card.");
 
-  const [board, paper] = await Promise.all([
+  const [grain, paper, sprig, flower] = await Promise.all([
     optionalArtwork("/art/black-paper.webp"),
     optionalArtwork("/art/letter-paper.webp"),
+    optionalArtwork("/art/botanical-sprig.webp"),
+    optionalArtwork("/art/white-flower.webp"),
     optionalFonts(),
   ]);
-  const displayFamily = availableFonts.has("CampaignDisplay")
-    ? "CampaignDisplay"
-    : "Arial";
+  const displayFamily = availableFonts.has("LetterDisplay")
+    ? "LetterDisplay"
+    : "Georgia";
   const readingFamily = availableFonts.has("LetterTypewriter")
     ? "LetterTypewriter"
-    : '"Courier New"';
-  const handFamily = availableFonts.has("Handwritten")
-    ? "Handwritten"
     : '"Courier New"';
   const uiFamily = availableFonts.has("CampaignSans")
     ? "CampaignSans"
@@ -182,116 +207,95 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
       "This browser could not create an image. Copy the letter link instead.",
     );
 
-  ctx.fillStyle = "#101010";
+  // Colour and legibility never depend on an illustration or font arriving.
+  ctx.fillStyle = MOSS;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  // Keep the solid board if its decorative texture is unavailable.
-  if (board && board.naturalWidth && board.naturalHeight) {
-    const boardScale = Math.max(
-      WIDTH / board.naturalWidth,
-      HEIGHT / board.naturalHeight,
+  if (grain?.naturalWidth && grain.naturalHeight) {
+    const scale = Math.max(
+      WIDTH / grain.naturalWidth,
+      HEIGHT / grain.naturalHeight,
     );
-    const boardWidth = board.naturalWidth * boardScale;
-    const boardHeight = board.naturalHeight * boardScale;
+    const width = grain.naturalWidth * scale;
+    const height = grain.naturalHeight * scale;
+    ctx.save();
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.globalAlpha = 0.2;
     ctx.drawImage(
-      board,
-      (WIDTH - boardWidth) / 2,
-      (HEIGHT - boardHeight) / 2,
-      boardWidth,
-      boardHeight,
+      grain,
+      (WIDTH - width) / 2,
+      (HEIGHT - height) / 2,
+      width,
+      height,
     );
+    ctx.restore();
   }
 
-  // Hand-arranged condensed lettering belongs to the board, not the letter.
-  // Its safe-area position leaves room for Story controls above and below.
-  ctx.fillStyle = "#fffdf7";
+  // Two small botanical pieces sit behind the paper, never over its words.
+  ctx.save();
+  ctx.translate(900, 654);
+  ctx.rotate(0.2);
+  drawContained(ctx, sprig, -145, -270, 290, 540);
+  ctx.restore();
+  drawContained(ctx, flower, 12, 1288, 275, 320);
+
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
-  let displaySize = 112;
+  ctx.fillStyle = CREAM;
+  let displaySize = 140;
   do {
-    ctx.font = `800 ${displaySize}px ${displayFamily}, Arial, sans-serif`;
-    if (
-      Math.max(
-        ctx.measureText("LETTERS").width,
-        ctx.measureText("TO GROW.").width + 36,
-      ) <= 594
-    )
-      break;
+    ctx.font = `italic 500 ${displaySize}px ${displayFamily}, Georgia, serif`;
+    if (ctx.measureText("Letters to").width <= 790) break;
     displaySize -= 2;
-  } while (displaySize > 60);
-  ctx.save();
-  ctx.translate(136, 316);
-  ctx.rotate(-0.025);
-  ctx.fillText("LETTERS", 0, 0);
-  ctx.fillText("TO GROW.", 36, 112);
-  ctx.restore();
-
-  ctx.save();
-  ctx.translate(833, 335);
-  ctx.rotate(0.09);
+  } while (displaySize > 80);
+  ctx.fillText("Letters to", 129, 321);
+  ctx.font = `italic 500 ${Math.min(displaySize + 8, 148)}px ${displayFamily}, Georgia, serif`;
+  ctx.fillText("Grow", 256, 434);
+  const growWidth = ctx.measureText("Grow").width;
   ctx.fillStyle = RED;
-  ctx.font = `400 44px ${handFamily}, monospace`;
-  ctx.fillText("Still,", -80, -8);
-  ctx.fillText("We Grow.", -80, 28);
-  ctx.restore();
+  ctx.fillText(".", 256 + growWidth + 3, 434);
 
-  // Always paint a cream page first, including when every asset is blocked.
-  // The base sits inside the texture's alpha edge when artwork is available.
-  ctx.fillStyle = "#f3eee4";
-  ctx.beginPath();
-  ctx.moveTo(132, 502);
-  ctx.lineTo(943, 498);
-  ctx.lineTo(953, 525);
-  ctx.lineTo(949, 918);
-  ctx.lineTo(954, 1318);
-  ctx.lineTo(943, 1565);
-  ctx.lineTo(132, 1562);
-  ctx.lineTo(124, 1310);
-  ctx.lineTo(130, 922);
-  ctx.lineTo(125, 535);
-  ctx.closePath();
-  ctx.fill();
-  if (paper && paper.naturalWidth && paper.naturalHeight)
-    ctx.drawImage(paper, 104, 476, 872, 1114);
-
-  // A small irregular strip holds the page to the board. It never covers text.
+  // A complete cream page is present even with all decorative assets blocked.
+  const page = new Path2D();
+  page.moveTo(134, 552);
+  page.lineTo(941, 548);
+  page.lineTo(950, 577);
+  page.lineTo(946, 932);
+  page.lineTo(952, 1304);
+  page.lineTo(941, 1538);
+  page.lineTo(135, 1540);
+  page.lineTo(127, 1308);
+  page.lineTo(132, 925);
+  page.lineTo(126, 580);
+  page.closePath();
   ctx.save();
-  ctx.translate(551, 491);
-  ctx.rotate(-0.075);
-  ctx.fillStyle = RED;
-  ctx.beginPath();
-  ctx.moveTo(-132, -31);
-  ctx.lineTo(126, -28);
-  ctx.lineTo(132, -19);
-  ctx.lineTo(126, -8);
-  ctx.lineTo(133, 2);
-  ctx.lineTo(126, 14);
-  ctx.lineTo(130, 29);
-  ctx.lineTo(-127, 32);
-  ctx.lineTo(-132, 20);
-  ctx.lineTo(-126, 9);
-  ctx.lineTo(-133, -2);
-  ctx.lineTo(-127, -13);
-  ctx.closePath();
-  ctx.fill();
-  ctx.globalAlpha = 0.14;
-  ctx.fillStyle = "#fffdf7";
-  ctx.fillRect(-118, -19, 235, 2);
-  ctx.fillRect(-116, 14, 232, 1);
+  ctx.shadowColor = "rgba(32, 43, 17, 0.16)";
+  ctx.shadowBlur = 32;
+  ctx.shadowOffsetY = 9;
+  ctx.fillStyle = CREAM;
+  ctx.fill(page);
   ctx.restore();
+  if (paper?.naturalWidth && paper.naturalHeight) {
+    ctx.save();
+    ctx.clip(page);
+    // The same tactile artwork as the on-screen letter, softly blended into cream.
+    ctx.globalAlpha = 0.6;
+    ctx.drawImage(paper, 104, 524, 872, 1040);
+    ctx.restore();
+  }
 
-  const left = 173;
-  const textWidth = 734;
+  const left = 177;
+  const textWidth = 726;
   ctx.fillStyle = INK;
   ctx.font = `400 29px ${readingFamily}, monospace`;
   const salutationLines = wrapText(ctx, input.salutation, textWidth);
   salutationLines.forEach((text, index) =>
-    ctx.fillText(text, left, 640 + index * 40),
+    ctx.fillText(text, left, 668 + index * 40),
   );
 
-  const quoteTop = Math.max(762, 692 + salutationLines.length * 40);
-  const quoteBottom = 1406;
+  const quoteTop = Math.max(778, 710 + salutationLines.length * 40);
+  const quoteBottom = 1382;
   const availableHeight = quoteBottom - quoteTop;
-  let quoteSize = 60;
+  let quoteSize = 58;
   let quoteLines: string[] = [];
   for (; quoteSize >= 24; quoteSize -= 2) {
     ctx.font = `400 ${quoteSize}px ${readingFamily}, monospace`;
@@ -304,17 +308,22 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
     );
   ctx.fillStyle = INK;
   const lineHeight = quoteSize * 1.29;
+  const textHeight = quoteLines.length * lineHeight;
+  const firstBaseline =
+    quoteTop + Math.max(0, (availableHeight - textHeight) / 2) + quoteSize;
   quoteLines.forEach((text, index) =>
-    ctx.fillText(text, left, quoteTop + quoteSize + index * lineHeight),
+    ctx.fillText(text, left, firstBaseline + index * lineHeight),
   );
 
-  // Quiet editorial disclosure on paper, with sender attribution on the board.
-  ctx.fillStyle = "#57534c";
+  ctx.fillStyle = "#69634e";
   ctx.font = `400 23px ${readingFamily}, monospace`;
-  ctx.fillText("Example letter", left, 1512);
-  ctx.fillStyle = "#fffdf7";
+  ctx.fillText("Example letter", left, 1478);
+
+  ctx.fillStyle = CREAM;
+  ctx.font = `italic 500 43px ${displayFamily}, Georgia, serif`;
+  ctx.fillText("Still, We Grow.", 134, 1654);
   ctx.font = `400 25px ${uiFamily}, Arial, sans-serif`;
-  ctx.fillText("TEDxUniversitasIndonesia", 134, 1662);
+  ctx.fillText("TEDxUniversitasIndonesia", 134, 1714);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(

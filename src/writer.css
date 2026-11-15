@@ -1,0 +1,304 @@
+.writer {
+  width: min(calc(100% - 40px), 790px);
+  margin: 0 auto;
+  padding: 8px 0 28px;
+}
+.writer-heading-row {
+  text-align: center;
+}
+.writer-back,
+.writer-inline-button,
+.writer-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 13px;
+  padding: 8px 5px;
+}
+.writer-back:hover,
+.writer-remove:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.writer-heading-row h1 {
+  font-family: var(--display, LetterDisplay, Georgia, serif);
+  font-weight: 500;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.07;
+  margin: 12px 0 14px;
+  padding-bottom: 5px;
+  outline: none;
+}
+.writer-introduction {
+  max-width: 460px;
+  margin: 0 auto 18px;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.writer-privacy {
+  max-width: 620px;
+  margin: 0 auto 24px;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 1.65;
+  text-align: center;
+}
+.writer-paper {
+  position: relative;
+  background: var(--paper, #fffbe9);
+  color: var(--ink, #302b20);
+  padding: clamp(24px, 6vw, 56px);
+  border: 1px solid #d9cfaf;
+  border-radius: 3px 5px 3px 4px;
+  box-shadow: 0 8px 22px #26301120;
+  min-width: 0;
+}
+.writer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.writer-form label {
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 20px;
+}
+.writer-form label:first-child {
+  margin-top: 0;
+}
+.writer-form label span {
+  color: #6f6a57;
+}
+.writer-form input,
+.writer-form textarea {
+  width: 100%;
+  min-width: 0;
+  background: #fffdf5;
+  color: #302b20;
+  border: 1px solid #b6af92;
+  border-radius: 0;
+  padding: 12px 14px;
+  font-family: var(--reading, "Courier New", monospace);
+  font-size: 17px;
+  line-height: 1.65;
+}
+.writer-form input {
+  min-height: 50px;
+}
+.writer-form textarea {
+  min-height: 310px;
+  resize: vertical;
+  overflow-wrap: anywhere;
+}
+.writer-form input::placeholder,
+.writer-form textarea::placeholder {
+  color: #797460;
+  opacity: 1;
+}
+.writer-form input:focus-visible,
+.writer-form textarea:focus-visible,
+.writer-paper button:focus-visible {
+  outline: 3px solid #697b3c;
+  outline-offset: 3px;
+}
+.writer-length {
+  align-self: flex-end;
+  margin: -2px 0 0;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 11px;
+  color: #6f6a57;
+  line-height: 1.5;
+}
+.writer-preview-button,
+.writer-save,
+.writer-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 12px 18px;
+  min-height: 49px;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.writer-preview-button {
+  align-self: flex-start;
+  margin-top: 18px;
+  background: #53632f;
+  color: #fffbe9;
+  border-color: #53632f;
+}
+.writer-preview-button:hover {
+  background: #415125;
+}
+.writer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+.writer-save {
+  background: var(--paper, #fffbe9);
+  color: var(--ink, #302b20);
+  border-color: var(--paper, #fffbe9);
+}
+.writer-download {
+  color: inherit;
+  background: transparent;
+}
+.writer-save:hover,
+.writer-download:hover {
+  filter: brightness(0.96);
+}
+.writer-feedback {
+  margin: 14px auto 0;
+  max-width: 620px;
+  text-align: center;
+}
+.writer-status,
+.writer-error {
+  margin: 0;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.writer-error {
+  padding: 10px 13px;
+  background: #fffbe9;
+  color: #8d2c1e;
+  border: 1px solid #d8ba97;
+}
+.writer-remove {
+  display: flex;
+  margin: 9px auto 0;
+  max-width: 100%;
+  text-align: center;
+  white-space: normal;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.writer-device-note {
+  max-width: 550px;
+  margin: 13px auto 0;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: center;
+}
+.writer-preview-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 22px;
+  font-family: var(--ui, Arial, sans-serif);
+  font-size: 12px;
+  color: #625d49;
+}
+.writer-preview-topline span {
+  white-space: nowrap;
+}
+.writer-inline-button {
+  padding: 6px 0;
+  color: #4a5e2d;
+}
+.writer-inline-button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.writer-preview h2 {
+  font-family: var(--reading, "Courier New", monospace);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  margin: 0 0 25px;
+  outline: none;
+}
+.writer-preview-body,
+.writer-signature {
+  font-family: var(--reading, "Courier New", monospace);
+  font-size: 18px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.writer-signature {
+  margin: 30px 0 0;
+  font-style: italic;
+}
+@media (max-width: 560px) {
+  .writer {
+    width: calc(100% - 32px);
+    padding-top: 0;
+  }
+  .writer-introduction {
+    font-size: 14px;
+  }
+  .writer-privacy {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .writer-paper {
+    padding: 25px 20px;
+  }
+  .writer-form textarea {
+    min-height: 320px;
+  }
+  .writer-actions {
+    gap: 10px;
+    align-items: stretch;
+  }
+  .writer-save,
+  .writer-download {
+    flex: 1 1 230px;
+  }
+  .writer-preview-topline {
+    gap: 8px;
+    font-size: 11px;
+  }
+  .writer-inline-button {
+    font-size: 11px;
+  }
+  .writer-preview h2 {
+    font-size: 20px;
+  }
+  .writer-preview-body,
+  .writer-signature {
+    font-size: 17px;
+    line-height: 1.7;
+  }
+}
+@media (forced-colors: active) {
+  .writer-paper,
+  .writer-error {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+  .writer-form input,
+  .writer-form textarea {
+    background: Field;
+    color: FieldText;
+    border-color: FieldText;
+  }
+  .writer-preview-button,
+  .writer-save,
+  .writer-download {
+    border: 1px solid ButtonText;
+    color: ButtonText;
+    background: ButtonFace;
+  }
+}
