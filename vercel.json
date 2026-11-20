@@ -2,19 +2,39 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "headers": [
+  "functions": {
+    "api/page.js": {
+      "includeFiles": "dist/index.html"
+    }
+  },
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
+      "src": "^/(.*)$",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "X-Frame-Options": "DENY"
+      },
+      "continue": true
+    },
+    {
+      "src": "^/$",
+      "dest": "/api/page"
+    },
+    {
+      "src": "^/index\\.html$",
+      "dest": "/api/page"
+    },
+    {
+      "src": "^/api/(letters(?:/[^/]+)?|rotation|community|reports)$",
+      "dest": "/api/handler?__ltg_route=$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/api/.*$",
+      "status": 404
     }
   ]
 }

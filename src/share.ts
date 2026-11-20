@@ -1,110 +1,72 @@
-/**
- * A locally generated Story-sized image, ready before a share-button click.
- * No text, images or drafts are sent to a server by this module.
- */
+/** The preview, downloaded PNG and native shared file all use these same bytes. */
 export interface ShareCard {
   blob: Blob;
   url: string;
   file: File;
 }
 
-type CardInput = {
+export type CardInput = {
   excerpt: string;
   salutation: string;
   letterUrl: string;
+  signoff: string;
+  origin: "editorial" | "community";
 };
 
 const WIDTH = 1080;
 const HEIGHT = 1920;
-const INK = "#302b20";
-const MOSS = "#69783e";
-const CREAM = "#fffbe9";
-const RED = "#d8311f";
+const CREAM = "#FFFBED";
+const INK = "#302B20";
+const OLIVE = "#57652E";
+const RED = "#CA301D";
+const graphemeSegmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
 
-function wrapText(
-  ctx: CanvasRenderingContext2D,
-  value: string,
-  width: number,
-): string[] {
+function wrapText(ctx: CanvasRenderingContext2D, value: string, width: number): string[] {
   const words = value.trim().split(/\s+/u).filter(Boolean);
   const lines: string[] = [];
   let current = "";
-
   for (const word of words) {
-    // Long URLs or unbroken words must fit too. Break at Unicode characters,
-    // rather than assuming every input contains conveniently short words.
     if (ctx.measureText(word).width > width) {
-      if (current) {
-        lines.push(current);
-        current = "";
+      if (current) lines.push(current);
+      current = "";
+      for (const { segment } of graphemeSegmenter.segment(word)) {
+        if (current && ctx.measureText(current + segment).width > width) {
+          lines.push(current);
+          current = segment;
+        } else current += segment;
       }
-      let piece = "";
-      for (const character of Array.from(word)) {
-        if (piece && ctx.measureText(piece + character).width > width) {
-          lines.push(piece);
-          piece = character;
-        } else {
-          piece += character;
-        }
-      }
-      current = piece;
       continue;
     }
-
     const next = current ? `${current} ${word}` : word;
     if (current && ctx.measureText(next).width > width) {
       lines.push(current);
       current = word;
-    } else {
-      current = next;
-    }
+    } else current = next;
   }
   if (current) lines.push(current);
   return lines;
 }
 
-/** Decoration is optional: never make an image wait on the network. */
-function settleWithin<T>(
-  task: Promise<T>,
-  fallback: T,
-  milliseconds = 1000,
-): Promise<T> {
-  return new Promise<T>((resolve) => {
+function settleWithin<T>(task: Promise<T>, fallback: T, milliseconds = 2000): Promise<T> {
+  return new Promise((resolve) => {
     const timeout = window.setTimeout(() => resolve(fallback), milliseconds);
-    task.then(
-      (value) => {
-        window.clearTimeout(timeout);
-        resolve(value);
-      },
-      () => {
-        window.clearTimeout(timeout);
-        resolve(fallback);
-      },
-    );
+    task.then((value) => { window.clearTimeout(timeout); resolve(value); },
+      () => { window.clearTimeout(timeout); resolve(fallback); });
   });
 }
 
 const loadedArtwork = new Map<string, HTMLImageElement>();
 const pendingArtwork = new Map<string, Promise<HTMLImageElement | null>>();
-function optionalArtwork(path: string): Promise<HTMLImageElement | null> {
+function artwork(path: string): Promise<HTMLImageElement | null> {
   const ready = loadedArtwork.get(path);
   if (ready) return Promise.resolve(ready);
   let pending = pendingArtwork.get(path);
   if (!pending) {
-    pending = new Promise<HTMLImageElement | null>((resolve) => {
+    pending = new Promise((resolve) => {
       const image = new Image();
       image.onload = () => {
-        const decoded =
-          typeof image.decode === "function"
-            ? image.decode()
-            : Promise.resolve();
-        decoded.then(
-          () => {
-            loadedArtwork.set(path, image);
-            resolve(image);
-          },
-          () => resolve(null),
-        );
+        const decoded = image.decode ? image.decode() : Promise.resolve();
+        decoded.then(() => { loadedArtwork.set(path, image); resolve(image); }, () => resolve(null));
       };
       image.onerror = () => resolve(null);
       image.src = path;
@@ -112,243 +74,143 @@ function optionalArtwork(path: string): Promise<HTMLImageElement | null> {
     pendingArtwork.set(path, pending);
     void pending.then(() => pendingArtwork.delete(path));
   }
-  // If loading finishes after this deadline, cache it for the next card.
   return settleWithin(pending, null);
 }
 
-const availableFonts = new Set<string>();
-async function optionalFonts(): Promise<void> {
-  if (!document.fonts || typeof document.fonts.load !== "function") return;
-  const specs = [
-    ["LetterDisplay", "italic 500 140px LetterDisplay"],
-    ["LetterTypewriter", "400 60px LetterTypewriter"],
-    ["CampaignSans", "400 24px CampaignSans"],
-  ];
-  const loading = Promise.all(
-    specs.map(async ([family, specification]) => {
-      if (availableFonts.has(family)) return;
-      try {
-        const faces = await document.fonts.load(specification);
-        if (faces.some((face) => face.status === "loaded"))
-          availableFonts.add(family);
-      } catch {
-        // The system font is part of the design's readable fallback.
-      }
-    }),
-  ).then(() => undefined);
-  await settleWithin(loading, undefined);
+async function loadFonts(): Promise<void> {
+  if (!document.fonts) return;
+  await settleWithin(Promise.all([
+    document.fonts.load("500 70px LetterDisplay"),
+    document.fonts.load("italic 500 120px LetterDisplay"),
+    document.fonts.load("400 28px CampaignSans"),
+  ]).then(() => undefined), undefined);
+}
+
+function drawContained(ctx: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number): void {
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const w = image.naturalWidth * scale;
+  const h = image.naturalHeight * scale;
+  ctx.drawImage(image, x + (width - w) / 2, y + (height - h) / 2, w, h);
+}
+
+function drawCover(ctx: CanvasRenderingContext2D, image: HTMLImageElement): void {
+  const scale = Math.max(WIDTH / image.naturalWidth, HEIGHT / image.naturalHeight);
+  const w = image.naturalWidth * scale;
+  const h = image.naturalHeight * scale;
+  ctx.drawImage(image, (WIDTH - w) / 2, (HEIGHT - h) / 2, w, h);
+}
+
+/** A scalloped paper silhouette also works when decorative artwork is unavailable. */
+function fallbackHeart(ctx: CanvasRenderingContext2D): void {
+  const path = new Path2D();
+  path.moveTo(540, 680);
+  path.bezierCurveTo(270, 420, 30, 620, 80, 920);
+  path.bezierCurveTo(110, 1150, 330, 1390, 540, 1530);
+  path.bezierCurveTo(750, 1390, 970, 1150, 1000, 920);
+  path.bezierCurveTo(1050, 620, 810, 420, 540, 680);
+  path.closePath();
+  ctx.fillStyle = CREAM;
+  ctx.fill(path);
+  ctx.save();
+  ctx.strokeStyle = CREAM;
+  ctx.lineWidth = 28;
+  ctx.lineCap = "round";
+  ctx.setLineDash([1, 34]);
+  ctx.stroke(path);
+  ctx.restore();
 }
 
 function filenameFromUrl(value: string): string {
-  try {
-    const parsed = new URL(value, window.location.href);
-    const id =
-      parsed.searchParams.get("letter") ||
-      parsed.searchParams.get("id") ||
-      "excerpt";
-    return `letters-to-grow-${id.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 60) || "excerpt"}.png`;
-  } catch {
-    return "letters-to-grow-excerpt.png";
-  }
-}
-
-/** Keep the collage natural without stretching its flowers or leaves. */
-function drawContained(
-  ctx: CanvasRenderingContext2D,
-  image: HTMLImageElement | null,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-): void {
-  if (!image?.naturalWidth || !image.naturalHeight) return;
-  const scale = Math.min(
-    width / image.naturalWidth,
-    height / image.naturalHeight,
-  );
-  const drawnWidth = image.naturalWidth * scale;
-  const drawnHeight = image.naturalHeight * scale;
-  ctx.drawImage(
-    image,
-    x + (width - drawnWidth) / 2,
-    y + (height - drawnHeight) / 2,
-    drawnWidth,
-    drawnHeight,
-  );
+  const parsed = new URL(value, window.location.href);
+  const id = parsed.searchParams.get("letter") || "excerpt";
+  return `letters-to-grow-${id.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80) || "excerpt"}.png`;
 }
 
 export async function createShareCard(input: CardInput): Promise<ShareCard> {
-  if (!input.excerpt.trim())
-    throw new Error("Choose a sentence before making a card.");
-
-  const [grain, paper, sprig, flower] = await Promise.all([
-    optionalArtwork("/art/black-paper.webp"),
-    optionalArtwork("/art/letter-paper.webp"),
-    optionalArtwork("/art/botanical-sprig.webp"),
-    optionalArtwork("/art/white-flower.webp"),
-    optionalFonts(),
+  if (!input.excerpt.trim()) throw new Error("Choose a sentence before making a card.");
+  const [ground, heart, logo] = await Promise.all([
+    artwork("/art/olive-ground.webp"),
+    artwork("/art/heart-paper.webp"),
+    artwork("/art/tedx-logo.png"),
+    loadFonts(),
   ]);
-  const displayFamily = availableFonts.has("LetterDisplay")
-    ? "LetterDisplay"
-    : "Georgia";
-  const readingFamily = availableFonts.has("LetterTypewriter")
-    ? "LetterTypewriter"
-    : '"Courier New"';
-  const uiFamily = availableFonts.has("CampaignSans")
-    ? "CampaignSans"
-    : "Arial";
-
+  if (!logo) throw new Error("The campaign mark could not load. Try preparing the image again.");
   const canvas = document.createElement("canvas");
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
   const ctx = canvas.getContext("2d");
-  if (!ctx)
-    throw new Error(
-      "This browser could not create an image. Copy the letter link instead.",
-    );
+  if (!ctx) throw new Error("This browser could not create an image. Copy the letter link instead.");
 
-  // Colour and legibility never depend on an illustration or font arriving.
-  ctx.fillStyle = MOSS;
+  ctx.fillStyle = OLIVE;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  if (grain?.naturalWidth && grain.naturalHeight) {
-    const scale = Math.max(
-      WIDTH / grain.naturalWidth,
-      HEIGHT / grain.naturalHeight,
-    );
-    const width = grain.naturalWidth * scale;
-    const height = grain.naturalHeight * scale;
-    ctx.save();
-    ctx.globalCompositeOperation = "soft-light";
-    ctx.globalAlpha = 0.2;
-    ctx.drawImage(
-      grain,
-      (WIDTH - width) / 2,
-      (HEIGHT - height) / 2,
-      width,
-      height,
-    );
-    ctx.restore();
-  }
+  if (ground) drawCover(ctx, ground);
+  ctx.fillStyle = "rgba(44, 53, 24, .1)";
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Two small botanical pieces sit behind the paper, never over its words.
-  ctx.save();
-  ctx.translate(900, 654);
-  ctx.rotate(0.2);
-  drawContained(ctx, sprig, -145, -270, 290, 540);
-  ctx.restore();
-  drawContained(ctx, flower, 12, 1288, 275, 320);
-
-  ctx.textAlign = "left";
+  ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = CREAM;
-  let displaySize = 140;
-  do {
-    ctx.font = `italic 500 ${displaySize}px ${displayFamily}, Georgia, serif`;
-    if (ctx.measureText("Letters to").width <= 790) break;
-    displaySize -= 2;
-  } while (displaySize > 80);
-  ctx.fillText("Letters to", 129, 321);
-  ctx.font = `italic 500 ${Math.min(displaySize + 8, 148)}px ${displayFamily}, Georgia, serif`;
-  ctx.fillText("Grow", 256, 434);
-  const growWidth = ctx.measureText("Grow").width;
+  ctx.font = "400 24px CampaignSans, Arial, sans-serif";
+  ctx.fillText("STILL, WE GROW", 540, 286);
+  ctx.font = "italic 500 114px LetterDisplay, Georgia, serif";
+  ctx.fillText("Letters to Grow", 530, 412);
+  const titleWidth = ctx.measureText("Letters to Grow").width;
   ctx.fillStyle = RED;
-  ctx.fillText(".", 256 + growWidth + 3, 434);
+  ctx.beginPath();
+  ctx.arc(530 + titleWidth / 2 + 12, 404, 6, 0, Math.PI * 2);
+  ctx.fill();
 
-  // A complete cream page is present even with all decorative assets blocked.
-  const page = new Path2D();
-  page.moveTo(134, 552);
-  page.lineTo(941, 548);
-  page.lineTo(950, 577);
-  page.lineTo(946, 932);
-  page.lineTo(952, 1304);
-  page.lineTo(941, 1538);
-  page.lineTo(135, 1540);
-  page.lineTo(127, 1308);
-  page.lineTo(132, 925);
-  page.lineTo(126, 580);
-  page.closePath();
-  ctx.save();
-  ctx.shadowColor = "rgba(32, 43, 17, 0.16)";
-  ctx.shadowBlur = 32;
-  ctx.shadowOffsetY = 9;
-  ctx.fillStyle = CREAM;
-  ctx.fill(page);
-  ctx.restore();
-  if (paper?.naturalWidth && paper.naturalHeight) {
-    ctx.save();
-    ctx.clip(page);
-    // The same tactile artwork as the on-screen letter, softly blended into cream.
-    ctx.globalAlpha = 0.6;
-    ctx.drawImage(paper, 104, 524, 872, 1040);
-    ctx.restore();
-  }
+  if (heart) drawContained(ctx, heart, 20, 520, 1040, 1040);
+  else fallbackHeart(ctx);
 
-  const left = 177;
-  const textWidth = 726;
-  ctx.fillStyle = INK;
-  ctx.font = `400 29px ${readingFamily}, monospace`;
-  const salutationLines = wrapText(ctx, input.salutation, textWidth);
-  salutationLines.forEach((text, index) =>
-    ctx.fillText(text, left, 668 + index * 40),
-  );
-
-  const quoteTop = Math.max(778, 710 + salutationLines.length * 40);
-  const quoteBottom = 1382;
-  const availableHeight = quoteBottom - quoteTop;
-  let quoteSize = 58;
+  // The broad central area remains clear of both the notch and tapered point.
+  const quoteWidth = 712;
+  let quoteSize = 72;
   let quoteLines: string[] = [];
-  for (; quoteSize >= 24; quoteSize -= 2) {
-    ctx.font = `400 ${quoteSize}px ${readingFamily}, monospace`;
-    quoteLines = wrapText(ctx, input.excerpt, textWidth);
-    if (quoteLines.length * quoteSize * 1.29 <= availableHeight) break;
+  for (; quoteSize >= 62; quoteSize -= 2) {
+    ctx.font = `500 ${quoteSize}px LetterDisplay, Georgia, serif`;
+    quoteLines = wrapText(ctx, input.excerpt, quoteWidth);
+    if (quoteLines.length * quoteSize * 1.08 <= 454) break;
   }
-  if (quoteSize < 24)
-    throw new Error(
-      "This excerpt is too long for a Story card. Choose a shorter sentence.",
-    );
+  if (quoteSize < 62) {
+    throw new Error("This line is too long for a readable Story card. Choose a shorter passage.");
+  }
+  const lineHeight = quoteSize * 1.08;
+  const quoteTop = 773 + (454 - quoteLines.length * lineHeight) / 2;
+  ctx.fillStyle = RED;
+  ctx.font = "italic 500 100px LetterDisplay, Georgia, serif";
+  ctx.fillText("“", 540, 775);
   ctx.fillStyle = INK;
-  const lineHeight = quoteSize * 1.29;
-  const textHeight = quoteLines.length * lineHeight;
-  const firstBaseline =
-    quoteTop + Math.max(0, (availableHeight - textHeight) / 2) + quoteSize;
-  quoteLines.forEach((text, index) =>
-    ctx.fillText(text, left, firstBaseline + index * lineHeight),
-  );
+  ctx.font = `500 ${quoteSize}px LetterDisplay, Georgia, serif`;
+  quoteLines.forEach((line, index) => ctx.fillText(line, 540, quoteTop + quoteSize + index * lineHeight));
 
-  ctx.fillStyle = "#69634e";
-  ctx.font = `400 23px ${readingFamily}, monospace`;
-  ctx.fillText("Example letter", left, 1478);
+  // The exact byline is always rendered, including anonymous public letters.
+  ctx.font = "500 34px LetterDisplay, Georgia, serif";
+  const signature = input.signoff.trim() || "Anonymous";
+  const signatureLines = wrapText(ctx, signature, 514);
+  if (signatureLines.length > 3) throw new Error("This signature is too long for the Story card.");
+  signatureLines.forEach((line, index) => ctx.fillText(line, 540, 1252 + index * 37));
+  ctx.fillStyle = "#70694F";
+  ctx.font = "400 23px CampaignSans, Arial, sans-serif";
+  ctx.fillText(input.origin === "editorial" ? "Fictional editorial letter" : "Community letter", 540, 1377);
+  drawContained(ctx, logo, 402, 1392, 276, 68);
 
   ctx.fillStyle = CREAM;
-  ctx.font = `italic 500 43px ${displayFamily}, Georgia, serif`;
-  ctx.fillText("Still, We Grow.", 134, 1654);
-  ctx.font = `400 25px ${uiFamily}, Arial, sans-serif`;
-  ctx.fillText("TEDxUniversitasIndonesia", 134, 1714);
+  ctx.font = "italic 500 42px LetterDisplay, Georgia, serif";
+  ctx.fillText("A little more room to grow.", 540, 1610);
+  const address = new URL(input.letterUrl, window.location.href);
+  const host = address.host;
+  const isLocalAddress = address.hostname === "localhost" || address.hostname === "127.0.0.1" || address.hostname === "[::1]";
+  ctx.font = "400 22px CampaignSans, Arial, sans-serif";
+  if (!isLocalAddress && ctx.measureText(host).width < 820) ctx.fillText(host, 540, 1650);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(
-      (result) =>
-        result
-          ? resolve(result)
-          : reject(
-              new Error(
-                "The image could not be prepared. Try again or copy the letter link.",
-              ),
-            ),
-      "image/png",
-    );
+    canvas.toBlob((result) => result ? resolve(result) : reject(new Error("The image could not be prepared. Try again or copy the letter link.")), "image/png");
   });
-
-  return {
-    blob,
-    url: URL.createObjectURL(blob),
-    file: new File([blob], filenameFromUrl(input.letterUrl), {
-      type: "image/png",
-    }),
-  };
+  return { blob, url: URL.createObjectURL(blob), file: new File([blob], filenameFromUrl(input.letterUrl), { type: "image/png" }) };
 }
 
-/** The caller retains ownership of card.url and revokes it when its preview closes. */
+/** The preview owner revokes card.url after it is replaced or dismissed. */
 export function downloadCard(card: ShareCard): void {
   const anchor = document.createElement("a");
   anchor.href = card.url;
@@ -359,28 +221,15 @@ export function downloadCard(card: ShareCard): void {
   anchor.remove();
 }
 
-/**
- * Call directly from a click with a card that has already been generated.
- * No awaited work runs before navigator.share, preserving transient activation.
- * "shared" means handed to the OS share flow, not published to a social account.
- */
-export async function shareCard(
-  card: ShareCard,
-): Promise<"shared" | "cancelled" | "downloaded"> {
+/** Invoke directly from a tap with a prepared file to preserve user activation. */
+export async function shareCard(card: ShareCard): Promise<"shared" | "cancelled" | "downloaded"> {
   try {
-    if (
-      typeof navigator.share === "function" &&
-      typeof navigator.canShare === "function" &&
-      navigator.canShare({ files: [card.file] })
-    ) {
+    if (typeof navigator.share === "function" && typeof navigator.canShare === "function" && navigator.canShare({ files: [card.file] })) {
       await navigator.share({ files: [card.file] });
       return "shared";
     }
   } catch (error) {
-    if (error instanceof Error && error.name === "AbortError")
-      return "cancelled";
-    // Permissions, unsupported targets and in-app browser errors all retain
-    // a useful fallback. A user cancellation deliberately does not download.
+    if (error instanceof Error && error.name === "AbortError") return "cancelled";
   }
   downloadCard(card);
   return "downloaded";
@@ -391,7 +240,5 @@ export async function copyLink(url: string): Promise<boolean> {
     if (!navigator.clipboard?.writeText) return false;
     await navigator.clipboard.writeText(url);
     return true;
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }

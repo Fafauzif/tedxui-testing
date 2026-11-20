@@ -47,3 +47,16 @@ All fonts are bundled locally. The relevant upstream Open Font License text file
 | Controls and labels | DM Sans | `sans.woff2`; `DM-Sans-OFL.txt` |
 
 Earlier Barlow Condensed, Caveat, Archivo Black and Source Serif 4 files/licences remain for replacement compatibility. An unused local font file does not cause a runtime network request. Cormorant Garamond is a chosen substitute for the supplied references, not a claim about the exact official brand typeface.
+
+## Letters to Grow release artwork
+
+The campaign heart tile and supplied campaign grids informed the release composition. The site and Story use original GPT Image materials. Canvas draws the quotation, sign-off, campaign name, attribution, supplied mark and deployment host as independent layers.
+
+| Runtime asset | Master and use | Fallback |
+| --- | --- | --- |
+| `heart-paper.webp` | `production-art/masters/heart-paper.png`, 1,254 × 1,254 RGBA. WebP derivative for the Story heart. | Canvas scalloped cut-paper silhouette |
+| `olive-ground.webp` | `production-art/masters/olive-ground.png`, 1,086 × 1,448 RGB. WebP derivative for the website and Story ground. | Solid olive |
+| `social-cover.png` | 1,200 × 630 artwork composed in code using the ground, heart, supplied mark and campaign typography. | Per-letter title and description in the HTML |
+| `white-flower.webp` | Supplied source snapshot's original GPT Image flower. Used on the reader's identity rail and the social cover. | Paper and type carry the composition |
+
+The built-in GPT Image tool generated the two new masters. The paper prompt called for a front-on, warm ivory scalloped heart with a lightly embossed rim, broad blank center, faint paper fibres and transparent surroundings. The ground prompt called for muted olive screenprinted paper with uneven grain, a quiet center and soft botanical shadows near the corners. Both prompts excluded lettering and logos. The release uses Source Serif 4 for letter paragraphs, Cormorant Garamond for display and DM Sans for controls.

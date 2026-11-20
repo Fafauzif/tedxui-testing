@@ -7,14 +7,18 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "check": "tsc -b",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "start": "node --env-file-if-exists=.env server/local.mjs",
+    "seed:generate": "node scripts/generate-seed.mjs",
+    "test:backend": "node --test tests/*.test.mjs"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "@phosphor-icons/react": "^2.1.10"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.17",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "typescript": "~5.9.3",
