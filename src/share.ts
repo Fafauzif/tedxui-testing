@@ -12,6 +12,7 @@ export type CardInput = {
   letterUrl: string;
   signoff: string;
   origin: "editorial" | "community";
+  sample?: boolean;
   format?: CardFormat;
   style?: CardStyle;
 };
@@ -28,10 +29,10 @@ export const CARD_STYLES: Record<CardStyle, string> = {
   square: "Square",
   folded: "Folded Letter",
 };
-const CREAM = "#f9f6e9";
+const CREAM = "#fff7e6";
 const INK = "#263324";
-const OLIVE = "#37452d";
-const CLAY = "#b58d75";
+const MOSS = "#293923";
+const PARCHMENT = "#eee2c9";
 const RED = "#e63322";
 const SANS =
   '"Helvetica Neue", CampaignSans, "Liberation Sans", Arial, sans-serif';
@@ -39,6 +40,11 @@ const DISPLAY = "LetterDisplay, Georgia, serif";
 const SCRIPT = "CampaignScript, Georgia, serif";
 const graphemeSegmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
 type Box = { x: number; y: number; width: number; height: number };
+type CardArtwork = {
+  ground: HTMLImageElement | null;
+  flower: HTMLImageElement | null;
+  sprig: HTMLImageElement | null;
+};
 
 function wrapText(
   ctx: CanvasRenderingContext2D,
@@ -162,6 +168,41 @@ function cover(
   const w = image.naturalWidth * scale;
   const h = image.naturalHeight * scale;
   ctx.drawImage(image, (width - w) / 2, (height - h) / 2, w, h);
+}
+function cutout(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  x: number,
+  y: number,
+  width: number,
+  degrees: number,
+): void {
+  const height = width * (image.naturalHeight / image.naturalWidth);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate((degrees * Math.PI) / 180);
+  ctx.drawImage(image, -width / 2, -height / 2, width, height);
+  ctx.restore();
+}
+function drawGround(
+  ctx: CanvasRenderingContext2D,
+  format: CardFormat,
+  art: CardArtwork,
+): void {
+  const height = CARD_FORMATS[format].height;
+  ctx.fillStyle = MOSS;
+  ctx.fillRect(0, 0, 1080, height);
+  if (art.ground) {
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    cover(ctx, art.ground, 1080, height);
+    ctx.restore();
+  }
+  const story = format === "story";
+  if (art.flower)
+    cutout(ctx, art.flower, 1035, story ? 370 : 250, story ? 530 : 385, -20);
+  if (art.sprig)
+    cutout(ctx, art.sprig, 115, height - (story ? 267 : 124), story ? 685 : 560, -38);
 }
 function textBlock(
   ctx: CanvasRenderingContext2D,
@@ -292,7 +333,7 @@ function attribution(
 ): void {
   textBlock(ctx, input.signoff.trim() || "Anonymous", box, {
     max: 32,
-    min: 20,
+    min: 18,
     family: SANS,
     center,
     color,
@@ -311,9 +352,11 @@ function originLine(
   ctx.textAlign = center ? "center" : "left";
   ctx.fillStyle = color;
   ctx.fillText(
-    input.origin === "editorial"
-      ? "Fictional editorial letter"
-      : "Community letter",
+    input.sample
+      ? "Sample letter"
+      : input.origin === "editorial"
+        ? "Fictional editorial letter"
+        : "Community letter",
     x,
     y,
   );
@@ -323,19 +366,8 @@ function drawHeart(
   input: CardInput,
   format: CardFormat,
   heart: HTMLImageElement | null,
-  ground: HTMLImageElement | null,
   logo: HTMLImageElement,
 ): void {
-  const height = CARD_FORMATS[format].height;
-  ctx.fillStyle = OLIVE;
-  ctx.fillRect(0, 0, 1080, height);
-  if (ground) {
-    ctx.save();
-    ctx.globalAlpha = 0.17;
-    cover(ctx, ground, 1080, height);
-    ctx.restore();
-  }
-  header(ctx, format, CREAM);
   const size = format === "story" ? 1010 : format === "portrait" ? 990 : 844;
   const y = format === "story" ? 500 : format === "portrait" ? 280 : 214;
   const paper = { x: (1080 - size) / 2, y, width: size, height: size };
@@ -353,7 +385,7 @@ function drawHeart(
   ctx.fillText("“", 540, y + size * 0.25);
   textBlock(ctx, input.excerpt, quote, {
     max: format === "square" ? 62 : 72,
-    min: format === "square" ? 36 : 42,
+    min: format === "square" ? 22 : 26,
     center: true,
     lineHeight: 1.08,
   });
@@ -366,7 +398,7 @@ function drawHeart(
   originLine(ctx, input, 540, y + size * 0.805, INK, true);
   contain(ctx, logo, { x: 418, y: y + size * 0.825, width: 244, height: 58 });
   if (format === "story") hostLine(ctx, input, 1640, CREAM);
-  if (format === "portrait") hostLine(ctx, input, 1300, INK);
+  if (format === "portrait") hostLine(ctx, input, 1315, CREAM);
 }
 function drawSquare(
   ctx: CanvasRenderingContext2D,
@@ -375,19 +407,11 @@ function drawSquare(
   logo: HTMLImageElement,
 ): void {
   const height = CARD_FORMATS[format].height;
-  ctx.fillStyle = CREAM;
-  ctx.fillRect(0, 0, 1080, height);
-  header(ctx, format, INK);
   const y = format === "story" ? 505 : format === "portrait" ? 318 : 238;
   const bottom = format === "story" ? 1515 : height - 90;
   const boxHeight = bottom - y;
-  ctx.fillStyle = OLIVE;
+  ctx.fillStyle = CREAM;
   ctx.fillRect(80, y, 920, boxHeight);
-  ctx.strokeStyle = "rgba(249,246,233,.35)";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(100, y + 20, 880, boxHeight - 40);
-  ctx.fillStyle = CLAY;
-  ctx.fillRect(80, y, 920, 9);
   ctx.fillStyle = RED;
   ctx.textAlign = "left";
   ctx.font = `400 100px ${DISPLAY}`;
@@ -399,27 +423,21 @@ function drawSquare(
     { x: 145, y: y + 128, width: 790, height: quoteHeight },
     {
       max: format === "square" ? 62 : 78,
-      min: format === "square" ? 38 : 44,
-      color: CREAM,
+      min: 26,
       lineHeight: 1.16,
     },
   );
   const signatureY = bottom - 203;
-  ctx.strokeStyle = "rgba(249,246,233,.3)";
-  ctx.beginPath();
-  ctx.moveTo(145, signatureY - 22);
-  ctx.lineTo(935, signatureY - 22);
-  ctx.stroke();
   attribution(
     ctx,
     input,
     { x: 145, y: signatureY, width: 790, height: 76 },
-    CREAM,
+    INK,
     false,
   );
-  originLine(ctx, input, 145, bottom - 91, "#e2e2d1", false);
+  originLine(ctx, input, 145, bottom - 91, INK, false);
   contain(ctx, logo, { x: 685, y: bottom - 88, width: 250, height: 58 });
-  if (format === "story") hostLine(ctx, input, 1640, INK);
+  if (format === "story") hostLine(ctx, input, 1640, CREAM);
 }
 function drawFolded(
   ctx: CanvasRenderingContext2D,
@@ -428,14 +446,9 @@ function drawFolded(
   logo: HTMLImageElement,
 ): void {
   const height = CARD_FORMATS[format].height;
-  ctx.fillStyle = CLAY;
-  ctx.fillRect(0, 0, 1080, height);
-  header(ctx, format, INK);
   const y = format === "story" ? 505 : format === "portrait" ? 315 : 232;
   const bottom = format === "story" ? 1520 : height - 70;
   const paperHeight = bottom - y;
-  ctx.fillStyle = "rgba(38,51,36,.1)";
-  ctx.fillRect(93, y + 14, 900, paperHeight);
   const paper = new Path2D();
   paper.moveTo(80, y);
   paper.lineTo(902, y);
@@ -443,21 +456,15 @@ function drawFolded(
   paper.lineTo(1000, bottom);
   paper.lineTo(80, bottom);
   paper.closePath();
-  ctx.fillStyle = CREAM;
+  ctx.fillStyle = PARCHMENT;
   ctx.fill(paper);
-  ctx.fillStyle = "#d8d5c6";
+  ctx.fillStyle = "#d1c3a5";
   ctx.beginPath();
   ctx.moveTo(902, y);
   ctx.lineTo(902, y + 98);
   ctx.lineTo(1000, y + 98);
   ctx.closePath();
   ctx.fill();
-  ctx.strokeStyle = "#deddd0";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(80, bottom - 143);
-  ctx.lineTo(1000, bottom - 143);
-  ctx.stroke();
   ctx.fillStyle = RED;
   ctx.textAlign = "left";
   ctx.font = `400 100px ${DISPLAY}`;
@@ -468,7 +475,7 @@ function drawFolded(
     { x: 145, y: y + 133, width: 780, height: paperHeight - 365 },
     {
       max: format === "square" ? 60 : 74,
-      min: format === "square" ? 38 : 44,
+      min: 26,
       lineHeight: 1.17,
     },
   );
@@ -481,23 +488,21 @@ function drawFolded(
   );
   originLine(ctx, input, 145, bottom - 84, INK, false);
   contain(ctx, logo, { x: 685, y: bottom - 107, width: 250, height: 60 });
-  if (format === "story") hostLine(ctx, input, 1640, INK);
+  if (format === "story") hostLine(ctx, input, 1640, CREAM);
 }
 export async function createShareCard(input: CardInput): Promise<ShareCard> {
   if (!input.excerpt.trim())
     throw new Error("Choose a sentence before making a card.");
   const format = input.format || "story";
   const style = input.style || "heart";
-  const [heart, ground, logo] = await Promise.all([
+  const [heart, ground, flower, sprig, logo] = await Promise.all([
     style === "heart"
       ? artwork("/art/heart-paper.webp")
       : Promise.resolve(null),
-    style === "heart"
-      ? artwork("/art/olive-ground.webp")
-      : Promise.resolve(null),
-    artwork(
-      style === "square" ? "/art/tedx-logo-light.png" : "/art/tedx-logo.png",
-    ),
+    artwork("/art/olive-ground.webp"),
+    artwork("/art/white-flower.webp"),
+    artwork("/art/botanical-sprig.webp"),
+    artwork("/art/tedx-logo.png"),
     loadFonts(),
   ]);
   if (!logo)
@@ -513,7 +518,9 @@ export async function createShareCard(input: CardInput): Promise<ShareCard> {
       "This browser could not create an image. Copy the letter link instead.",
     );
   ctx.textBaseline = "alphabetic";
-  if (style === "heart") drawHeart(ctx, input, format, heart, ground, logo);
+  drawGround(ctx, format, { ground, flower, sprig });
+  header(ctx, format, CREAM);
+  if (style === "heart") drawHeart(ctx, input, format, heart, logo);
   if (style === "square") drawSquare(ctx, input, format, logo);
   if (style === "folded") drawFolded(ctx, input, format, logo);
   const blob = await new Promise<Blob>((resolve, reject) =>

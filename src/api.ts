@@ -4,6 +4,7 @@ export interface PublicLetter extends Letter {
   origin: "editorial" | "community";
   createdAt: string;
 }
+export { isSampleLetter } from "./letter-presentation.mjs";
 export class ApiError extends Error {
   status: number;
   code: string;

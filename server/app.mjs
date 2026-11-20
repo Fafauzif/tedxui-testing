@@ -1,5 +1,6 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { supabaseStore } from './store.mjs';
+import { hasOpenedLetter, isSampleLetter, openingLine } from '../src/letter-presentation.mjs';
 
 const messages = {
   VALIDATION: 'Check your letter and try again.',
@@ -156,16 +157,28 @@ export async function handleApi(req, res, store = supabaseStore()) {
 const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const FEATURED_LETTER_ID = 'outside-the-feed';
 
-function readerMarkup(bootstrap) {
+function readerMarkup(bootstrap, opened) {
   const letter = bootstrap.letter;
+  const folded = letter && bootstrap.requestedId === null && !opened;
+  const mark = '<img class="official-mark" src="/art/tedx-logo-light-header.webp" alt="TEDxUniversitasIndonesia · independently organized TED event" width="460" height="119">';
   let article;
-  if (letter) {
+  if (folded) {
+    article = `<section class="folded-letter" aria-labelledby="letter-heading">
+      <div class="folded-paper">
+        <h1 id="letter-heading" tabindex="-1">${escapeHtml(letter.salutation)}</h1>
+        <p>${escapeHtml(openingLine(letter))}</p>
+      </div>
+      <div class="paper-fold" aria-hidden="true"></div>
+      <img class="folded-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560">
+      <a class="open-letter" href="/?letter=${encodeURIComponent(letter.id)}">Open letter</a>
+    </section>`;
+  } else if (letter) {
+    const disclosure = isSampleLetter(letter) ? 'Sample letter' : letter.origin === 'editorial' ? 'Fictional letter' : '';
     article = `<article class="paper letter" aria-labelledby="letter-heading">
-      <div class="letter-meta"><span>${letter.origin === 'editorial' ? 'Fictional editorial letter' : 'Community letter'}</span>${letter.topic ? `<span>${escapeHtml(letter.topic)}</span>` : ''}</div>
-      <h1 id="letter-heading" tabindex="-1">${escapeHtml(letter.salutation)}</h1>
-      <div class="reader-actions" aria-hidden="true"><span style="display:block;height:44px;width:0"></span></div>
+      <div class="letter-opening"><h1 id="letter-heading" tabindex="-1">${escapeHtml(letter.salutation)}</h1></div>
       <div class="letter-body">${letter.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</div>
       <p class="letter-signoff">${escapeHtml(letter.signoff)}</p>
+      ${disclosure ? `<div class="letter-end"><p class="letter-disclosure">${disclosure}</p></div>` : ''}
     </article>`;
   } else {
     const title = bootstrap.error === 'missing'
@@ -179,19 +192,18 @@ function readerMarkup(bootstrap) {
   return `<div class="app">
     <a class="skip" href="#main">Skip to content</a>
     <header class="masthead"><div class="masthead-inner">
-      <a href="/" class="brand-home" aria-label="Read Letters to Grow"><img class="official-mark" src="/art/tedx-logo-header.webp" alt="TEDxUniversitasIndonesia · independently organized TED event" width="460" height="114"><span class="masthead-campaign" aria-hidden="true">Letters to Grow<span>.</span></span></a>
-      <nav aria-label="Main navigation"><a href="/?community">Community letters</a><a class="nav-write" href="/?write"><span aria-hidden="true" style="display:inline-block;width:16px;height:16px"></span>Write a letter</a></nav>
+      <a href="/" class="brand-home" aria-label="Read Letters to Grow">${mark}</a>
+      <nav aria-label="Main navigation"><a href="/?community">Community letters</a><a class="nav-write" href="/?write">Write a letter</a></nav>
     </div></header>
-    <main id="main" class="layout">
+    <main id="main" class="layout layout-read${folded ? ' layout-folded' : ''}">
+      <div class="campaign-art" aria-hidden="true">
+        <img class="art-flower" src="/art/white-flower.webp" alt="" width="600" height="900" decoding="async" fetchpriority="high">
+        <img class="art-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560" decoding="async">
+      </div>
+      <div class="campaign-identity"><p class="campaign-note">Still, We Grow.</p><p class="campaign-name">Letters<br> to Grow<span>.</span></p></div>
       <div class="content-column">${article}</div>
-      <aside class="identity" aria-label="About Letters to Grow">
-        <p class="identity-kicker">Still, we grow</p>
-        <a href="/" class="wordmark">Letters<br>to Grow<span aria-hidden="true">.</span></a>
-        <div class="identity-art" aria-hidden="true"><img src="/art/letters-still-life.webp" alt="" width="560" height="700" decoding="async" loading="lazy"></div>
-        <p class="campaign-line">What are you still figuring out?</p>
-      </aside>
     </main>
-    <footer class="site-footer"><span>Letters to Grow · TEDxUniversitasIndonesia 2027</span></footer>
+    <footer class="site-footer">${mark}</footer>
   </div>`;
 }
 
@@ -244,7 +256,7 @@ export async function renderPage(req, html, store = supabaseStore(), res) {
     .replace(/<meta\s+name=["'](?:description|robots)["'][^>]*>/gi, '')
     .replace('</head>', `<title>${escaped.title}</title><meta name="description" content="${escaped.description}"><meta name="robots" content="${robots}"><link rel="canonical" href="${escaped.canonical}"><meta property="og:title" content="${escaped.title}"><meta property="og:description" content="${escaped.description}"><meta property="og:url" content="${escaped.canonical}"><meta property="og:type" content="website"><meta property="og:image" content="${escapeHtml(requestOrigin(req))}/art/social-cover.png"><meta name="twitter:card" content="summary_large_image"></head>`);
   if (bootstrap) {
-    result = result.replace(/<div\s+id=["']root["']\s*><\/div>/i, () => `<div id="root">${readerMarkup(bootstrap)}</div>`);
+    result = result.replace(/<div\s+id=["']root["']\s*><\/div>/i, () => `<div id="root">${readerMarkup(bootstrap, hasOpenedLetter(req.headers.cookie || ''))}</div>`);
     result = result.replace('</body>', () => `<script id="ltg-reader-bootstrap" type="application/json">${serializeBootstrap(bootstrap)}</script></body>`);
   }
   if (res) {

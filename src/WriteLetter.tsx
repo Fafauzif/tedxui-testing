@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ArrowLeft,
   DownloadSimple,
   FloppyDisk,
   PencilSimple,
@@ -128,7 +129,7 @@ export default function WriteLetter({
   }, [unsaved, pending]);
 
   useEffect(() => {
-    if (preview) previewHeading.current?.focus({ preventScroll: true });
+    if (preview) previewHeading.current?.focus();
   }, [preview]);
 
   function change(field: keyof Draft, value: string) {
@@ -313,107 +314,37 @@ export default function WriteLetter({
 
   return (
     <section className="writer" aria-labelledby="writer-heading">
-      <div className="writer-heading-row">
-        <button
-          className="writer-back"
-          type="button"
-          onClick={onBack}
-          disabled={busy}
-        >
-          Back to letters
-        </button>
-        <p className="eyebrow">What are you still figuring out?</p>
-        <h1 id="writer-heading">
-          Write <span>a letter.</span>
-        </h1>
-        <p className="writer-introduction">
-          For someone going through it. For the person you used to be. Start
-          wherever you like.
-        </p>
-      </div>
-      <p className="writer-privacy" id="writer-privacy">
-        Your draft stays with you until you choose Publish letter.
-      </p>
+      <button
+        className="writer-text-button writer-back"
+        type="button"
+        onClick={onBack}
+        disabled={busy}
+      >
+        <ArrowLeft size={16} aria-hidden="true" /> Back to letters
+      </button>
       <div className="writer-paper">
+        <h1 id="writer-heading">{preview ? "Preview your letter" : "Write a letter"}</h1>
         {preview ? (
-          <div>
-            <article
-              className="writer-preview"
-              aria-labelledby="writer-preview-heading"
+          <article
+            className="writer-preview"
+            aria-labelledby="writer-preview-heading"
+          >
+            <h2
+              id="writer-preview-heading"
+              ref={previewHeading}
+              tabIndex={-1}
             >
-              <div className="writer-preview-topline">
-                <span>Letter preview</span>
-                <button
-                  className="writer-inline-button"
-                  type="button"
-                  onClick={edit}
-                  disabled={busy || Boolean(pending)}
-                >
-                  <PencilSimple size={16} aria-hidden="true" /> Back to editing
-                </button>
-              </div>
-              <h2
-                id="writer-preview-heading"
-                ref={previewHeading}
-                tabIndex={-1}
-              >
-                {draft.to.trim() || "To someone still growing,"}
-              </h2>
-              <div className="writer-preview-body">{draft.body.trim()}</div>
-              <p className="writer-signature">
-                {draft.signature.trim() || "Anonymous"}
-              </p>
-              <p className="writer-preview-origin">Community letter</p>
-            </article>
-            <fieldset
-              className="writer-excerpts"
-              disabled={busy || Boolean(pending)}
-            >
-              <legend>A line for your Story</legend>
-              <p>This line appears on the card readers can share.</p>
-              {Array.from(new Set([selectedExcerpt, ...choices]))
-                .filter(Boolean)
-                .map((option) => (
-                  <label
-                    key={option}
-                    className={selectedExcerpt === option ? "selected" : ""}
-                  >
-                    <input
-                      type="radio"
-                      name="writer-excerpt"
-                      checked={selectedExcerpt === option}
-                      onChange={() => setExcerpt(option)}
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
-            </fieldset>
-            <div className="writer-publish">
-              <p>
-                Anyone can read and share this letter as soon as you publish it.
-              </p>
-              {pending && (
-                <p className="writer-recovery-note">
-                  Confirm this publication before making further edits.
-                </p>
-              )}
-              <button
-                className="btn primary"
-                type="button"
-                disabled={busy || removed || !selectedExcerpt}
-                onClick={() => void publish()}
-              >
-                {busy
-                  ? "Publishing…"
-                  : pending
-                    ? "Retry publication"
-                    : "Publish letter"}
-              </button>
-            </div>
-          </div>
+              {draft.to.trim() || "To someone still growing,"}
+            </h2>
+            <div className="writer-preview-body">{draft.body.trim()}</div>
+            <p className="writer-signature">
+              {draft.signature.trim() || "Anonymous"}
+            </p>
+          </article>
         ) : (
           <form
             className="writer-form"
+            id="writer-form"
             aria-describedby="writer-privacy"
             onSubmit={(event) => {
               event.preventDefault();
@@ -442,7 +373,7 @@ export default function WriteLetter({
               value={draft.body}
               onChange={(event) => change("body", event.target.value)}
               maxLength={5000}
-              placeholder="Start with a thought you keep coming back to…"
+              placeholder="Start wherever you like."
               aria-describedby={
                 bodyError ? "writer-length writer-body-error" : "writer-length"
               }
@@ -468,27 +399,98 @@ export default function WriteLetter({
               autoComplete="off"
               placeholder="Someone still learning"
             />
-            <button className="btn primary writer-preview-button" type="submit">
-              Preview letter
-            </button>
           </form>
         )}
       </div>
-      <div className="writer-actions" aria-label="Keep your letter">
+      {preview ? (
+        <div className="writer-review">
+          <fieldset
+            className="writer-excerpts"
+            disabled={busy || Boolean(pending)}
+          >
+            <legend>Choose a line for your Story</legend>
+            {Array.from(new Set([selectedExcerpt, ...choices]))
+              .filter(Boolean)
+              .map((option) => (
+                <label
+                  key={option}
+                  className={selectedExcerpt === option ? "selected" : ""}
+                >
+                  <input
+                    type="radio"
+                    name="writer-excerpt"
+                    checked={selectedExcerpt === option}
+                    onChange={() => setExcerpt(option)}
+                  />
+                  <span>{option}</span>
+                </label>
+              ))}
+          </fieldset>
+          <p className="writer-privacy">
+            Anyone can read and share this letter as soon as you publish it.
+          </p>
+          {pending && (
+            <p className="writer-privacy">
+              Confirm this publication before making further edits.
+            </p>
+          )}
+          <div className="writer-actions">
+            <button
+              className="writer-primary"
+              type="button"
+              disabled={busy || removed || !selectedExcerpt}
+              onClick={() => void publish()}
+            >
+              {busy
+                ? "Publishing…"
+                : pending
+                  ? "Retry publication"
+                  : "Publish letter"}
+            </button>
+            <button
+              className="writer-text-button"
+              type="button"
+              onClick={edit}
+              disabled={busy || Boolean(pending)}
+            >
+              <PencilSimple size={16} aria-hidden="true" /> Back to editing
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="writer-compose-actions">
+          <button className="writer-primary" type="submit" form="writer-form">
+            Preview letter
+          </button>
+          <p className="writer-privacy" id="writer-privacy">
+            Your draft stays private until you publish it.
+          </p>
+        </div>
+      )}
+      <div className="writer-actions writer-draft-actions" role="group" aria-label="Keep your letter">
         <button
-          className="btn secondary writer-save"
+          className="writer-text-button"
           type="button"
           onClick={saveDraft}
         >
           <FloppyDisk size={18} aria-hidden="true" /> Save draft on this device
         </button>
         <button
-          className="btn secondary writer-download"
+          className="writer-text-button"
           type="button"
           onClick={download}
         >
           <DownloadSimple size={18} aria-hidden="true" /> Download letter
         </button>
+        {saved && (
+          <button
+            className="writer-text-button"
+            type="button"
+            onClick={removeSaved}
+          >
+            Remove saved copy from this browser
+          </button>
+        )}
       </div>
       <div className="writer-feedback">
         <p className="writer-status" role="status" aria-live="polite">
@@ -500,15 +502,6 @@ export default function WriteLetter({
           </p>
         )}
       </div>
-      {saved && (
-        <button className="writer-remove" type="button" onClick={removeSaved}>
-          Remove saved copy from this browser
-        </button>
-      )}
-      <p className="writer-device-note">
-        Save a draft to return to it in this browser. Download a copy to take
-        your words to another device.
-      </p>
     </section>
   );
 }

@@ -3,10 +3,13 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { handleApi, renderPage } from './app.mjs';
 import { localStore } from './local-store.mjs';
+import { withPreviewSamples } from './preview-samples.mjs';
 import { supabaseStore } from './store.mjs';
 
 const root = path.resolve('dist');
-const store = process.env.SUPABASE_URL ? supabaseStore() : await localStore();
+const store = process.env.SUPABASE_URL
+  ? supabaseStore()
+  : withPreviewSamples(await localStore(), process.env, { local: true });
 const mime = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.txt': 'text/plain' };
 const server = http.createServer(async (req, res) => {
   try {

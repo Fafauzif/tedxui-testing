@@ -1,6 +1,8 @@
 /** Production uses only server-side Supabase RPCs. Local uses the same PostgreSQL SQL. */
+import { withPreviewSamples } from './preview-samples.mjs';
+
 export function supabaseStore() {
-  return {
+  return withPreviewSamples({
     async rpc(name, parameters) {
       const base = process.env.SUPABASE_URL;
       const secretKey = process.env.SUPABASE_SECRET_KEY;
@@ -17,5 +19,5 @@ export function supabaseStore() {
       if (!response.ok) throw new Error(`Database RPC failed (${response.status})`);
       return response.json();
     },
-  };
+  });
 }

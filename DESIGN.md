@@ -1,18 +1,15 @@
-# Letters to Grow design
+# Letters to Grow
 
-An editorial letter opens as soon as the reader page arrives. The masthead sits on a plain cream background, and the article carries the salutation, reading controls and letter on one opaque sheet. On desktop, the campaign title and artwork sit beside the reader. Phones put the salutation, share action and opening paragraph near the top.
+The homepage presents a folded letter among the campaign's botanical cutouts. The salutation and first line are visible on arrival. Open letter unfolds the sheet in place, remembers the choice for the browser session and focuses the salutation. A permalink opens directly. Read another waits for the next result on the current sheet, then brings in the next letter. Reduced motion removes the transitions.
 
-Basteleur sets the display type. Helvetica Neue or the available system sans carries the letter, forms and controls. The campaign phrase and the heart card use Luxurious Script. The working palette uses cream, forest ink and red accents derived from the campaign references, with quieter surfaces for extended reading.
+The moss ground and larger botanical collage carry the campaign identity. The reading surface is opaque cream. The salutation and text start the sheet, Share sits at its edge, and the sign-off leads to Read another. The fiction disclosure appears below the originals. The writer uses the same paper and the Community collection is a list of openings. Staff manage public submissions through Supabase Dashboard.
 
-**Share** opens the card builder. Story, Square and Portrait are the image formats. Heart, Clean Square and Folded Letter are independent designs. The preview uses the actual PNG that the share and save actions use. Readers pick a supplied excerpt, retain its byline, and can copy the letter’s exact link for Instagram’s link sticker.
+Basteleur sets campaign titles and salutations. Helvetica Neue or the system sans carries paragraphs and controls. Luxurious Script appears as a short campaign accent. The supplied light TEDxUI mark sits on solid moss in the navigation.
 
-The writer, publication confirmation and Community collection use the same type and controls as the reader. Public preview shows the exact words and excerpt before publishing. Staff manage visibility from Supabase Dashboard.
+Share offers Story, Square and Portrait in Heart, Clean Square and Folded Letter styles. The default scalloped heart is surrounded by the same botanical cutouts and muted moss. The preview shows the actual exported PNG. The quote, byline and TEDxUI attribution are set in code, and Copy link supplies the exact permalink.
 
-The supplied brand guide governs marks and typography. The Creative Independent and Letters of Note informed the uncluttered hierarchy and how the letter is framed. Artwork stays in a defined area, with flat, high-contrast surfaces under reading and controls.
+The references informed different parts of the design. Reasons to Stay informed the immediate access and plain reading flow. Perception Box informed the single tactile object and asymmetric collage.
 
-- [The Creative Independent](https://thecreativeindependent.com/)
-- [Letters of Note](https://www.penguinrandomhouse.com/series/LN2/letters-of-note/)
-- [Nielsen Norman Group’s visual design principles](https://www.nngroup.com/articles/principles-visual-design/)
-- [W3C contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
-- [W3C reflow guidance](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)
+- [Reasons to Stay](https://reasonstostay.org/)
+- [Perception Box](https://www.unlikelycollaborators.com/perception-box)
 - [Artwork and asset provenance](ART-CREDITS.md)

@@ -2,11 +2,12 @@
 
 | Runtime asset | Source |
 | --- | --- |
-| `letters-still-life.webp` | GPT Image still life made for this redesign, cropped and encoded as a 560 × 700 WebP. The original is in `production-art/masters`. |
-| `heart-paper.webp` and `olive-ground.webp` | GPT Image paper and olive print material made for the original campaign build. The master PNGs are in `production-art/masters`. |
-| `tedx-logo.png` and `tedx-logo-light.png` | Black and white lockups supplied for TEDxUniversitasIndonesia 2027. The header WebP is a proportional derivative of the black lockup. |
-| `social-cover.png` | A 1200 × 630 composition of the official mark, Basteleur typography, and the letter still life. |
+| `white-flower.webp` and `botanical-sprig.webp` | Existing pressed botanical cutouts from the earlier green Letters to Grow design. |
+| `heart-paper.webp` and `olive-ground.webp` | GPT Image paper and olive print material from the original campaign build. The master PNGs are in `production-art/masters`. |
+| `moss-texture.webp` | Responsive derivative of the existing olive print asset. |
+| `tedx-logo.png` and `tedx-logo-light.png` | Black and white lockups supplied for TEDxUniversitasIndonesia 2027. Each header WebP is an optimized proportional derivative of its corresponding mark. |
+| `social-cover.png` | A 1200 × 630 composition of the supplied mark, brand typography, existing botanical cutouts and drawn paper. |
 
-The still-life brief called for one unlettered folded cream sheet and envelope on olive textile, with a small pressed wildflower, natural shadows and restrained detail. The earlier card masters depict a cut-paper heart with a scalloped edge and a separately printed olive surface. The two other card styles use shapes and color drawn in code.
+The folded sheet on the website is drawn with CSS. The export renderer sets the chosen quotation, byline, campaign title, mark and letter address in code. The product uses Basteleur, Luxurious Script and a Helvetica Neue system stack. Open font licenses and source details are listed in [brand implementation](docs/BRAND-IMPLEMENTATION.md).
 
-The export renderer sets the chosen quotation, byline, campaign title, mark and letter address in code. Its typographic layout adapts to the selected format and content. The product uses Basteleur, Luxurious Script and the reader’s system Helvetica Neue when available. The included open font licenses and source details are listed in [brand implementation](docs/BRAND-IMPLEMENTATION.md).
+The earlier GPT Image envelope still life remains in the source archive under `production-art/masters`, with its former web derivative under `public/art`.

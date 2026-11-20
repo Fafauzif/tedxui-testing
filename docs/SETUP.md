@@ -24,7 +24,7 @@ Run the backend regression checks with `npm run test:backend`. They use separate
 
 1. Create a separate Supabase project for preview. Do not select the existing live campaign database for synthetic data.
 2. In SQL Editor, run `supabase/migrations/001_letters.sql` as the project database owner, then `supabase/seed.sql`. The seed uses `ON CONFLICT DO NOTHING`, so repeated runs preserve edits and hidden status.
-3. In Vercel, import a separate copy of the source into a preview project. Set the framework to Vite and use the bundled `vercel.json`. Build with `npm run build` and output `dist`.
+3. Create a Preview deployment from a review branch in the existing Vercel project. Use Preview or branch-scoped environment values. Set the framework to Vite and use the bundled `vercel.json`. Build with `npm run build` and output `dist`.
 4. Configure server environment values `SUPABASE_URL`, `SUPABASE_SECRET_KEY` and `REQUEST_HASH_SECRET`. Use the project's server secret key (`sb_secret_…`). For a project that still uses a legacy `service_role` JWT, configure `SUPABASE_SERVICE_ROLE_KEY` instead and leave `SUPABASE_SECRET_KEY` empty. Generate the request secret with `openssl rand -hex 32`. Keep it stable across deployments so reading-session signatures and abuse counters remain consistent. Publication fingerprints are stable SHA-256 values independent of this secret. Never prefix any privileged value with `VITE_`.
 5. Set `PUBLIC_ORIGIN` to that environment's HTTPS origin. When using Vercel-generated preview hosts that change per deployment, omit this value so the request host supplies the origin. Leave `VITE_SHARE_ORIGIN` empty for each preview's own exact permalinks. Set it only to a stable, approved origin serving the same database.
 6. Leave `INDEXING_ENABLED=false` during review. It controls the server-rendered robots metadata. The browser does not communicate directly with Supabase. All reads and writes use same-origin server routes.
@@ -74,6 +74,12 @@ Vercel. (n.d.). *Static configuration with vercel.json*. Retrieved November 20, 
 
 Vercel. (n.d.). *Using the Node.js runtime with Vercel Functions*. Retrieved November 20, 2026, from https://vercel.com/docs/functions/runtimes/node-js
 
-## Synthetic community fixture
+## Five sample Community letters
 
-For a repeatable local community example, stop the server, run `node scripts/local-fixtures.mjs`, then restart `npm start`. The script refuses Supabase and Vercel environments and writes only to the local embedded database. Its example is **To someone taking their time,**, signed **A slow beginner**, ID `d86a557e-50b5-44c2-a50c-85139e458de3`. It is synthetic review content, not an audience submission. Do not import it into the production project.
+In the existing Vercel project, set `SAMPLE_LETTERS_ENABLED=true` for the review branch's Preview environment and deploy or redeploy the review branch. The five fictional letters appear first in Community with the **Sample letter** label. They have individual preview permalinks and can be shared from that deployment. The preview server supplies them without inserting Supabase rows. Real community submissions continue to use the database.
+
+To remove the full set from a new Preview deployment, clear the environment variable or set it to `false`, then redeploy. Older preview deployments keep their original settings and URLs. Production ignores the flag.
+
+Run `SAMPLE_LETTERS_ENABLED=true npm start` to see the same five letters in the local embedded database preview. They remain separate from the local database and disappear on restart when the flag is absent or false.
+
+The existing optional `node scripts/local-fixtures.mjs` command still writes the single earlier synthetic example to the embedded local database. Use the preview flag for the removable group of five.

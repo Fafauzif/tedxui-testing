@@ -4,13 +4,15 @@ import {
   ShareNetwork,
   X,
   PencilSimple,
-  Shuffle,
+  ArrowRight,
+  ArrowUpRight,
   Check,
   Flag,
 } from "@phosphor-icons/react";
-import { ApiError, letterLink, request } from "./api";
+import { ApiError, isSampleLetter, letterLink, request } from "./api";
 import type { PublicLetter } from "./api";
 import { readReaderBootstrap } from "./reader-bootstrap";
+import { hasOpenedLetter, openedLetterCookie, openingLine } from "./letter-presentation.mjs";
 import "./style.css";
 
 const ShareBuilder = lazy(() => import("./ShareBuilder"));
@@ -32,17 +34,20 @@ function Logo() {
   return (
     <img
       className="official-mark"
-      src="/art/tedx-logo-header.webp"
+      src="/art/tedx-logo-light-header.webp"
       alt="TEDxUniversitasIndonesia · independently organized TED event"
       width="460"
-      height="114"
+      height="119"
     />
   );
 }
+
 function App() {
   const [boot] = useState(readReaderBootstrap);
   const [view, setView] = useState<View>(readLocation);
   const [letter, setLetter] = useState<PublicLetter | null>(boot?.letter ?? null);
+  const [opened, setOpened] = useState(() => hasOpenedLetter(document.cookie));
+  const [paperMotion, setPaperMotion] = useState<"unfold" | "turn" | null>(null);
   const [loading, setLoading] = useState(!boot);
   const [loadError, setLoadError] = useState<
     "missing" | "service" | "empty" | null
@@ -71,6 +76,8 @@ function App() {
   const [communityLoading, setCommunityLoading] = useState(false);
   const [communityError, setCommunityError] = useState("");
   const communityGeneration = useRef(0);
+  const folded = view.kind === "read" && !view.id && !opened && Boolean(letter) && !loadError;
+  const sample = letter ? isSampleLetter(letter) : false;
   const url = letter ? letterLink(letter.id) : "";
   function resetNavigation() {
     navigation.current++;
@@ -82,6 +89,7 @@ function App() {
     setModal(null);
     setFeedback("");
     setPublished(false);
+    setPaperMotion(null);
     moveFocus.current = true;
   }
 
@@ -184,7 +192,7 @@ function App() {
       heading.current.focus({ preventScroll: true });
       moveFocus.current = false;
     }
-  }, [view, loading, letter, loadError]);
+  }, [view, loading, letter, loadError, opened]);
 
   const loadCommunity = useCallback(async (after?: string) => {
     const token = ++communityGeneration.current;
@@ -249,6 +257,9 @@ function App() {
       if (!isCurrent()) return;
       if (data.letter) {
         navigate({ kind: "read", id: data.letter.id }, false, data.letter);
+        setPaperMotion("turn");
+      } else if (previousId) {
+        setFeedback("You’re caught up for now.");
       } else {
         setLoadError("empty");
         setLetter(null);
@@ -262,6 +273,14 @@ function App() {
       if (isCurrent()) setLoading(false);
       if (rotation.current === controller) rotation.current = null;
     }
+  }
+
+  function unfoldLetter() {
+    moveFocus.current = true;
+    setPaperMotion("unfold");
+    setOpened(true);
+    document.cookie = `${openedLetterCookie}; Path=/; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+    window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   function openModal(next: "share" | "about" | "report") {
@@ -344,7 +363,6 @@ function App() {
           }}
         >
           <Logo />
-          <span className="masthead-campaign" aria-hidden="true">Letters to Grow<span>.</span></span>
         </a>
         <nav aria-label="Main navigation">
           <a
@@ -371,7 +389,15 @@ function App() {
           </a>
         </nav>
       </div></header>
-      <main id="main" className="layout">
+      <main id="main" className={`layout${folded ? " layout-folded" : ""} layout-${view.kind}`}>
+        <div className="campaign-art" aria-hidden="true">
+          <img className="art-flower" src="/art/white-flower.webp" alt="" width="600" height="900" decoding="async" fetchPriority="high" />
+          <img className="art-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560" decoding="async" />
+        </div>
+        <div className="campaign-identity">
+          <p className="campaign-note">Still, We Grow.</p>
+          <p className="campaign-name">Letters<br /> to Grow<span>.</span></p>
+        </div>
         <div className="content-column">
           {view.kind === "read" && (
             <>
@@ -432,41 +458,61 @@ function App() {
                     </a>
                   )}
                 </section>
+              ) : folded && letter ? (
+                <section className="folded-letter" aria-labelledby="letter-heading">
+                  <div className="folded-paper">
+                    <h1 id="letter-heading" ref={heading} tabIndex={-1}>{letter.salutation}</h1>
+                    <p>{openingLine(letter)}</p>
+                  </div>
+                  <div className="paper-fold" aria-hidden="true" />
+                  <img className="folded-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560" />
+                  <a
+                    className="open-letter"
+                    href={`/?letter=${encodeURIComponent(letter.id)}`}
+                    onClick={(event) => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                      event.preventDefault();
+                      unfoldLetter();
+                    }}
+                  >
+                    Open letter <ArrowUpRight size={19} aria-hidden="true" />
+                  </a>
+                </section>
               ) : (
                 letter && (
                   <>
                     <article
-                      className="paper letter"
+                      key={letter.id}
+                      className={`paper letter${paperMotion ? ` letter-${paperMotion}` : ""}`}
                       aria-labelledby="letter-heading"
                     >
-                      <div className="letter-meta">
-                        <span>
-                          {letter.origin === "editorial"
-                            ? "Fictional editorial letter"
-                            : "Community letter"}
-                        </span>
-                        {letter.topic && <span>{letter.topic}</span>}
-                      </div>
-                      <h1 id="letter-heading" ref={heading} tabIndex={-1}>
-                        {letter.salutation}
-                      </h1>
-                      <div className="reader-actions" aria-label="Letter actions">
-                        <button className="btn primary" onClick={nextLetter} disabled={loading} aria-busy={loading}>
-                          <Shuffle size={16} aria-hidden="true" />
-                          Read another
-                        </button>
-                        <button className="btn secondary" onClick={() => openModal("share")}>
+                      <div className="letter-opening">
+                        <h1 id="letter-heading" ref={heading} tabIndex={-1}>{letter.salutation}</h1>
+                        <button className="letter-share" onClick={() => openModal("share")}>
                           <ShareNetwork size={16} aria-hidden="true" />
                           Share
                         </button>
                       </div>
-                      <p className="reader-feedback" role="status">{!published && feedback}</p>
                       <div className="letter-body">
                         {letter.paragraphs.map((paragraph, index) => (
                           <p key={index}>{paragraph}</p>
                         ))}
                       </div>
                       <p className="letter-signoff">{letter.signoff}</p>
+                      <div className="letter-end">
+                        {(sample || letter.origin === "editorial") && (
+                          <p className="letter-disclosure">{sample ? "Sample letter" : "Fictional letter"}</p>
+                        )}
+                        {letter.origin === "community" && !sample && (
+                          <button className="report-link" onClick={() => openModal("report")}>
+                            <Flag size={14} aria-hidden="true" /> Report this letter
+                          </button>
+                        )}
+                        <button className="next-letter" onClick={nextLetter} disabled={loading} aria-busy={loading}>
+                          {loading ? "Opening…" : "Read another"} <ArrowRight size={17} aria-hidden="true" />
+                        </button>
+                      </div>
+                      <p className="reader-feedback" role="status">{!published && feedback}</p>
                     </article>
                     {published && (
                       <div className="public-link">
@@ -485,27 +531,6 @@ function App() {
                         <p role="status">{feedback}</p>
                       </div>
                     )}
-                    <div className="reader-after">
-                      <p>What are you still figuring out?</p>
-                      <a
-                        href="/?write"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          navigate({ kind: "write" });
-                        }}
-                      >
-                        Write a letter
-                      </a>
-                    </div>
-                    {letter.origin === "community" && (
-                      <button
-                        className="report-link"
-                        onClick={() => openModal("report")}
-                      >
-                        <Flag size={14} aria-hidden="true" />
-                        Report this letter
-                      </button>
-                    )}
                   </>
                 )
               )}
@@ -523,50 +548,45 @@ function App() {
             </Suspense>
           )}
           {view.kind === "community" && (
-            <section className="community" aria-labelledby="community-heading">
+            <section className="paper community" aria-labelledby="community-heading">
               <div className="collection-heading">
                 <h1 id="community-heading" ref={heading} tabIndex={-1}>
                   Community letters
                 </h1>
-                <p>
-                  Letters from people figuring things out as they go.
-                </p>
               </div>
-              {community.map((item) => (
-                <a
-                  className="community-letter paper"
-                  key={item.id}
-                  href={`/?letter=${encodeURIComponent(item.id)}`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    navigate({ kind: "read", id: item.id });
-                  }}
-                >
-                  <div className="letter-meta">
-                    <span>Community letter</span>
-                    <time dateTime={item.createdAt}>
-                      {new Date(item.createdAt).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                      })}
-                    </time>
-                  </div>
-                  <h2>{item.salutation}</h2>
-                  <p>
-                    {item.paragraphs.join(" ").slice(0, 230)}
-                    {item.paragraphs.join(" ").length > 230 ? "…" : ""}
-                  </p>
-                  <span className="community-byline">{item.signoff}</span>
-                  <span className="community-read">Read this letter</span>
-                </a>
-              ))}
+              {community.length > 0 && <ul className="community-list">
+                {community.map((item, index) => {
+                  const isSample = isSampleLetter(item);
+                  const titleId = `community-letter-${index}`;
+                  return (
+                    <li key={item.id}>
+                      <a
+                        className="community-letter"
+                        aria-labelledby={titleId}
+                        aria-describedby={isSample ? `${titleId}-sample` : undefined}
+                        href={`/?letter=${encodeURIComponent(item.id)}`}
+                        onClick={(event) => {
+                          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                          event.preventDefault();
+                          navigate({ kind: "read", id: item.id });
+                        }}
+                      >
+                        <h2 id={titleId}>{item.salutation}</h2>
+                        <p>{openingLine(item)}</p>
+                        {isSample && <span className="sample-label" id={`${titleId}-sample`}>Sample letter</span>}
+                        <ArrowUpRight className="community-arrow" size={19} aria-hidden="true" />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>}
               {communityLoading && (
                 <p className="state-message" role="status">
                   Opening Community letters…
                 </p>
               )}
               {communityError && (
-                <div className="paper state-paper" role="alert">
+                <div className="collection-state" role="alert">
                   <p>{communityError}</p>
                   <button
                     className="btn primary"
@@ -579,11 +599,8 @@ function App() {
               {!communityLoading &&
                 !communityError &&
                 community.length === 0 && (
-                  <div className="paper state-paper">
-                    <h2>A page for your words.</h2>
-                    <p>
-                      Community letters begin with someone willing to write.
-                    </p>
+                  <div className="collection-state">
+                    <p>There are no community letters yet.</p>
                     <a
                       className="btn primary"
                       href="/?write"
@@ -608,28 +625,11 @@ function App() {
             </section>
           )}
         </div>
-        <aside className="identity" aria-label="About Letters to Grow">
-          <p className="identity-kicker">Still, we grow</p>
-          <a
-            href="/"
-            className="wordmark"
-            onClick={(event) => {
-              event.preventDefault();
-              navigate({ kind: "read" });
-            }}
-          >
-            Letters<br />to Grow<span aria-hidden="true">.</span>
-          </a>
-          <div className="identity-art" aria-hidden="true">
-            <img src="/art/letters-still-life.webp" alt="" width="560" height="700" decoding="async" loading="lazy" />
-          </div>
-          <p className="campaign-line">What are you still figuring out?</p>
-        </aside>
       </main>
       <footer className="site-footer">
-        <span>Letters to Grow · TEDxUniversitasIndonesia 2027</span>
+        <Logo />
         <button onClick={() => openModal("about")}>
-          About this collection
+          About
         </button>
       </footer>
       <dialog
@@ -677,8 +677,7 @@ function App() {
             </p>
             <p>
               A campaign by TEDxUniversitasIndonesia 2027. The original twelve
-              letters are fictional editorial letters. Public submissions are
-              marked “Community letter”.
+              letters are fictional. Community letters are public submissions.
             </p>
             <p>
               Drafts stay on your device until you choose Publish letter.

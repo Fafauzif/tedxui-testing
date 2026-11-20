@@ -7,6 +7,7 @@ import {
   ShareNetwork,
 } from "@phosphor-icons/react";
 import type { PublicLetter } from "./api";
+import { isSampleLetter } from "./api";
 import {
   CARD_FORMATS,
   CARD_STYLES,
@@ -69,6 +70,7 @@ export default function ShareBuilder({ letter, letterUrl }: Props) {
       salutation: letter.salutation,
       signoff: letter.signoff,
       origin: letter.origin,
+      sample: isSampleLetter(letter),
       letterUrl,
       format,
       style,
@@ -174,7 +176,7 @@ export default function ShareBuilder({ letter, letterUrl }: Props) {
     <div className="share-builder">
       <div className="share-builder-heading">
         <h2 id="share-builder-title">
-          Make it <em>yours.</em>
+          Share this letter
         </h2>
       </div>
       <div className="share-builder-layout">
@@ -197,7 +199,7 @@ export default function ShareBuilder({ letter, letterUrl }: Props) {
               />
             ) : (
               <div className="share-builder-failed">
-                <p>Your image could not be prepared.</p>
+                <p role="alert">{error || "Your image could not be prepared."}</p>
                 <button
                   type="button"
                   onClick={() => setRetry((value) => value + 1)}
@@ -334,18 +336,6 @@ export default function ShareBuilder({ letter, letterUrl }: Props) {
               </label>
             ))}
           </fieldset>
-          {error && (
-            <div className="share-builder-error" role="alert">
-              <p>{error}</p>
-              <button
-                type="button"
-                onClick={() => setRetry((value) => value + 1)}
-              >
-                <ArrowClockwise size={16} aria-hidden="true" />
-                Try again
-              </button>
-            </div>
-          )}
           <p className="share-builder-instruction">
             In Instagram, add the image to your Story and paste the letter link
             into a link sticker.

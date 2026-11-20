@@ -20,7 +20,7 @@ function bootstrap(html) {
 
 // No WASM database is needed for these HTML/boot regression checks. The
 // PostgreSQL suite owns atomic visibility and persistence behavior.
-test('root renders the featured letter in HTML and bootstrap with one database request', async () => {
+test('root renders the folded letter and bootstrap with one database request', async () => {
   const calls = [];
   const res = response();
   const html = await renderPage(req('/'), shell, { rpc: async (...args) => { calls.push(args); return featured; } }, res);
@@ -30,12 +30,23 @@ test('root renders the featured letter in HTML and bootstrap with one database r
   assert.ok(calls[0][1].p_session);
   assert.ok(html.includes('<h1 id="letter-heading" tabindex="-1">To someone with a very familiar feed,</h1>'));
   assert.ok(html.includes('<p>A friend borrowed my phone.</p>'));
+  assert.match(html, /class="open-letter" href="\/\?letter=outside-the-feed"/);
+  assert.doesNotMatch(html, /class="letter-body"/);
   assert.deepEqual(bootstrap(html), { version: 1, requestedId: null, letter: featured, error: null });
   assert.match(html, /rel="canonical" href="http:\/\/localhost:4173\/\?letter=outside-the-feed"/);
   assert.match(res.headers['Set-Cookie'], /^ltg_session=/);
   assert.equal(res.headers.Vary, 'Cookie');
   assert.match(res.headers['Server-Timing'], /^reader;dur=\d+\.\d$/);
   assert.ok(!html.includes('Opening a letter'));
+});
+
+test('return visits with an open-letter cookie render the full letter immediately', async () => {
+  const request = req('/');
+  request.headers.cookie = 'other=1; ltg_opened=yes';
+  const html = await renderPage(request, shell, { rpc: async () => featured });
+  assert.match(html, /class="letter-body"/);
+  assert.match(html, /Fictional letter/);
+  assert.doesNotMatch(html, /class="open-letter"/);
 });
 
 test('hidden featured letter uses only a current visible rotation result', async () => {
@@ -59,6 +70,8 @@ test('exact deep links share their one visible lookup with HTML metadata and boo
   assert.equal(bootstrap(html).letter.id, featured.id);
   assert.ok(html.includes(`<title>${featured.salutation} · Letters to Grow</title>`));
   assert.ok(html.includes(`content="${featured.excerpt}"`));
+  assert.match(html, /class="letter-body"/);
+  assert.doesNotMatch(html, /class="open-letter"/);
 });
 
 test('hidden deep links never choose a replacement or expose stale content', async () => {
