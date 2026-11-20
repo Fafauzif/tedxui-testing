@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   ShareNetwork,
   X,
-  DownloadSimple,
-  LinkSimple,
   PencilSimple,
   Shuffle,
   Check,
@@ -12,10 +10,12 @@ import {
 } from "@phosphor-icons/react";
 import { ApiError, letterLink, request } from "./api";
 import type { PublicLetter } from "./api";
-import { createShareCard, downloadCard, shareCard, copyLink } from "./share";
-import type { ShareCard } from "./share";
-import WriteLetter from "./WriteLetter";
+import { readReaderBootstrap } from "./reader-bootstrap";
 import "./style.css";
+
+const ShareBuilder = lazy(() => import("./ShareBuilder"));
+const WriteLetter = lazy(() => import("./WriteLetter"));
+const featuredId = "outside-the-feed";
 
 type View =
   { kind: "read"; id?: string } | { kind: "write" } | { kind: "community" };
@@ -32,20 +32,21 @@ function Logo() {
   return (
     <img
       className="official-mark"
-      src="/art/tedx-logo.png"
+      src="/art/tedx-logo-header.webp"
       alt="TEDxUniversitasIndonesia · independently organized TED event"
-      width="260"
-      height="64"
+      width="460"
+      height="114"
     />
   );
 }
 function App() {
+  const [boot] = useState(readReaderBootstrap);
   const [view, setView] = useState<View>(readLocation);
-  const [letter, setLetter] = useState<PublicLetter | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [letter, setLetter] = useState<PublicLetter | null>(boot?.letter ?? null);
+  const [loading, setLoading] = useState(!boot);
   const [loadError, setLoadError] = useState<
     "missing" | "service" | "empty" | null
-  >(null);
+  >(boot?.error ?? null);
   const [refresh, setRefresh] = useState(0);
   const [published, setPublished] = useState(false);
   const [modal, setModal] = useState<"share" | "about" | "report" | null>(null);
@@ -53,22 +54,13 @@ function App() {
   const savedFocus = useRef<HTMLElement | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const moveFocus = useRef(false);
-  const generation = useRef(0);
   const navigation = useRef(0);
   const rotation = useRef<AbortController | null>(null);
-  const resolvedRoot = useRef<string | undefined>(undefined);
-  const activeCard = useRef<ShareCard | null>(null);
-  const [preparedCard, setPreparedCard] = useState<{
-    key: string;
-    card: ShareCard;
-  } | null>(null);
-  const [excerptIndex, setExcerptIndex] = useState(0);
-  const [renderTry, setRenderTry] = useState(0);
-  const [cardLoading, setCardLoading] = useState(false);
-  const [cardError, setCardError] = useState("");
-  const [sharing, setSharing] = useState(false);
+  const resolvedRoot = useRef<string | undefined>(boot?.letter?.id);
+  const resolvedView = useRef<{ view: View; refresh: number } | null>(
+    boot ? { view, refresh: 0 } : null,
+  );
   const [feedback, setFeedback] = useState("");
-  const [manualLink, setManualLink] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [reportBusy, setReportBusy] = useState(false);
   const [reportSent, setReportSent] = useState(false);
@@ -80,19 +72,6 @@ function App() {
   const [communityError, setCommunityError] = useState("");
   const communityGeneration = useRef(0);
   const url = letter ? letterLink(letter.id) : "";
-  const excerpt = letter?.excerpts[excerptIndex] || letter?.excerpt || "";
-  const cardLetter = view.kind === "read" && !loadError ? letter : null;
-  const cardKey = cardLetter
-    ? JSON.stringify([
-        url,
-        excerpt,
-        cardLetter.salutation,
-        cardLetter.signoff,
-        cardLetter.origin,
-      ])
-    : "";
-  const card = preparedCard?.key === cardKey ? preparedCard.card : null;
-
   function resetNavigation() {
     navigation.current++;
     rotation.current?.abort();
@@ -101,13 +80,12 @@ function App() {
     setLetter(null);
     setLoading(true);
     setModal(null);
-    setExcerptIndex(0);
     setFeedback("");
     setPublished(false);
     moveFocus.current = true;
   }
 
-  const navigate = useCallback((next: View, replace = false) => {
+  const navigate = useCallback((next: View, replace = false, readyLetter?: PublicLetter) => {
     const search =
       next.kind === "write"
         ? "?write"
@@ -118,9 +96,16 @@ function App() {
             : "/";
     history[replace ? "replaceState" : "pushState"]({}, "", search);
     resetNavigation();
+    if (readyLetter) {
+      resolvedView.current = { view: next, refresh };
+      setLetter(readyLetter);
+      setLoadError(null);
+      setLoading(false);
+      document.title = `${readyLetter.salutation} · Letters to Grow`;
+    }
     setView(next);
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     const back = () => {
@@ -144,19 +129,25 @@ function App() {
       setLoading(false);
       return;
     }
+    if (resolvedView.current?.view === view && resolvedView.current.refresh === refresh) {
+      return;
+    }
     const controller = new AbortController();
     const navigationAtStart = navigation.current;
     const id = view.id || resolvedRoot.current;
     setLoading(true);
     setLoadError(null);
-    const path = id
-      ? `/api/letters/${encodeURIComponent(id)}`
-      : "/api/rotation";
+    const read = (target: string) => request<{ letter: PublicLetter | null }>(
+      target, { signal: controller.signal }
+    );
     const isCurrent = () =>
       !controller.signal.aborted && navigation.current === navigationAtStart;
-    void request<{ letter: PublicLetter | null }>(path, {
-      signal: controller.signal,
-    })
+    void read(`/api/letters/${encodeURIComponent(id || featuredId)}`)
+      .catch((error) => {
+        if (!id && isCurrent() && error instanceof ApiError && error.status === 404)
+          return read("/api/rotation");
+        throw error;
+      })
       .then((data) => {
         if (!isCurrent()) return;
         if (!data.letter) {
@@ -165,14 +156,7 @@ function App() {
         }
         setLetter(data.letter);
         document.title = `${data.letter.salutation} · Letters to Grow`;
-        if (!id) {
-          resolvedRoot.current = data.letter.id;
-          history.replaceState(
-            {},
-            "",
-            `?letter=${encodeURIComponent(data.letter.id)}`,
-          );
-        }
+        if (!id) resolvedRoot.current = data.letter.id;
       })
       .catch((error) => {
         if (!isCurrent()) return;
@@ -254,6 +238,7 @@ function App() {
       !controller.signal.aborted && navigation.current === navigationAtStart;
     setLoading(true);
     setLoadError(null);
+    setFeedback("");
     try {
       const path = previousId
         ? `/api/rotation?exclude=${encodeURIComponent(previousId)}`
@@ -263,15 +248,15 @@ function App() {
       });
       if (!isCurrent()) return;
       if (data.letter) {
-        navigate({ kind: "read", id: data.letter.id });
+        navigate({ kind: "read", id: data.letter.id }, false, data.letter);
       } else {
         setLoadError("empty");
         setLetter(null);
       }
     } catch {
       if (isCurrent()) {
-        setLetter(null);
-        setLoadError("service");
+        if (previousId) setFeedback("Could not open another letter. Please try again.");
+        else setLoadError("service");
       }
     } finally {
       if (isCurrent()) setLoading(false);
@@ -282,7 +267,6 @@ function App() {
   function openModal(next: "share" | "about" | "report") {
     savedFocus.current = document.activeElement as HTMLElement;
     setFeedback("");
-    setManualLink(false);
     if (next === "report") {
       setReportReason("");
       setReportSent(false);
@@ -309,89 +293,14 @@ function App() {
     };
   }, [modal]);
 
-  useEffect(() => {
-    const token = ++generation.current;
-    setPreparedCard(null);
-    setCardError("");
-    if (activeCard.current) {
-      URL.revokeObjectURL(activeCard.current.url);
-      activeCard.current = null;
-    }
-    if (!cardKey) {
-      setCardLoading(false);
-      return;
-    }
-
-    const [letterUrl, quote, salutation, signoff, origin] = JSON.parse(
-      cardKey,
-    ) as [string, string, string, string, PublicLetter["origin"]];
-    setCardLoading(true);
-    void createShareCard({
-      excerpt: quote,
-      salutation,
-      signoff,
-      origin,
-      letterUrl,
-    })
-      .then((result) => {
-        if (token !== generation.current) {
-          URL.revokeObjectURL(result.url);
-          return;
-        }
-        activeCard.current = result;
-        setPreparedCard({ key: cardKey, card: result });
-      })
-      .catch((error) => {
-        if (token === generation.current)
-          setCardError(
-            error instanceof Error
-              ? error.message
-              : "The image could not be prepared. Try again.",
-          );
-      })
-      .finally(() => {
-        if (token === generation.current) setCardLoading(false);
-      });
-
-    return () => {
-      generation.current++;
-    };
-  }, [cardKey, renderTry]);
-
-  useEffect(
-    () => () => {
-      if (activeCard.current) URL.revokeObjectURL(activeCard.current.url);
-    },
-    [],
-  );
-
-  function onShare() {
-    if (!card || sharing) return;
-    setSharing(true);
-    setFeedback("");
-    void shareCard(card)
-      .then((result) =>
-        setFeedback(
-          result === "cancelled"
-            ? "Sharing cancelled. Your image is still here."
-            : result === "downloaded"
-              ? "Image download started. You can also open the image below to save it."
-              : "Image handed to your device’s share menu.",
-        ),
-      )
-      .catch(() =>
-        setFeedback("Sharing could not open. Save the image instead."),
-      )
-      .finally(() => setSharing(false));
-  }
   async function onCopy() {
-    const copied = await copyLink(url);
-    setManualLink(!copied);
-    setFeedback(
-      copied
-        ? "Letter link copied."
-        : "Select and copy your letter link below.",
-    );
+    try {
+      await navigator.clipboard.writeText(url);
+      setFeedback("Letter link copied.");
+    } catch {
+      document.getElementById("published-url")?.focus();
+      setFeedback("Select and copy your letter link above.");
+    }
   }
   async function submitReport(event: React.FormEvent) {
     event.preventDefault();
@@ -424,7 +333,7 @@ function App() {
       <a className="skip" href="#main">
         Skip to content
       </a>
-      <header className="masthead">
+      <header className="masthead"><div className="masthead-inner">
         <a
           href="/"
           className="brand-home"
@@ -435,10 +344,11 @@ function App() {
           }}
         >
           <Logo />
+          <span className="masthead-campaign" aria-hidden="true">Letters to Grow<span>.</span></span>
         </a>
         <nav aria-label="Main navigation">
           <a
-            className={view.kind === "community" ? "active" : ""}
+            aria-current={view.kind === "community" ? "page" : undefined}
             href="/?community"
             onClick={(event) => {
               event.preventDefault();
@@ -448,7 +358,8 @@ function App() {
             Community letters
           </a>
           <a
-            className={"nav-write " + (view.kind === "write" ? "active" : "")}
+            className="nav-write"
+            aria-current={view.kind === "write" ? "page" : undefined}
             href="/?write"
             onClick={(event) => {
               event.preventDefault();
@@ -459,46 +370,8 @@ function App() {
             Write a letter
           </a>
         </nav>
-      </header>
+      </div></header>
       <main id="main" className="layout">
-        <aside className="identity">
-          <a
-            href="/"
-            className="wordmark"
-            aria-label="Letters to Grow, read a letter"
-            onClick={(event) => {
-              event.preventDefault();
-              navigate({ kind: "read" });
-            }}
-          >
-            Letters
-            <br />
-            <span>
-              to <em>Grow</em>
-              <b>.</b>
-            </span>
-          </a>
-          <p className="campaign-line">Still, We Grow.</p>
-          <div className="identity-flower" aria-hidden="true">
-            <img src="/art/white-flower.webp" alt="" />
-          </div>
-          <div className="rail-invitation">
-            <p>
-              What are you
-              <br />
-              <em>still figuring out?</em>
-            </p>
-            <a
-              href="/?write"
-              onClick={(event) => {
-                event.preventDefault();
-                navigate({ kind: "write" });
-              }}
-            >
-              Put it into words
-            </a>
-          </div>
-        </aside>
         <div className="content-column">
           {view.kind === "read" && (
             <>
@@ -514,11 +387,10 @@ function App() {
                   </div>
                 </div>
               )}
-              {loading ? (
+              {loading && !letter ? (
                 <section className="paper state-paper" aria-busy="true">
                   <p className="eyebrow">Letters to Grow</p>
                   <h1>Opening a letter…</h1>
-                  <p role="status">A few words are on their way.</p>
                 </section>
               ) : loadError ? (
                 <section className="paper state-paper">
@@ -578,29 +450,24 @@ function App() {
                       <h1 id="letter-heading" ref={heading} tabIndex={-1}>
                         {letter.salutation}
                       </h1>
+                      <div className="reader-actions" aria-label="Letter actions">
+                        <button className="btn primary" onClick={nextLetter} disabled={loading} aria-busy={loading}>
+                          <Shuffle size={16} aria-hidden="true" />
+                          Read another
+                        </button>
+                        <button className="btn secondary" onClick={() => openModal("share")}>
+                          <ShareNetwork size={16} aria-hidden="true" />
+                          Share
+                        </button>
+                      </div>
+                      <p className="reader-feedback" role="status">{!published && feedback}</p>
                       <div className="letter-body">
                         {letter.paragraphs.map((paragraph, index) => (
                           <p key={index}>{paragraph}</p>
                         ))}
                       </div>
                       <p className="letter-signoff">{letter.signoff}</p>
-                      <div className="paper-ending" aria-hidden="true">
-                        ✳
-                      </div>
                     </article>
-                    <div className="reader-actions">
-                      <button className="btn primary" onClick={nextLetter}>
-                        <Shuffle size={18} aria-hidden="true" />
-                        Read another
-                      </button>
-                      <button
-                        className="btn secondary"
-                        onClick={() => openModal("share")}
-                      >
-                        <ShareNetwork size={18} aria-hidden="true" />
-                        Share to Story
-                      </button>
-                    </div>
                     {published && (
                       <div className="public-link">
                         <label htmlFor="published-url">
@@ -645,25 +512,24 @@ function App() {
             </>
           )}
           {view.kind === "write" && (
+            <Suspense fallback={<p className="state-message" role="status">Opening the writer…</p>}>
             <WriteLetter
               onBack={() => navigate({ kind: "read" })}
               onPublished={(item) => {
-                navigate({ kind: "read", id: item.id });
+                navigate({ kind: "read", id: item.id }, false, item);
                 setPublished(true);
               }}
             />
+            </Suspense>
           )}
           {view.kind === "community" && (
             <section className="community" aria-labelledby="community-heading">
               <div className="collection-heading">
-                <p className="eyebrow">From one person to another</p>
                 <h1 id="community-heading" ref={heading} tabIndex={-1}>
-                  Community <em>letters.</em>
+                  Community letters
                 </h1>
                 <p>
-                  Things we’re learning. Things we’re still working out.
-                  <br className="wide-only" /> Words left here for someone like
-                  you.
+                  Letters from people figuring things out as they go.
                 </p>
               </div>
               {community.map((item) => (
@@ -742,18 +608,34 @@ function App() {
             </section>
           )}
         </div>
+        <aside className="identity" aria-label="About Letters to Grow">
+          <p className="identity-kicker">Still, we grow</p>
+          <a
+            href="/"
+            className="wordmark"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate({ kind: "read" });
+            }}
+          >
+            Letters<br />to Grow<span aria-hidden="true">.</span>
+          </a>
+          <div className="identity-art" aria-hidden="true">
+            <img src="/art/letters-still-life.webp" alt="" width="560" height="700" decoding="async" loading="lazy" />
+          </div>
+          <p className="campaign-line">What are you still figuring out?</p>
+        </aside>
       </main>
       <footer className="site-footer">
         <span>Letters to Grow · TEDxUniversitasIndonesia 2027</span>
         <button onClick={() => openModal("about")}>
           About this collection
         </button>
-        <span>Still, We Grow.</span>
       </footer>
       <dialog
         ref={dialog}
         className={`dialog ${modal === "share" ? "share-dialog" : ""}`}
-        aria-labelledby="dialog-title"
+        aria-labelledby={modal === "share" ? "share-builder-title" : "dialog-title"}
         onCancel={(event) => {
           event.preventDefault();
           closeModal();
@@ -779,125 +661,9 @@ function App() {
           <X size={22} />
         </button>
         {modal === "share" && letter && (
-          <div className="share-content">
-            <div className="share-intro">
-              <p className="eyebrow">Instagram Story</p>
-              <h2 id="dialog-title">
-                Let a line <em>travel.</em>
-              </h2>
-            </div>
-            <div className="share-grid">
-              <div className="story-preview" aria-busy={cardLoading}>
-                {card ? (
-                  <img
-                    src={card.url}
-                    alt={`Story card: ${excerpt} — ${letter.signoff}`}
-                    width="1080"
-                    height="1920"
-                  />
-                ) : (
-                  <div role="status">
-                    {cardLoading
-                      ? "Composing your Story…"
-                      : "Your Story image will appear here."}
-                  </div>
-                )}
-              </div>
-              <div className="share-controls">
-                {cardError && (
-                  <div className="share-error" role="alert">
-                    <p>{cardError}</p>
-                    <button
-                      className="text-link"
-                      onClick={() => setRenderTry((n) => n + 1)}
-                    >
-                      Try making the image again
-                    </button>
-                  </div>
-                )}
-                <div className="share-actions">
-                  <button
-                    className="btn primary"
-                    disabled={!card || cardLoading || sharing}
-                    onClick={onShare}
-                  >
-                    <ShareNetwork size={18} />
-                    {sharing ? "Opening share menu…" : "Share image"}
-                  </button>
-                  <button
-                    className="btn secondary"
-                    disabled={!card || cardLoading}
-                    onClick={() => {
-                      if (card) {
-                        downloadCard(card);
-                        setFeedback(
-                          "Image download started. If it does not save, open the image below.",
-                        );
-                      }
-                    }}
-                  >
-                    <DownloadSimple size={18} />
-                    Save image
-                  </button>
-                  <button className="text-link" onClick={onCopy}>
-                    <LinkSimple size={17} />
-                    Copy letter link
-                  </button>
-                </div>
-                <p className="instagram-note">
-                  In Instagram, add the image to your Story and paste the letter
-                  link into a link sticker.
-                </p>
-                <p className="share-feedback" role="status">
-                  {feedback}
-                </p>
-                {manualLink && (
-                  <label className="manual-link">
-                    Letter link
-                    <input
-                      value={url}
-                      readOnly
-                      onFocus={(event) => event.currentTarget.select()}
-                    />
-                  </label>
-                )}
-                <fieldset className="excerpt-options">
-                  <legend>Choose your line</legend>
-                  {letter.excerpts.map((option, index) => (
-                    <label
-                      key={index}
-                      className={index === excerptIndex ? "selected" : ""}
-                    >
-                      <input
-                        type="radio"
-                        name="excerpt"
-                        checked={index === excerptIndex}
-                        disabled={sharing}
-                        onChange={() => {
-                          setExcerptIndex(index);
-                          setFeedback("");
-                        }}
-                      />
-                      <span>{option}</span>
-                    </label>
-                  ))}
-                </fieldset>
-                {card && (
-                  <details className="save-help">
-                    <summary>Having trouble saving?</summary>
-                    <p>
-                      Open the image, then touch and hold it to save to Photos.
-                      If Instagram blocks saving, open this letter in Safari or
-                      Chrome.
-                    </p>
-                    <a href={card.url} target="_blank" rel="noopener">
-                      Open full-size image
-                    </a>
-                  </details>
-                )}
-              </div>
-            </div>
-          </div>
+          <Suspense fallback={<h2 id="share-builder-title">Opening the card builder…</h2>}>
+            <ShareBuilder letter={letter} letterUrl={url} />
+          </Suspense>
         )}
         {modal === "about" && (
           <div className="about-content">

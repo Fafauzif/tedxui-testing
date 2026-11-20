@@ -189,7 +189,9 @@ export default function WriteLetter({
     if (!checkBody()) return;
     try {
       const url = URL.createObjectURL(
-        new Blob([textFile(draft) + "\n"], { type: "text/plain;charset=utf-8" }),
+        new Blob([textFile(draft) + "\n"], {
+          type: "text/plain;charset=utf-8",
+        }),
       );
       const anchor = document.createElement("a");
       anchor.href = url;
@@ -201,7 +203,9 @@ export default function WriteLetter({
       setStatus("Letter download started.");
       setError("");
     } catch {
-      setError("The download could not start. You can still select and copy your words.");
+      setError(
+        "The download could not start. You can still select and copy your words.",
+      );
     }
   }
 
@@ -319,7 +323,9 @@ export default function WriteLetter({
           Back to letters
         </button>
         <p className="eyebrow">What are you still figuring out?</p>
-        <h1 id="writer-heading">Write a letter.</h1>
+        <h1 id="writer-heading">
+          Write <span>a letter.</span>
+        </h1>
         <p className="writer-introduction">
           For someone going through it. For the person you used to be. Start
           wherever you like.
@@ -469,10 +475,18 @@ export default function WriteLetter({
         )}
       </div>
       <div className="writer-actions" aria-label="Keep your letter">
-        <button className="writer-save" type="button" onClick={saveDraft}>
+        <button
+          className="btn secondary writer-save"
+          type="button"
+          onClick={saveDraft}
+        >
           <FloppyDisk size={18} aria-hidden="true" /> Save draft on this device
         </button>
-        <button className="writer-download" type="button" onClick={download}>
+        <button
+          className="btn secondary writer-download"
+          type="button"
+          onClick={download}
+        >
           <DownloadSimple size={18} aria-hidden="true" /> Download letter
         </button>
       </div>

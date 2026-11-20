@@ -1,0 +1,65 @@
+[
+  {
+    "format": "story",
+    "style": "heart",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "story",
+    "style": "square",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "story",
+    "style": "folded",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "square",
+    "style": "heart",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "square",
+    "style": "square",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "square",
+    "style": "folded",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "portrait",
+    "style": "heart",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "portrait",
+    "style": "square",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  },
+  {
+    "format": "portrait",
+    "style": "folded",
+    "type": "editorial",
+    "fidelity": true,
+    "success": true
+  }
+]

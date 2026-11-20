@@ -1,0 +1,371 @@
+{
+  "prior": [
+    {
+      "path": "art/black-paper.webp",
+      "bytes": 49066,
+      "sha256": "b448fbee27fe8255f2e3c845e648797125c7ac770426d6c1b70f0a738768e39b"
+    },
+    {
+      "path": "art/botanical-sprig.webp",
+      "bytes": 95352,
+      "sha256": "9f626691f262bb2dc98cd5a949df237e10710356e4ce6b92f21b4dc65f369107"
+    },
+    {
+      "path": "art/envelope-chalk.webp",
+      "bytes": 47504,
+      "sha256": "c595c02c1b0f3cdcaf5a0ba99abe51573ac4c108a552c48f69485e59c5976bb1"
+    },
+    {
+      "path": "art/heart-paper.webp",
+      "bytes": 165262,
+      "sha256": "8c2c51c28c7631dcbaba20b86230a5fcbfca3c5345446ab9379a63e678884c66"
+    },
+    {
+      "path": "art/letter-paper.webp",
+      "bytes": 112198,
+      "sha256": "6ed1861bc95ffa737ad28ae0b0f37e28de00fc5bfb161edc8856b557f507b80e"
+    },
+    {
+      "path": "art/olive-ground.webp",
+      "bytes": 333180,
+      "sha256": "ebae4380993c50ecc06d6258188aa2ed3bf35458f86ce7a0a8845bc67b11d3eb"
+    },
+    {
+      "path": "art/social-cover.png",
+      "bytes": 1028230,
+      "sha256": "6fcd4ce05bab2fc00e65e9696921e85c20272dcf68938fbd452aee23dcbcb5d2"
+    },
+    {
+      "path": "art/tedx-logo.png",
+      "bytes": 98288,
+      "sha256": "e89eb5f2eec98244bd2d2d49ba2ff91893fc213ad39294d9d3a4a5c929536977"
+    },
+    {
+      "path": "art/white-flower.webp",
+      "bytes": 78322,
+      "sha256": "af4f5e1ca074206a76310f725c600c4b8719687f4a1394ea1fa7f95b76e37f73"
+    },
+    {
+      "path": "assets/index-D7JUhCKw.js",
+      "bytes": 279662,
+      "sha256": "f0b18909c09d03f7fd2a9cc9646934099accd1277f246d42822ef5c19d1c7d07"
+    },
+    {
+      "path": "assets/index-DVrktQNY.css",
+      "bytes": 19806,
+      "sha256": "3a4fb6fc3dc4f6af623eac427eca4c8a57352876dc9f63a6631961324ab57a10"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 284,
+      "sha256": "1f4af092ead224bc45ee61a566ef80d877282ac8dc82fbb97be8bb03a5135149"
+    },
+    {
+      "path": "fonts/Archivo-Black-OFL.txt",
+      "bytes": 4399,
+      "sha256": "4eb085b4f06e3c1625d8b577902bf639d480633635837bf2ed94d1a7b1b842f5"
+    },
+    {
+      "path": "fonts/Barlow-Condensed-OFL.txt",
+      "bytes": 4377,
+      "sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f"
+    },
+    {
+      "path": "fonts/Caveat-OFL.txt",
+      "bytes": 4385,
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+    },
+    {
+      "path": "fonts/Cormorant-Garamond-OFL.txt",
+      "bytes": 4387,
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956"
+    },
+    {
+      "path": "fonts/Courier-Prime-OFL.txt",
+      "bytes": 4403,
+      "sha256": "9a755af092b494944c99f471be6fddd19b006a448fefdc4717e4ee0aa09a97b0"
+    },
+    {
+      "path": "fonts/DM-Sans-OFL.txt",
+      "bytes": 4389,
+      "sha256": "2af94f4fb533be8fa23282eb33e08ca311ddf47c2f32777e2040b282deeec65c"
+    },
+    {
+      "path": "fonts/Source-Serif-4-OFL.txt",
+      "bytes": 4400,
+      "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9"
+    },
+    {
+      "path": "fonts/condensed.woff2",
+      "bytes": 33132,
+      "sha256": "9578b1b9d14e68b5167f27edc818b956bdb33aa30e8b49848d99d40c1804af65"
+    },
+    {
+      "path": "fonts/display-serif-italic.woff2",
+      "bytes": 24668,
+      "sha256": "ba5aa5c7aaaf3529dd1ec3345c1d6354dfdeb3c689a7392a19009fa422a4136e"
+    },
+    {
+      "path": "fonts/display-serif.woff2",
+      "bytes": 23952,
+      "sha256": "c26e9d26fdae7c46a812090987f461e410dcb856ac9f9b721834076cf2143678"
+    },
+    {
+      "path": "fonts/display.woff2",
+      "bytes": 30212,
+      "sha256": "cfdd9d470da97eac4404f118cd248aa35e6d30e968cdc81db9e20053543d11c5"
+    },
+    {
+      "path": "fonts/hand.woff2",
+      "bytes": 100896,
+      "sha256": "b8015df93e2e68f3c535a73da3afb6ba4362a6af01bf0a1103b421eb91bc7620"
+    },
+    {
+      "path": "fonts/sans.woff2",
+      "bytes": 19112,
+      "sha256": "f9f57fe9daa5f9de4db7f451a50c364b5757a11cf6105543fab1502e8215eef5"
+    },
+    {
+      "path": "fonts/serif.woff2",
+      "bytes": 54960,
+      "sha256": "9f9d21347de26bbf2f2e3ca6b7af6b2bce87a96655e2374f71b9826245a6cb6b"
+    },
+    {
+      "path": "fonts/typewriter-italic.woff2",
+      "bytes": 29120,
+      "sha256": "a4dfde805f617084841480a4ccffc36e05810850e011ae7f3bcd165607b2c661"
+    },
+    {
+      "path": "fonts/typewriter.woff2",
+      "bytes": 25804,
+      "sha256": "b2c87c9127e8c69f6d44addcbf5a56aea78758cbff0490bd9345d40a8fe35b2b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 1143,
+      "sha256": "32e76c1572d0e1d71824c0e8e76ed54d0fc5ecf1e5808452ebab7d54825386fe"
+    }
+  ],
+  "redesign": [
+    {
+      "path": "art/black-paper.webp",
+      "bytes": 49066,
+      "sha256": "b448fbee27fe8255f2e3c845e648797125c7ac770426d6c1b70f0a738768e39b"
+    },
+    {
+      "path": "art/botanical-sprig.webp",
+      "bytes": 95352,
+      "sha256": "9f626691f262bb2dc98cd5a949df237e10710356e4ce6b92f21b4dc65f369107"
+    },
+    {
+      "path": "art/envelope-chalk.webp",
+      "bytes": 47504,
+      "sha256": "c595c02c1b0f3cdcaf5a0ba99abe51573ac4c108a552c48f69485e59c5976bb1"
+    },
+    {
+      "path": "art/heart-paper.webp",
+      "bytes": 165262,
+      "sha256": "8c2c51c28c7631dcbaba20b86230a5fcbfca3c5345446ab9379a63e678884c66"
+    },
+    {
+      "path": "art/letter-paper.webp",
+      "bytes": 112198,
+      "sha256": "6ed1861bc95ffa737ad28ae0b0f37e28de00fc5bfb161edc8856b557f507b80e"
+    },
+    {
+      "path": "art/letters-still-life.webp",
+      "bytes": 50354,
+      "sha256": "6aa19c0ac76e17f866d5b155ab73d76065e3bf52c3214f2dea4eaff9947e5c6c"
+    },
+    {
+      "path": "art/olive-ground.webp",
+      "bytes": 333180,
+      "sha256": "ebae4380993c50ecc06d6258188aa2ed3bf35458f86ce7a0a8845bc67b11d3eb"
+    },
+    {
+      "path": "art/social-cover.png",
+      "bytes": 1028230,
+      "sha256": "6fcd4ce05bab2fc00e65e9696921e85c20272dcf68938fbd452aee23dcbcb5d2"
+    },
+    {
+      "path": "art/tedx-logo-header.webp",
+      "bytes": 19896,
+      "sha256": "64c3c9c0f84ba21fbc936f93b0a27e3943e3a9d54a2298779bcce157a435d294"
+    },
+    {
+      "path": "art/tedx-logo-light.png",
+      "bytes": 67542,
+      "sha256": "ea45476fa0fa8007a35e0ddb815701dae4202771de7e47a7f2d62b5282ccb059"
+    },
+    {
+      "path": "art/tedx-logo.png",
+      "bytes": 132381,
+      "sha256": "fdd71a9ffe4b82c3428b188b4d5d74b93592e858caa71877ff4307c36b5253cc"
+    },
+    {
+      "path": "art/white-flower.webp",
+      "bytes": 78322,
+      "sha256": "af4f5e1ca074206a76310f725c600c4b8719687f4a1394ea1fa7f95b76e37f73"
+    },
+    {
+      "path": "assets/DownloadSimple.es-pPTCIZBT.js",
+      "bytes": 2004,
+      "sha256": "6853702c1c60f002b12a18e0b297637ac0895c3d82764f373815399d23a83b7e"
+    },
+    {
+      "path": "assets/ShareBuilder-DNLZ9dNe.js",
+      "bytes": 18105,
+      "sha256": "f9c578945535b7522b886512645e02d82d0fffdd98f802a0c7500137ad293ed3"
+    },
+    {
+      "path": "assets/ShareBuilder-DhsdyLQf.css",
+      "bytes": 7267,
+      "sha256": "375342bd1a964cd9700944a83c3cc2eb74e337b3736b807bc4b4ee69500b094a"
+    },
+    {
+      "path": "assets/WriteLetter-BUSQl_ny.css",
+      "bytes": 6660,
+      "sha256": "5c5c6845485f53f065f3fd5d8eb13b8dd7fe5fa1aa49d6035a978501332784ff"
+    },
+    {
+      "path": "assets/WriteLetter-VQuVzA2Y.js",
+      "bytes": 12698,
+      "sha256": "ee314d38cb3975d251f932dcccba77de1a16864acd2086a7511b2dfe48656f14"
+    },
+    {
+      "path": "assets/index-LA-GCc30.css",
+      "bytes": 9274,
+      "sha256": "957ec6e16ac70217a9f996f789b3574f38a5c18618eb1e8d37d3f648bb169b03"
+    },
+    {
+      "path": "assets/index-fvYO-LIs.js",
+      "bytes": 256093,
+      "sha256": "38a2d9c4ab066664f8b67e25143043d4c5f42ce8fcbff32035354e43e1970934"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 284,
+      "sha256": "1f4af092ead224bc45ee61a566ef80d877282ac8dc82fbb97be8bb03a5135149"
+    },
+    {
+      "path": "fonts/Archivo-Black-OFL.txt",
+      "bytes": 4399,
+      "sha256": "4eb085b4f06e3c1625d8b577902bf639d480633635837bf2ed94d1a7b1b842f5"
+    },
+    {
+      "path": "fonts/Barlow-Condensed-OFL.txt",
+      "bytes": 4377,
+      "sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f"
+    },
+    {
+      "path": "fonts/Basteleur-Bold.woff2",
+      "bytes": 48040,
+      "sha256": "2a43b63af007450e81a19fb184a8bb19f4a72e9a9d8461694fd495087ce3d4af"
+    },
+    {
+      "path": "fonts/Basteleur-COPYRIGHT.md",
+      "bytes": 53,
+      "sha256": "1beb2a5645516a2472b04a0fb57f96a6735c3f31fec6a30d91eb16dedde59c9b"
+    },
+    {
+      "path": "fonts/Basteleur-Moonlight.woff2",
+      "bytes": 44820,
+      "sha256": "9517a47c65fcdb75c82fa138130593f86deda1b977b98f5bd9738a352802e64a"
+    },
+    {
+      "path": "fonts/Basteleur-OFL.txt",
+      "bytes": 4495,
+      "sha256": "bf7e42d235d42957d4d081f3416c49354cc1fb21580d86ee0cf0136a58199b51"
+    },
+    {
+      "path": "fonts/Caveat-OFL.txt",
+      "bytes": 4385,
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+    },
+    {
+      "path": "fonts/Cormorant-Garamond-OFL.txt",
+      "bytes": 4387,
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956"
+    },
+    {
+      "path": "fonts/Courier-Prime-OFL.txt",
+      "bytes": 4403,
+      "sha256": "9a755af092b494944c99f471be6fddd19b006a448fefdc4717e4ee0aa09a97b0"
+    },
+    {
+      "path": "fonts/DM-Sans-OFL.txt",
+      "bytes": 4389,
+      "sha256": "2af94f4fb533be8fa23282eb33e08ca311ddf47c2f32777e2040b282deeec65c"
+    },
+    {
+      "path": "fonts/Luxurious-Script-OFL.txt",
+      "bytes": 4397,
+      "sha256": "0d53601eaba9a6f5dbf7ee43e26edbb37ea5fb7f3f170052ca5dc8d51704a5ea"
+    },
+    {
+      "path": "fonts/LuxuriousScript-Campaign.woff2",
+      "bytes": 9388,
+      "sha256": "20a82f05eca3434ec7068c713f81b1c764eb16a18e67712d5d86291fcff7d02a"
+    },
+    {
+      "path": "fonts/LuxuriousScript-Regular.woff2",
+      "bytes": 127940,
+      "sha256": "c1518f3f43713ddd198bda29d88889675c58b294161fc32fdac2113ae14f2cf0"
+    },
+    {
+      "path": "fonts/Source-Serif-4-OFL.txt",
+      "bytes": 4400,
+      "sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9"
+    },
+    {
+      "path": "fonts/condensed.woff2",
+      "bytes": 33132,
+      "sha256": "9578b1b9d14e68b5167f27edc818b956bdb33aa30e8b49848d99d40c1804af65"
+    },
+    {
+      "path": "fonts/display-serif-italic.woff2",
+      "bytes": 24668,
+      "sha256": "ba5aa5c7aaaf3529dd1ec3345c1d6354dfdeb3c689a7392a19009fa422a4136e"
+    },
+    {
+      "path": "fonts/display-serif.woff2",
+      "bytes": 23952,
+      "sha256": "c26e9d26fdae7c46a812090987f461e410dcb856ac9f9b721834076cf2143678"
+    },
+    {
+      "path": "fonts/display.woff2",
+      "bytes": 30212,
+      "sha256": "cfdd9d470da97eac4404f118cd248aa35e6d30e968cdc81db9e20053543d11c5"
+    },
+    {
+      "path": "fonts/hand.woff2",
+      "bytes": 100896,
+      "sha256": "b8015df93e2e68f3c535a73da3afb6ba4362a6af01bf0a1103b421eb91bc7620"
+    },
+    {
+      "path": "fonts/sans.woff2",
+      "bytes": 19112,
+      "sha256": "f9f57fe9daa5f9de4db7f451a50c364b5757a11cf6105543fab1502e8215eef5"
+    },
+    {
+      "path": "fonts/serif.woff2",
+      "bytes": 54960,
+      "sha256": "9f9d21347de26bbf2f2e3ca6b7af6b2bce87a96655e2374f71b9826245a6cb6b"
+    },
+    {
+      "path": "fonts/typewriter-italic.woff2",
+      "bytes": 29120,
+      "sha256": "a4dfde805f617084841480a4ccffc36e05810850e011ae7f3bcd165607b2c661"
+    },
+    {
+      "path": "fonts/typewriter.woff2",
+      "bytes": 25804,
+      "sha256": "b2c87c9127e8c69f6d44addcbf5a56aea78758cbff0490bd9345d40a8fe35b2b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 739,
+      "sha256": "2bba053b489600639b053c3e5b9a62658ba30aa82b4f626d8f10d79e1fc2e508"
+    }
+  ]
+}

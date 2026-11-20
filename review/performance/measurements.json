@@ -1,0 +1,4525 @@
+{
+  "settings": {
+    "browser": "Playwright Firefox153 headless desktop engine",
+    "viewport": "390x844 CSS px",
+    "latencyBeforeEachResponseMs": 100,
+    "sharedResponseBodyBytesPerSecond": 125000,
+    "compression": "Brotli quality5 for text",
+    "staticCache": "public max-age3600 immutable",
+    "database": "One shared in-memory PostgreSQL database, seeded original twelve letters",
+    "cold": "New browser context",
+    "warm": "Same context, fresh navigation with cached static resources",
+    "repetitions": 3
+  },
+  "results": [
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 1,
+      "wallTimeMs": 8929.015249999997,
+      "totalEncodedBodyBytes": 885793,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 3319,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-second-saturday",
+      "heading": "To someone standing at the edge of the court,",
+      "firstParagraph": "I joined a Saturday badminton session and spent the first ten minutes pretending to tie my shoes. Everyone seemed to have a partner already. Mine were tied. I checked them again.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 8352,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -5,
+          "domainLookupStart": 29,
+          "domainLookupEnd": 29,
+          "connectStart": 29,
+          "connectEnd": 30,
+          "secureConnectionStart": 0,
+          "requestStart": 30,
+          "finalResponseHeadersStart": 160,
+          "firstInterimResponseStart": 0,
+          "responseStart": 160,
+          "responseEnd": 160,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 366,
+          "domContentLoadedEventStart": 3106,
+          "domContentLoadedEventEnd": 3108,
+          "domComplete": 8351,
+          "loadEventStart": 8351,
+          "loadEventEnd": 8352,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1270
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1363
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2218
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2689
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 491
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 3519
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1015
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 7486
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 3325
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 2825
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1024,
+          "encodedBodySize": 724,
+          "decodedBodySize": 1721,
+          "duration": 160
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 4449
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 1,
+      "wallTimeMs": 913.7713199999998,
+      "totalEncodedBodyBytes": 1219,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 400,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-extra-chairs",
+      "heading": "To someone who wants to help,",
+      "firstParagraph": "We spent longer making the book donation poster than we did talking to the reading room. I know because I made the poster. There were several font discussions.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 269,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -4,
+          "domainLookupStart": 15,
+          "domainLookupEnd": 15,
+          "connectStart": 15,
+          "connectEnd": 15,
+          "secureConnectionStart": 0,
+          "requestStart": 15,
+          "finalResponseHeadersStart": 119,
+          "firstInterimResponseStart": 0,
+          "responseStart": 119,
+          "responseEnd": 120,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 126,
+          "unloadEventEnd": 126,
+          "domInteractive": 143,
+          "domContentLoadedEventStart": 265,
+          "domContentLoadedEventEnd": 266,
+          "domComplete": 269,
+          "loadEventStart": 269,
+          "loadEventEnd": 269,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 39
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 40
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 39
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 40
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 125
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1055,
+          "encodedBodySize": 755,
+          "decodedBodySize": 1859,
+          "duration": 120
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 1,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-extra-chairs",
+        "/api/letters/the-last-page"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 1,
+      "wallTimeMs": 2461.080774000002,
+      "totalEncodedBodyBytes": 144771,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 520,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1839,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 4,
+          "domainLookupEnd": 4,
+          "connectStart": 4,
+          "connectEnd": 4,
+          "secureConnectionStart": 0,
+          "requestStart": 5,
+          "finalResponseHeadersStart": 113,
+          "firstInterimResponseStart": 0,
+          "responseStart": 113,
+          "responseEnd": 113,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 3.4,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 131,
+          "domContentLoadedEventStart": 1836,
+          "domContentLoadedEventEnd": 1838,
+          "domComplete": 1839,
+          "loadEventStart": 1839,
+          "loadEventEnd": 1839,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1669
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 199
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 929
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1806
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 1158
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 1,
+      "wallTimeMs": 754.1945399999968,
+      "totalEncodedBodyBytes": 1808,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 174,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 234,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "secureConnectionStart": 0,
+          "requestStart": 3,
+          "finalResponseHeadersStart": 115,
+          "firstInterimResponseStart": 0,
+          "responseStart": 115,
+          "responseEnd": 124,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 1.9,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 152,
+          "unloadEventEnd": 154,
+          "domInteractive": 174,
+          "domContentLoadedEventStart": 231,
+          "domContentLoadedEventEnd": 233,
+          "domComplete": 234,
+          "loadEventStart": 234,
+          "loadEventEnd": 234,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 27
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 60
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 1,
+      "apiReadPaths": [
+        "/api/rotation?exclude=outside-the-feed"
+      ],
+      "canvasExports": 0
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 2,
+      "wallTimeMs": 2093.0921769999986,
+      "totalEncodedBodyBytes": 144771,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 291,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1457,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 3,
+          "domainLookupEnd": 3,
+          "connectStart": 3,
+          "connectEnd": 4,
+          "secureConnectionStart": 0,
+          "requestStart": 4,
+          "finalResponseHeadersStart": 109,
+          "firstInterimResponseStart": 0,
+          "responseStart": 109,
+          "responseEnd": 109,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 3.3,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 128,
+          "domContentLoadedEventStart": 1455,
+          "domContentLoadedEventEnd": 1457,
+          "domComplete": 1457,
+          "loadEventStart": 1457,
+          "loadEventEnd": 1457,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1300
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 149
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 705
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1431
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 996
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 2,
+      "wallTimeMs": 769.4664749999938,
+      "totalEncodedBodyBytes": 1808,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 138,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 230,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -5,
+          "domainLookupStart": -5,
+          "domainLookupEnd": -5,
+          "connectStart": -5,
+          "connectEnd": -5,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 112,
+          "firstInterimResponseStart": 0,
+          "responseStart": 112,
+          "responseEnd": 112,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 3.6,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 121,
+          "unloadEventEnd": 121,
+          "domInteractive": 138,
+          "domContentLoadedEventStart": 229,
+          "domContentLoadedEventEnd": 230,
+          "domComplete": 230,
+          "loadEventStart": 230,
+          "loadEventEnd": 230,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 43
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 101
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 2,
+      "apiReadPaths": [
+        "/api/rotation?exclude=outside-the-feed"
+      ],
+      "canvasExports": 0
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 2,
+      "wallTimeMs": 8395.545688000006,
+      "totalEncodedBodyBytes": 885818,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 2844,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-last-page",
+      "heading": "To someone thinking of leaving the team,",
+      "firstParagraph": "Our student magazine had eleven files called some version of FINAL. I was checking captions on a Sunday night when someone uploaded FINAL_ACTUALLY_FINAL. I nearly threw my phone.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 7758,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 3,
+          "domainLookupEnd": 3,
+          "connectStart": 3,
+          "connectEnd": 3,
+          "secureConnectionStart": 0,
+          "requestStart": 3,
+          "finalResponseHeadersStart": 106,
+          "firstInterimResponseStart": 0,
+          "responseStart": 106,
+          "responseEnd": 106,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 124,
+          "domContentLoadedEventStart": 2667,
+          "domContentLoadedEventEnd": 2669,
+          "domComplete": 7757,
+          "loadEventStart": 7757,
+          "loadEventEnd": 7758,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1212
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 308
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1129
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2030
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2489
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 3272
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1008
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 7317
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 3178
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 2699
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1049,
+          "encodedBodySize": 749,
+          "decodedBodySize": 1853,
+          "duration": 147
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 4359
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 2,
+      "wallTimeMs": 839.9590719999978,
+      "totalEncodedBodyBytes": 1218,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 326,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-question-about-the-moon",
+      "heading": "To the person who checks the score first,",
+      "firstParagraph": "My little sister showed me a drawing of the moon. I asked if it was homework. Nope. A competition? Also nope. She'd just felt like drawing the moon.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 211,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -5,
+          "domainLookupStart": 8,
+          "domainLookupEnd": 8,
+          "connectStart": 8,
+          "connectEnd": 8,
+          "secureConnectionStart": 0,
+          "requestStart": 9,
+          "finalResponseHeadersStart": 112,
+          "firstInterimResponseStart": 0,
+          "responseStart": 112,
+          "responseEnd": 112,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 117,
+          "unloadEventEnd": 117,
+          "domInteractive": 134,
+          "domContentLoadedEventStart": 205,
+          "domContentLoadedEventEnd": 208,
+          "domComplete": 211,
+          "loadEventStart": 211,
+          "loadEventEnd": 211,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 33
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 34
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 35
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 35
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 72
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1054,
+          "encodedBodySize": 754,
+          "decodedBodySize": 1784,
+          "duration": 106
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 2,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-question-about-the-moon",
+        "/api/letters/the-shallow-end"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 3,
+      "wallTimeMs": 10471.565313,
+      "totalEncodedBodyBytes": 885824,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 3936,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-extra-chairs",
+      "heading": "To someone who wants to help,",
+      "firstParagraph": "We spent longer making the book donation poster than we did talking to the reading room. I know because I made the poster. There were several font discussions.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 9966,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": 4,
+          "domainLookupEnd": 4,
+          "connectStart": 4,
+          "connectEnd": 4,
+          "secureConnectionStart": 0,
+          "requestStart": 4,
+          "finalResponseHeadersStart": 106,
+          "firstInterimResponseStart": 0,
+          "responseStart": 106,
+          "responseEnd": 106,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 124,
+          "domContentLoadedEventStart": 2657,
+          "domContentLoadedEventEnd": 2659,
+          "domComplete": 9961,
+          "loadEventStart": 9961,
+          "loadEventEnd": 9966,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 308
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1194
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1255
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2029
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2492
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 4381
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1060
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 9464
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 4028
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 4510
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1055,
+          "encodedBodySize": 755,
+          "decodedBodySize": 1859,
+          "duration": 1239
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 5945
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 3,
+      "wallTimeMs": 846.2348150000034,
+      "totalEncodedBodyBytes": 1213,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/rotation"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 339,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-last-page",
+      "heading": "To someone thinking of leaving the team,",
+      "firstParagraph": "Our student magazine had eleven files called some version of FINAL. I was checking captions on a Sunday night when someone uploaded FINAL_ACTUALLY_FINAL. I nearly threw my phone.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 220,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -3,
+          "domainLookupStart": -3,
+          "domainLookupEnd": -3,
+          "connectStart": -3,
+          "connectEnd": -3,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 106,
+          "firstInterimResponseStart": 0,
+          "responseStart": 106,
+          "responseEnd": 106,
+          "transferSize": 764,
+          "encodedBodySize": 464,
+          "decodedBodySize": 1566,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 113,
+          "unloadEventEnd": 114,
+          "domInteractive": 131,
+          "domContentLoadedEventStart": 216,
+          "domContentLoadedEventEnd": 217,
+          "domComplete": 220,
+          "loadEventStart": 220,
+          "loadEventEnd": 220,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 31
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 31
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 34
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 35
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 89
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/rotation",
+          "initiatorType": "fetch",
+          "transferSize": 1049,
+          "encodedBodySize": 749,
+          "decodedBodySize": 1853,
+          "duration": 106
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 3,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-last-page",
+        "/api/letters/outside-the-feed"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "cold",
+      "repetition": 3,
+      "wallTimeMs": 2228.7677330000006,
+      "totalEncodedBodyBytes": 144771,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 409,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1606,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 12,
+          "domainLookupEnd": 12,
+          "connectStart": 12,
+          "connectEnd": 13,
+          "secureConnectionStart": 0,
+          "requestStart": 13,
+          "finalResponseHeadersStart": 119,
+          "firstInterimResponseStart": 0,
+          "responseStart": 119,
+          "responseEnd": 131,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 2.5,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 152,
+          "domContentLoadedEventStart": 1602,
+          "domContentLoadedEventEnd": 1603,
+          "domComplete": 1605,
+          "loadEventStart": 1605,
+          "loadEventEnd": 1606,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 198
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 787
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1409
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1551
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 1073
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "warm",
+      "repetition": 3,
+      "wallTimeMs": 734.4243180000049,
+      "totalEncodedBodyBytes": 1808,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 132,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/",
+      "heading": "To someone with a very familiar feed,",
+      "firstParagraph": "A friend borrowed my phone to find a recipe and asked why I watched so many videos of people tidying desks. Fair question. My own desk has a cup on it that I'm scared to investigate.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 203,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 0,
+          "domainLookupEnd": 0,
+          "connectStart": 0,
+          "connectEnd": 0,
+          "secureConnectionStart": 0,
+          "requestStart": 3,
+          "finalResponseHeadersStart": 107,
+          "firstInterimResponseStart": 0,
+          "responseStart": 107,
+          "responseEnd": 107,
+          "transferSize": 2108,
+          "encodedBodySize": 1808,
+          "decodedBodySize": 6187,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 2.5,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 119,
+          "unloadEventEnd": 120,
+          "domInteractive": 133,
+          "domContentLoadedEventStart": 200,
+          "domContentLoadedEventEnd": 202,
+          "domComplete": 203,
+          "loadEventStart": 203,
+          "loadEventEnd": 203,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 36
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 73
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "featured",
+      "cache": "next",
+      "repetition": 3,
+      "apiReadPaths": [
+        "/api/rotation?exclude=outside-the-feed"
+      ],
+      "canvasExports": 0
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 1,
+      "wallTimeMs": 60344.902361,
+      "totalEncodedBodyBytes": 885850,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 2864,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 59675,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 2,
+          "domainLookupEnd": 2,
+          "connectStart": 2,
+          "connectEnd": 2,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 108,
+          "firstInterimResponseStart": 0,
+          "responseStart": 108,
+          "responseEnd": 108,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 121,
+          "domContentLoadedEventStart": 2692,
+          "domContentLoadedEventEnd": 2693,
+          "domComplete": 59674,
+          "loadEventStart": 59674,
+          "loadEventEnd": 59675,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1143
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1235
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2043
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2518
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 326
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 3281
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1010
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 59060
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 56872
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 56846
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 145
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 56662
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 1,
+      "wallTimeMs": 2441.531661999994,
+      "totalEncodedBodyBytes": 1245,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 1915,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1796,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -8,
+          "domainLookupStart": 5,
+          "domainLookupEnd": 5,
+          "connectStart": 5,
+          "connectEnd": 5,
+          "secureConnectionStart": 0,
+          "requestStart": 6,
+          "finalResponseHeadersStart": 112,
+          "firstInterimResponseStart": 0,
+          "responseStart": 112,
+          "responseEnd": 113,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 1653,
+          "unloadEventEnd": 1654,
+          "domInteractive": 1684,
+          "domContentLoadedEventStart": 1790,
+          "domContentLoadedEventEnd": 1791,
+          "domComplete": 1796,
+          "loadEventStart": 1796,
+          "loadEventEnd": 1796,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 48
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 49
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 51
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 53
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 106
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 111
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 1,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase",
+        "/api/letters/the-word-on-the-board"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 1,
+      "wallTimeMs": 2303.262803999998,
+      "totalEncodedBodyBytes": 144745,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 319,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1512,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": 7,
+          "domainLookupEnd": 7,
+          "connectStart": 7,
+          "connectEnd": 7,
+          "secureConnectionStart": 0,
+          "requestStart": 7,
+          "finalResponseHeadersStart": 118,
+          "firstInterimResponseStart": 0,
+          "responseStart": 118,
+          "responseEnd": 118,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 1.8,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 136,
+          "domContentLoadedEventStart": 1506,
+          "domContentLoadedEventEnd": 1509,
+          "domComplete": 1512,
+          "loadEventStart": 1512,
+          "loadEventEnd": 1512,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1305
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 159
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 734
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1492
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 990
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 1,
+      "wallTimeMs": 730.2772129999939,
+      "totalEncodedBodyBytes": 1782,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 135,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 214,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "secureConnectionStart": 0,
+          "requestStart": 4,
+          "finalResponseHeadersStart": 112,
+          "firstInterimResponseStart": 0,
+          "responseStart": 112,
+          "responseEnd": 112,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 2.1,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 119,
+          "unloadEventEnd": 119,
+          "domInteractive": 135,
+          "domContentLoadedEventStart": 211,
+          "domContentLoadedEventEnd": 213,
+          "domComplete": 214,
+          "loadEventStart": 214,
+          "loadEventEnd": 214,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 29
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 75
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 1,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase"
+      ],
+      "canvasExports": 0
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 2,
+      "wallTimeMs": 2321.318726000027,
+      "totalEncodedBodyBytes": 144745,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 482,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1704,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": 3,
+          "domainLookupEnd": 3,
+          "connectStart": 3,
+          "connectEnd": 3,
+          "secureConnectionStart": 0,
+          "requestStart": 3,
+          "finalResponseHeadersStart": 111,
+          "firstInterimResponseStart": 0,
+          "responseStart": 111,
+          "responseEnd": 111,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 4.8,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 133,
+          "domContentLoadedEventStart": 1700,
+          "domContentLoadedEventEnd": 1703,
+          "domComplete": 1704,
+          "loadEventStart": 1704,
+          "loadEventEnd": 1704,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 207
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 840
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1477
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1671
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 1022
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 2,
+      "wallTimeMs": 795.9222549999831,
+      "totalEncodedBodyBytes": 1782,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 136,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 180,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 110,
+          "firstInterimResponseStart": 0,
+          "responseStart": 110,
+          "responseEnd": 110,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 6,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 114,
+          "unloadEventEnd": 115,
+          "domInteractive": 136,
+          "domContentLoadedEventStart": 178,
+          "domContentLoadedEventEnd": 179,
+          "domComplete": 180,
+          "loadEventStart": 180,
+          "loadEventEnd": 180,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 15
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 44
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 2,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase"
+      ],
+      "canvasExports": 0
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 2,
+      "wallTimeMs": 8313.598283,
+      "totalEncodedBodyBytes": 885850,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 2837,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 7797,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0,
+          "domainLookupStart": 1,
+          "domainLookupEnd": 1,
+          "connectStart": 1,
+          "connectEnd": 2,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 107,
+          "firstInterimResponseStart": 0,
+          "responseStart": 107,
+          "responseEnd": 107,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 121,
+          "domContentLoadedEventStart": 2688,
+          "domContentLoadedEventEnd": 2691,
+          "domComplete": 7796,
+          "loadEventStart": 7796,
+          "loadEventEnd": 7797,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1133
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1214
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2051
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2518
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 328
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 3265
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1030
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 7340
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 3200
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 2701
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 122
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 4389
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 2,
+      "wallTimeMs": 1135.734318999981,
+      "totalEncodedBodyBytes": 1245,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 629,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 485,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -4,
+          "domainLookupStart": -4,
+          "domainLookupEnd": -4,
+          "connectStart": -4,
+          "connectEnd": -4,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 110,
+          "firstInterimResponseStart": 0,
+          "responseStart": 110,
+          "responseEnd": 110,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 115,
+          "unloadEventEnd": 115,
+          "domInteractive": 127,
+          "domContentLoadedEventStart": 383,
+          "domContentLoadedEventEnd": 442,
+          "domComplete": 484,
+          "loadEventStart": 484,
+          "loadEventEnd": 485,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 49
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 49
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 50
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 52
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 359
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 172
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 2,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase",
+        "/api/letters/the-question-about-the-moon"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 3,
+      "wallTimeMs": 12701.951185999991,
+      "totalEncodedBodyBytes": 885850,
+      "requestCount": 13,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 122692,
+      "artBytes": 675238,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 3407,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 12175,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": 2,
+          "domainLookupEnd": 2,
+          "connectStart": 2,
+          "connectEnd": 2,
+          "secureConnectionStart": 0,
+          "requestStart": 3,
+          "finalResponseHeadersStart": 107,
+          "firstInterimResponseStart": 0,
+          "responseStart": 107,
+          "responseEnd": 107,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 126,
+          "domContentLoadedEventStart": 3202,
+          "domContentLoadedEventEnd": 3205,
+          "domComplete": 12174,
+          "loadEventStart": 12174,
+          "loadEventEnd": 12175,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 24968,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 1527
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 24252,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 1598
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 55260,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 2394
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 5133,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 627
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 82142,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 2953
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 3833
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/sans.woff2",
+          "initiatorType": "other",
+          "transferSize": 19412,
+          "encodedBodySize": 19112,
+          "decodedBodySize": 19112,
+          "duration": 1032
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/olive-ground.webp",
+          "initiatorType": "css",
+          "transferSize": 333480,
+          "encodedBodySize": 333180,
+          "decodedBodySize": 333180,
+          "duration": 11235
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/tedx-logo.png",
+          "initiatorType": "img",
+          "transferSize": 98588,
+          "encodedBodySize": 98288,
+          "decodedBodySize": 98288,
+          "duration": 3213
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/white-flower.webp",
+          "initiatorType": "img",
+          "transferSize": 78622,
+          "encodedBodySize": 78322,
+          "decodedBodySize": 78322,
+          "duration": 2700
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 158
+        },
+        {
+          "name": "http://127.0.0.1:4188/art/heart-paper.webp",
+          "initiatorType": "img",
+          "transferSize": 165562,
+          "encodedBodySize": 165262,
+          "decodedBodySize": 165262,
+          "duration": 8711
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 3,
+      "wallTimeMs": 952.0519499999937,
+      "totalEncodedBodyBytes": 1245,
+      "requestCount": 2,
+      "apiReadCount": 1,
+      "apiReadPaths": [
+        "/api/letters/the-old-staircase"
+      ],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 362,
+      "canvasExports": 1,
+      "marks": [],
+      "url": "http://127.0.0.1:4188/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4188/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 228,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -2,
+          "domainLookupStart": -2,
+          "domainLookupEnd": -2,
+          "connectStart": -2,
+          "connectEnd": -2,
+          "secureConnectionStart": 0,
+          "requestStart": 4,
+          "finalResponseHeadersStart": 116,
+          "firstInterimResponseStart": 0,
+          "responseStart": 116,
+          "responseEnd": 116,
+          "transferSize": 795,
+          "encodedBodySize": 495,
+          "decodedBodySize": 1670,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [],
+          "unloadEventStart": 121,
+          "unloadEventEnd": 121,
+          "domInteractive": 137,
+          "domContentLoadedEventStart": 226,
+          "domContentLoadedEventEnd": 228,
+          "domComplete": 228,
+          "loadEventStart": 228,
+          "loadEventEnd": 228,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif-italic.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 24668,
+          "decodedBodySize": 24668,
+          "duration": 35
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 54960,
+          "decodedBodySize": 54960,
+          "duration": 37
+        },
+        {
+          "name": "http://127.0.0.1:4188/fonts/display-serif.woff2",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 23952,
+          "decodedBodySize": 23952,
+          "duration": 38
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-DVrktQNY.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 4833,
+          "decodedBodySize": 19806,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4188/assets/index-D7JUhCKw.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 81842,
+          "decodedBodySize": 279662,
+          "duration": 39
+        },
+        {
+          "name": "http://127.0.0.1:4188/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 98
+        },
+        {
+          "name": "http://127.0.0.1:4188/api/letters/the-old-staircase",
+          "initiatorType": "fetch",
+          "transferSize": 1050,
+          "encodedBodySize": 750,
+          "decodedBodySize": 1815,
+          "duration": 126
+        }
+      ]
+    },
+    {
+      "variant": "prior",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 3,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase",
+        "/api/letters/the-second-saturday"
+      ],
+      "canvasExports": 2
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "cold",
+      "repetition": 3,
+      "wallTimeMs": 2327.5792310000106,
+      "totalEncodedBodyBytes": 144745,
+      "requestCount": 6,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 44820,
+      "artBytes": 20082,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 353,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 1691,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": 2,
+          "domainLookupEnd": 2,
+          "connectStart": 2,
+          "connectEnd": 2,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 113,
+          "firstInterimResponseStart": 0,
+          "responseStart": 113,
+          "responseEnd": 113,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 6.7,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 134,
+          "domContentLoadedEventStart": 1685,
+          "domContentLoadedEventEnd": 1690,
+          "domComplete": 1691,
+          "loadEventStart": 1691,
+          "loadEventEnd": 1691,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 75751,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 1489
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 2910,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 196
+        },
+        {
+          "name": "http://127.0.0.1:4189/art/tedx-logo-header.webp",
+          "initiatorType": "img",
+          "transferSize": 20196,
+          "encodedBodySize": 19896,
+          "decodedBodySize": 19896,
+          "duration": 770
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 486,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 1651
+        },
+        {
+          "name": "http://127.0.0.1:4189/fonts/Basteleur-Moonlight.woff2",
+          "initiatorType": "other",
+          "transferSize": 45120,
+          "encodedBodySize": 44820,
+          "decodedBodySize": 44820,
+          "duration": 1068
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "warm",
+      "repetition": 3,
+      "wallTimeMs": 731.325353000022,
+      "totalEncodedBodyBytes": 1782,
+      "requestCount": 1,
+      "apiReadCount": 0,
+      "apiReadPaths": [],
+      "fontBytes": 0,
+      "artBytes": 0,
+      "entryShareBuilderRequests": [],
+      "firstReadable": 138,
+      "canvasExports": 0,
+      "marks": [],
+      "url": "http://127.0.0.1:4189/?letter=the-old-staircase",
+      "heading": "To anyone starting over,",
+      "firstParagraph": "I changed courses last semester. On the first Monday, I went to my old building by mistake. Got halfway up the stairs, checked my phone, and had to turn around. Great start.",
+      "navigation": [
+        {
+          "name": "http://127.0.0.1:4189/?letter=the-old-staircase",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 211,
+          "initiatorType": "navigation",
+          "nextHopProtocol": "http/1.1",
+          "workerStart": 0,
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": -1,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "secureConnectionStart": 0,
+          "requestStart": 2,
+          "finalResponseHeadersStart": 112,
+          "firstInterimResponseStart": 0,
+          "responseStart": 112,
+          "responseEnd": 112,
+          "transferSize": 2082,
+          "encodedBodySize": 1782,
+          "decodedBodySize": 6128,
+          "responseStatus": 200,
+          "contentType": "text/html",
+          "serverTiming": [
+            {
+              "name": "reader",
+              "duration": 7,
+              "description": ""
+            }
+          ],
+          "unloadEventStart": 118,
+          "unloadEventEnd": 119,
+          "domInteractive": 138,
+          "domContentLoadedEventStart": 207,
+          "domContentLoadedEventEnd": 209,
+          "domComplete": 211,
+          "loadEventStart": 211,
+          "loadEventEnd": 211,
+          "type": "navigate",
+          "redirectCount": 0
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://127.0.0.1:4189/assets/index-LA-GCc30.css",
+          "initiatorType": "link",
+          "transferSize": 0,
+          "encodedBodySize": 2610,
+          "decodedBodySize": 9274,
+          "duration": 0
+        },
+        {
+          "name": "http://127.0.0.1:4189/assets/index-fvYO-LIs.js",
+          "initiatorType": "script",
+          "transferSize": 0,
+          "encodedBodySize": 75451,
+          "decodedBodySize": 256093,
+          "duration": 23
+        },
+        {
+          "name": "http://127.0.0.1:4189/favicon.svg",
+          "initiatorType": "other",
+          "transferSize": 0,
+          "encodedBodySize": 186,
+          "decodedBodySize": 284,
+          "duration": 67
+        }
+      ]
+    },
+    {
+      "variant": "redesign",
+      "scenario": "deep",
+      "cache": "next",
+      "repetition": 3,
+      "apiReadPaths": [
+        "/api/rotation?exclude=the-old-staircase"
+      ],
+      "canvasExports": 0
+    }
+  ],
+  "pageErrors": [],
+  "requests": [
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 724,
+      "decodedBytes": 1721,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-1",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-1",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-1",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 755,
+      "decodedBytes": 1859,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-1",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-extra-chairs",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 749,
+      "decodedBytes": 1853,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-1",
+      "method": "GET",
+      "path": "/api/letters/the-last-page",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 749,
+      "decodedBytes": 1853,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-1",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-warm-1",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-next-1",
+      "method": "GET",
+      "path": "/api/rotation?exclude=outside-the-feed",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 749,
+      "decodedBytes": 1853,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-2",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-warm-2",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-next-2",
+      "method": "GET",
+      "path": "/api/rotation?exclude=outside-the-feed",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 736,
+      "decodedBytes": 1769,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 749,
+      "decodedBytes": 1853,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-2",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-2",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-2",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 754,
+      "decodedBytes": 1784,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-2",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-question-about-the-moon",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 736,
+      "decodedBytes": 1769,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-2",
+      "method": "GET",
+      "path": "/api/letters/the-shallow-end",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 736,
+      "decodedBytes": 1769,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 755,
+      "decodedBytes": 1859,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-cold-3",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-3",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 464,
+      "decodedBytes": 1566,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-warm-3",
+      "method": "GET",
+      "path": "/api/rotation",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 749,
+      "decodedBytes": 1853,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-3",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-last-page",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 776,
+      "decodedBytes": 1813,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-featured-next-3",
+      "method": "GET",
+      "path": "/api/letters/outside-the-feed",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 776,
+      "decodedBytes": 1813,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-cold-3",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-warm-3",
+      "method": "GET",
+      "path": "/",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1808,
+      "decodedBytes": 6187,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-featured-next-3",
+      "method": "GET",
+      "path": "/api/rotation?exclude=outside-the-feed",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-1",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-1",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-1",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-1",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 763,
+      "decodedBytes": 1873,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-1",
+      "method": "GET",
+      "path": "/api/letters/the-word-on-the-board",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 763,
+      "decodedBytes": 1873,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-1",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-warm-1",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-next-1",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 736,
+      "decodedBytes": 1769,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-2",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-warm-2",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-next-2",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 763,
+      "decodedBytes": 1873,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-2",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-2",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-2",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-2",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 754,
+      "decodedBytes": 1784,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-2",
+      "method": "GET",
+      "path": "/api/letters/the-question-about-the-moon",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 754,
+      "decodedBytes": 1784,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/fonts/display-serif-italic.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 24668,
+      "decodedBytes": 24668,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/fonts/serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 54960,
+      "decodedBytes": 54960,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/fonts/display-serif.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 23952,
+      "decodedBytes": 23952,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/assets/index-D7JUhCKw.js",
+      "type": "text/javascript",
+      "encodedBytes": 81842,
+      "decodedBytes": 279662,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/assets/index-DVrktQNY.css",
+      "type": "text/css",
+      "encodedBytes": 4833,
+      "decodedBytes": 19806,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/fonts/sans.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 19112,
+      "decodedBytes": 19112,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/art/olive-ground.webp",
+      "type": "image/webp",
+      "encodedBytes": 333180,
+      "decodedBytes": 333180,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/art/tedx-logo.png",
+      "type": "image/png",
+      "encodedBytes": 98288,
+      "decodedBytes": 98288,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/art/white-flower.webp",
+      "type": "image/webp",
+      "encodedBytes": 78322,
+      "decodedBytes": 78322,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/art/heart-paper.webp",
+      "type": "image/webp",
+      "encodedBytes": 165262,
+      "decodedBytes": 165262,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-cold-3",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-3",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 495,
+      "decodedBytes": 1670,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-warm-3",
+      "method": "GET",
+      "path": "/api/letters/the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 750,
+      "decodedBytes": 1815,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-3",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 724,
+      "decodedBytes": 1721,
+      "status": 200
+    },
+    {
+      "variant": "prior",
+      "run": "prior-deep-next-3",
+      "method": "GET",
+      "path": "/api/letters/the-second-saturday",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 724,
+      "decodedBytes": 1721,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/assets/index-fvYO-LIs.js",
+      "type": "text/javascript",
+      "encodedBytes": 75451,
+      "decodedBytes": 256093,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/assets/index-LA-GCc30.css",
+      "type": "text/css",
+      "encodedBytes": 2610,
+      "decodedBytes": 9274,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/art/tedx-logo-header.webp",
+      "type": "image/webp",
+      "encodedBytes": 19896,
+      "decodedBytes": 19896,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/fonts/Basteleur-Moonlight.woff2",
+      "type": "font/woff2",
+      "encodedBytes": 44820,
+      "decodedBytes": 44820,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-cold-3",
+      "method": "GET",
+      "path": "/favicon.svg",
+      "type": "image/svg+xml",
+      "encodedBytes": 186,
+      "decodedBytes": 284,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-warm-3",
+      "method": "GET",
+      "path": "/?letter=the-old-staircase",
+      "type": "text/html; charset=utf-8",
+      "encodedBytes": 1782,
+      "decodedBytes": 6128,
+      "status": 200
+    },
+    {
+      "variant": "redesign",
+      "run": "redesign-deep-next-3",
+      "method": "GET",
+      "path": "/api/rotation?exclude=the-old-staircase",
+      "type": "application/json; charset=utf-8",
+      "encodedBytes": 754,
+      "decodedBytes": 1784,
+      "status": 200
+    }
+  ]
+}

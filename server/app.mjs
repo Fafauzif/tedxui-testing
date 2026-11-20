@@ -154,23 +154,102 @@ export async function handleApi(req, res, store = supabaseStore()) {
 }
 
 const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-export async function renderPage(req, html, store = supabaseStore()) {
+const FEATURED_LETTER_ID = 'outside-the-feed';
+
+function readerMarkup(bootstrap) {
+  const letter = bootstrap.letter;
+  let article;
+  if (letter) {
+    article = `<article class="paper letter" aria-labelledby="letter-heading">
+      <div class="letter-meta"><span>${letter.origin === 'editorial' ? 'Fictional editorial letter' : 'Community letter'}</span>${letter.topic ? `<span>${escapeHtml(letter.topic)}</span>` : ''}</div>
+      <h1 id="letter-heading" tabindex="-1">${escapeHtml(letter.salutation)}</h1>
+      <div class="reader-actions" aria-hidden="true"><span style="display:block;height:44px;width:0"></span></div>
+      <div class="letter-body">${letter.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</div>
+      <p class="letter-signoff">${escapeHtml(letter.signoff)}</p>
+    </article>`;
+  } else {
+    const title = bootstrap.error === 'missing'
+      ? 'This letter is unavailable.'
+      : bootstrap.error === 'empty' ? 'A little room for words.' : 'Letters are taking a moment.';
+    const message = bootstrap.error === 'missing'
+      ? 'There are other letters waiting to be read.'
+      : bootstrap.error === 'empty' ? 'Be the first to leave a letter for someone.' : 'The collection could not be reached. Try again in a moment.';
+    article = `<section class="paper state-paper"><p class="eyebrow">Letters to Grow</p><h1 id="letter-heading">${title}</h1><p>${message}</p></section>`;
+  }
+  return `<div class="app">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="masthead"><div class="masthead-inner">
+      <a href="/" class="brand-home" aria-label="Read Letters to Grow"><img class="official-mark" src="/art/tedx-logo-header.webp" alt="TEDxUniversitasIndonesia · independently organized TED event" width="460" height="114"><span class="masthead-campaign" aria-hidden="true">Letters to Grow<span>.</span></span></a>
+      <nav aria-label="Main navigation"><a href="/?community">Community letters</a><a class="nav-write" href="/?write"><span aria-hidden="true" style="display:inline-block;width:16px;height:16px"></span>Write a letter</a></nav>
+    </div></header>
+    <main id="main" class="layout">
+      <div class="content-column">${article}</div>
+      <aside class="identity" aria-label="About Letters to Grow">
+        <p class="identity-kicker">Still, we grow</p>
+        <a href="/" class="wordmark">Letters<br>to Grow<span aria-hidden="true">.</span></a>
+        <div class="identity-art" aria-hidden="true"><img src="/art/letters-still-life.webp" alt="" width="560" height="700" decoding="async" loading="lazy"></div>
+        <p class="campaign-line">What are you still figuring out?</p>
+      </aside>
+    </main>
+    <footer class="site-footer"><span>Letters to Grow · TEDxUniversitasIndonesia 2027</span></footer>
+  </div>`;
+}
+
+function serializeBootstrap(value) {
+  // The node is inert JSON. Escape HTML delimiters so an author's </script>
+  // cannot terminate it, even before the browser starts the application.
+  return JSON.stringify(value).replace(/[<>&\u2028\u2029]/g, character =>
+    `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`);
+}
+
+export async function renderPage(req, html, store = supabaseStore(), res) {
+  const started = performance.now();
   const url = new URL(req.url, requestOrigin(req));
-  const id = url.searchParams.get('letter');
+  const isReader = !url.searchParams.has('write') && !url.searchParams.has('community');
+  const requestedId = url.searchParams.has('letter') ? url.searchParams.get('letter') : null;
+  let bootstrap = null;
   let title = 'Letters to Grow · Still, We Grow';
   let description = 'Letters about things we’re still figuring out. TEDxUniversitasIndonesia 2027.';
   let canonical = `${requestOrigin(req)}/`;
-  if (id) {
-    canonical += `?letter=${encodeURIComponent(id)}`;
+  if (isReader) {
+    bootstrap = { version: 1, requestedId, letter: null, error: null };
+    const session = sessionId(req);
     try {
-      const letter = validId(id) ? await store.rpc('ltg_letter', { p_id: id }) : null;
-      if (letter) { title = `${letter.salutation} · Letters to Grow`; description = letter.excerpt; }
-      else { title = 'This letter is unavailable · Letters to Grow'; description = 'Read another letter from Letters to Grow.'; }
-    } catch { title = 'Letters to Grow'; description = 'Letters are temporarily unavailable. Please try again.'; }
+      const id = requestedId === null ? FEATURED_LETTER_ID : requestedId;
+      bootstrap.letter = validId(id) ? await store.rpc('ltg_letter', { p_id: id, p_session: session }) : null;
+      // A hidden featured letter can only be replaced by another currently
+      // visible database row. A deep link always retains its exact identity.
+      if (!bootstrap.letter && requestedId === null) {
+        bootstrap.letter = await store.rpc('ltg_rotation', { p_session: session, p_exclude: FEATURED_LETTER_ID });
+      }
+      if (!bootstrap.letter) bootstrap.error = requestedId === null ? 'empty' : 'missing';
+      if (bootstrap.letter && res) setSession(res, req, session);
+    } catch {
+      bootstrap.letter = null;
+      bootstrap.error = 'service';
+    }
+    if (bootstrap.letter) {
+      title = `${bootstrap.letter.salutation} · Letters to Grow`;
+      description = bootstrap.letter.excerpt;
+      canonical += `?letter=${encodeURIComponent(bootstrap.letter.id)}`;
+    } else {
+      if (requestedId !== null) canonical += `?letter=${encodeURIComponent(requestedId)}`;
+      title = bootstrap.error === 'missing' ? 'This letter is unavailable · Letters to Grow' : 'Letters to Grow';
+      description = bootstrap.error === 'service' ? 'Letters are temporarily unavailable. Please try again.' : 'Read another letter from Letters to Grow.';
+    }
   }
   const escaped = { title: escapeHtml(title), description: escapeHtml(description), canonical: escapeHtml(canonical) };
   const robots = process.env.INDEXING_ENABLED === 'true' ? 'index,follow' : 'noindex,nofollow';
-  return html.replace(/<title>[\s\S]*?<\/title>/i, '')
+  let result = html.replace(/<title>[\s\S]*?<\/title>/i, '')
     .replace(/<meta\s+name=["'](?:description|robots)["'][^>]*>/gi, '')
     .replace('</head>', `<title>${escaped.title}</title><meta name="description" content="${escaped.description}"><meta name="robots" content="${robots}"><link rel="canonical" href="${escaped.canonical}"><meta property="og:title" content="${escaped.title}"><meta property="og:description" content="${escaped.description}"><meta property="og:url" content="${escaped.canonical}"><meta property="og:type" content="website"><meta property="og:image" content="${escapeHtml(requestOrigin(req))}/art/social-cover.png"><meta name="twitter:card" content="summary_large_image"></head>`);
+  if (bootstrap) {
+    result = result.replace(/<div\s+id=["']root["']\s*><\/div>/i, () => `<div id="root">${readerMarkup(bootstrap)}</div>`);
+    result = result.replace('</body>', () => `<script id="ltg-reader-bootstrap" type="application/json">${serializeBootstrap(bootstrap)}</script></body>`);
+  }
+  if (res) {
+    res.setHeader('Vary', 'Cookie');
+    res.setHeader('Server-Timing', `reader;dur=${(performance.now() - started).toFixed(1)}`);
+  }
+  return result;
 }

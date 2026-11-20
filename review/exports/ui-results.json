@@ -1,0 +1,62 @@
+[
+  {
+    "width": 320,
+    "layout": {
+      "width": 320,
+      "scroll": 320,
+      "dialogWidth": 280,
+      "dialogScroll": 280
+    },
+    "closePosition": {
+      "top": 20,
+      "bottom": 64,
+      "height": 1000
+    },
+    "saveMatchesPreview": true,
+    "clipboardFallback": true,
+    "formatStyleControls": true,
+    "focusReturns": true,
+    "nativeCancellation": true,
+    "nativeFileMatchesPreview": true
+  },
+  {
+    "width": 390,
+    "layout": {
+      "width": 390,
+      "scroll": 390,
+      "dialogWidth": 350,
+      "dialogScroll": 350
+    },
+    "closePosition": {
+      "top": 20,
+      "bottom": 64,
+      "height": 1000
+    },
+    "saveMatchesPreview": true,
+    "clipboardFallback": true,
+    "formatStyleControls": true,
+    "focusReturns": true,
+    "nativeCancellation": true,
+    "nativeFileMatchesPreview": true
+  },
+  {
+    "width": 1440,
+    "layout": {
+      "width": 1440,
+      "scroll": 1440,
+      "dialogWidth": 978,
+      "dialogScroll": 978
+    },
+    "closePosition": {
+      "top": 50,
+      "bottom": 94,
+      "height": 1000
+    },
+    "saveMatchesPreview": true,
+    "clipboardFallback": true,
+    "formatStyleControls": true,
+    "focusReturns": true,
+    "nativeCancellation": true,
+    "nativeFileMatchesPreview": true
+  }
+]

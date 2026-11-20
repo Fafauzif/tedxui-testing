@@ -1,37 +1,22 @@
-# Vercel build and route verification
+# Vercel build verification
 
-Checked locally on November 20, 2026 with the official Vercel CLI 66.5.0, `@vercel/node` 32.0.0 and `@vercel/static-build` 29.0.0. The check used a separate temporary source copy with local-only placeholder project settings. It used no account credential and created no deployment or public preview.
+The integrated redesign passed an isolated local build with official Vercel CLI 66.5.0, `@vercel/node` 32.0.0 and `@vercel/static-build` 29.0.0 on November 20, 2026. The build used cached builders, offline dependency installation, empty preview environment values and local placeholder project settings. No account credentials or deployment were used.
 
-The official builder completed successfully and reported zero output-validation problems. Its emitted function runtime is `nodejs22.x`.
+The official build ran TypeScript and Vite successfully and reported **zero output-validation problems**. Both emitted functions target `nodejs22.x`. The final rebuild used the latest responsive frontend and card controls. Its source and asset inputs matched the checkout byte for byte after the build.
 
-The initial builder output exposed two defects that were corrected before delivery. Plain Vite functions treated `api/[...path].js` as one dynamic segment, so it did not match `/api/letters/<id>`. Also, normal rewrites appeared after the filesystem lookup, which allowed the existing static index to bypass dynamic letter metadata. The release now uses explicit routes before filesystem lookup and one conventional `api/handler.js` wrapper.
-
-The emitted configuration applies security headers first, routes dynamic content next, and looks up static files afterward.
-
-| Incoming path | Destination before filesystem lookup |
+| Verified output | Result |
 | --- | --- |
-| `/` | `/api/page` |
-| `/index.html` | `/api/page` |
-| `/api/letters` and `/api/letters/<id>` | `/api/handler` with captured route |
-| `/api/rotation` | `/api/handler` with captured route |
-| `/api/community` | `/api/handler` with captured route |
-| `/api/reports` | `/api/handler` with captured route |
+| Root and `/index.html` | Dynamic page route precedes filesystem lookup |
+| Letter publication, nested letter reader, rotation, community and report paths | Explicit API routes precede filesystem lookup |
+| Page function packaging | Built `dist/index.html` resolves through the official `filePathMap` |
+| Static build | Official mark, still-life artwork, social cover and local reading font present |
+| Lazy loading | Separate `ShareBuilder` and `WriteLetter` JavaScript chunks present |
 
-Unknown API paths return 404 after filesystem lookup.
+Direct invocation of the emitted functions passed nested letter and community reads, one-request featured-root and deep-link rendering, initial semantic letter HTML, inert bootstrap JSON, escaped metadata and canonical links, no-store responses, session cookies and server timing. Writer entry performed zero reader database requests. Hidden-letter checks returned API 404 and bootstrap `missing` with no letter text. An outage returned API 503 and bootstrap `service` with no letter text.
 
-`api/page.js` includes the built `dist/index.html` through the official function `filePathMap`. The referenced source exists after the frontend build. Local invocation materialized that map in the same function-relative location before running the emitted handler.
+Those emitted-function invocations used synthetic Supabase RPC responses. Actual PostgreSQL visibility, publication retries, removal and persistence were tested separately. All 28 tracked checks and `npm run check` passed in the integrated source.
 
-The emitted functions passed nested letter read, community read, dynamically escaped letter HTML, canonical permalink, no-store response, hidden-letter 404, hidden metadata and outage 503 checks. Those invocations used a synthetic Supabase transport response. The database behavior is covered separately by the PostgreSQL regression suite.
-
-The tracked regression command is
-
-```sh
-node --test tests/vercel-routing.test.mjs
-```
-
-It verifies route order, the nested letter path and preservation of cursor and exclusion queries. Both checks passed.
-
-Hosted edge routing, actual project environment values and the hosted Supabase service remain account-dependent release checks. A local builder and emitted-function invocation do not demonstrate a deployed edge or database integration. Run those checks in the approved environment before the owner authorizes production.
+Hosted Vercel edge behavior and the project's actual Supabase environment remain release checks. The local build does not establish a hosted deployment. Production deployment still requires the owner's explicit approval.
 
 Vercel. (n.d.). *vercel build*. Retrieved November 20, 2026, from https://vercel.com/docs/cli/build
 

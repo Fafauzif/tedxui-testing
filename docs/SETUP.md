@@ -32,6 +32,10 @@ Run the backend regression checks with `npm run test:backend`. They use separate
 
 A database connection is the only publication dependency. An outage serves the shell, draft editor and retry controls while public reads return a distinct temporary-error response. It never substitutes bundled letters for an unknown visibility state.
 
+## Upgrading an existing installation
+
+This redesign uses the original database schema and seed. For a previously configured Vercel project, keep its current environment variables and database. Deploying a preview in a new project or environment requires values for that environment. Apply the bundled migration and seed only when setting up a fresh database. Use a branch and isolated database for review involving publications.
+
 ## Local Supabase alternative
 
 If Docker and Supabase CLI are installed, use `supabase init`, retain the bundled migrations and seed in that project, and run `supabase start`. Apply the same SQL with `supabase db reset --local` in that isolated project. Copy its API URL and server secret key into a local `.env`, add a stable `REQUEST_HASH_SECRET`, and set `PUBLIC_ORIGIN=http://localhost:4173`. `npm start` selects Supabase when `SUPABASE_URL` is present.

@@ -1,0 +1,1 @@
+Firefox: no-JS featured letter, no duplicate initial or rotation request, Back navigation, share focus return, reader and writer 320px/390px reflow, publication and permanent URL in a second context, and community read confirmed.

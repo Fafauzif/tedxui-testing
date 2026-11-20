@@ -1,6 +1,6 @@
 # Letters to Grow
 
-**Still, We Grow.** A standalone letter collection for TEDxUniversitasIndonesia 2027. Open the site and read a letter. Share a line as an Instagram Story, or write and publish a letter for the next reader.
+**Still, We Grow.** A standalone letter collection for TEDxUniversitasIndonesia 2027. Open the site and read a letter. Share a line as a Story, Square or Portrait PNG. Write and publish a letter for the next reader.
 
 ```sh
 npm ci
@@ -14,3 +14,4 @@ Open http://localhost:4173. Node.js 22.12 or later is required. The local server
 - [Staff removal from Supabase Dashboard](docs/STAFF-REMOVAL.md)
 - [Release verification and review evidence](docs/RELEASE-REVIEW.md)
 - [Artwork and font credits](ART-CREDITS.md)
+- [TEDxUI brand implementation](docs/BRAND-IMPLEMENTATION.md)

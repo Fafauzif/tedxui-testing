@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === '/' || url.pathname === '/index.html') {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Cache-Control', 'no-store');
-      res.end(await renderPage(req, await fs.readFile(path.join(root, 'index.html'), 'utf8'), store));
+      res.end(await renderPage(req, await fs.readFile(path.join(root, 'index.html'), 'utf8'), store, res));
       return;
     }
     const filename = path.resolve(root, `.${decodeURIComponent(url.pathname)}`);
