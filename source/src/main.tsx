@@ -1,0 +1,743 @@
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  ShareNetwork,
+  X,
+  PencilSimple,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Flag,
+} from "@phosphor-icons/react";
+import { ApiError, isSampleLetter, letterLink, request } from "./api";
+import type { PublicLetter } from "./api";
+import { readReaderBootstrap } from "./reader-bootstrap";
+import { hasOpenedLetter, openedLetterCookie, openingLine } from "./letter-presentation.mjs";
+import "./style.css";
+
+const ShareBuilder = lazy(() => import("./ShareBuilder"));
+const WriteLetter = lazy(() => import("./WriteLetter"));
+const featuredId = "outside-the-feed";
+
+type View =
+  { kind: "read"; id?: string } | { kind: "write" } | { kind: "community" };
+function readLocation(): View {
+  const query = new URLSearchParams(location.search);
+  if (query.has("write")) return { kind: "write" };
+  if (query.has("community")) return { kind: "community" };
+  return {
+    kind: "read",
+    id: query.has("letter") ? query.get("letter") || "invalid" : undefined,
+  };
+}
+function Logo() {
+  return (
+    <img
+      className="official-mark"
+      src="/art/tedx-logo-light-header.webp"
+      alt="TEDxUniversitasIndonesia · independently organized TED event"
+      width="460"
+      height="119"
+    />
+  );
+}
+
+function App() {
+  const [boot] = useState(readReaderBootstrap);
+  const [view, setView] = useState<View>(readLocation);
+  const [letter, setLetter] = useState<PublicLetter | null>(boot?.letter ?? null);
+  const [opened, setOpened] = useState(() => hasOpenedLetter(document.cookie));
+  const [paperMotion, setPaperMotion] = useState<"unfold" | "turn" | null>(null);
+  const [loading, setLoading] = useState(!boot);
+  const [loadError, setLoadError] = useState<
+    "missing" | "service" | "empty" | null
+  >(boot?.error ?? null);
+  const [refresh, setRefresh] = useState(0);
+  const [published, setPublished] = useState(false);
+  const [modal, setModal] = useState<"share" | "about" | "report" | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const savedFocus = useRef<HTMLElement | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const moveFocus = useRef(false);
+  const navigation = useRef(0);
+  const rotation = useRef<AbortController | null>(null);
+  const resolvedRoot = useRef<string | undefined>(boot?.letter?.id);
+  const resolvedView = useRef<{ view: View; refresh: number } | null>(
+    boot ? { view, refresh: 0 } : null,
+  );
+  const [feedback, setFeedback] = useState("");
+  const [reportReason, setReportReason] = useState("");
+  const [reportBusy, setReportBusy] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+  const reportKey = useRef(crypto.randomUUID());
+  const [reportError, setReportError] = useState("");
+  const [community, setCommunity] = useState<PublicLetter[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [communityLoading, setCommunityLoading] = useState(false);
+  const [communityError, setCommunityError] = useState("");
+  const communityGeneration = useRef(0);
+  const folded = view.kind === "read" && !view.id && !opened && Boolean(letter) && !loadError;
+  const sample = letter ? isSampleLetter(letter) : false;
+  const url = letter ? letterLink(letter.id) : "";
+  function resetNavigation() {
+    navigation.current++;
+    rotation.current?.abort();
+    rotation.current = null;
+    resolvedRoot.current = undefined;
+    setLetter(null);
+    setLoading(true);
+    setModal(null);
+    setFeedback("");
+    setPublished(false);
+    setPaperMotion(null);
+    moveFocus.current = true;
+  }
+
+  const navigate = useCallback((next: View, replace = false, readyLetter?: PublicLetter) => {
+    const search =
+      next.kind === "write"
+        ? "?write"
+        : next.kind === "community"
+          ? "?community"
+          : next.id
+            ? `?letter=${encodeURIComponent(next.id)}`
+            : "/";
+    history[replace ? "replaceState" : "pushState"]({}, "", search);
+    resetNavigation();
+    if (readyLetter) {
+      resolvedView.current = { view: next, refresh };
+      setLetter(readyLetter);
+      setLoadError(null);
+      setLoading(false);
+      document.title = `${readyLetter.salutation} · Letters to Grow`;
+    }
+    setView(next);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [refresh]);
+
+  useEffect(() => {
+    const back = () => {
+      resetNavigation();
+      setView(readLocation());
+    };
+    const resume = () => {
+      if (document.visibilityState === "visible") setRefresh((n) => n + 1);
+    };
+    window.addEventListener("popstate", back);
+    document.addEventListener("visibilitychange", resume);
+    return () => {
+      window.removeEventListener("popstate", back);
+      document.removeEventListener("visibilitychange", resume);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (view.kind !== "read") {
+      document.title = `${view.kind === "write" ? "Write a letter" : "Community letters"} · Letters to Grow`;
+      setLoading(false);
+      return;
+    }
+    if (resolvedView.current?.view === view && resolvedView.current.refresh === refresh) {
+      return;
+    }
+    const controller = new AbortController();
+    const navigationAtStart = navigation.current;
+    const id = view.id || resolvedRoot.current;
+    setLoading(true);
+    setLoadError(null);
+    const read = (target: string) => request<{ letter: PublicLetter | null }>(
+      target, { signal: controller.signal }
+    );
+    const isCurrent = () =>
+      !controller.signal.aborted && navigation.current === navigationAtStart;
+    void read(`/api/letters/${encodeURIComponent(id || featuredId)}`)
+      .catch((error) => {
+        if (!id && isCurrent() && error instanceof ApiError && error.status === 404)
+          return read("/api/rotation");
+        throw error;
+      })
+      .then((data) => {
+        if (!isCurrent()) return;
+        if (!data.letter) {
+          setLoadError("empty");
+          return;
+        }
+        setLetter(data.letter);
+        document.title = `${data.letter.salutation} · Letters to Grow`;
+        if (!id) resolvedRoot.current = data.letter.id;
+      })
+      .catch((error) => {
+        if (!isCurrent()) return;
+        setLetter(null);
+        setModal(null);
+        document.title = "Letters to Grow · Still, We Grow";
+        setLoadError(
+          error instanceof ApiError && error.status === 404
+            ? "missing"
+            : "service",
+        );
+      })
+      .finally(() => {
+        if (isCurrent()) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [view, refresh]);
+
+  useEffect(() => {
+    if (
+      moveFocus.current &&
+      (view.kind !== "read" || !loading) &&
+      heading.current
+    ) {
+      heading.current.focus({ preventScroll: true });
+      moveFocus.current = false;
+    }
+  }, [view, loading, letter, loadError, opened]);
+
+  const loadCommunity = useCallback(async (after?: string) => {
+    const token = ++communityGeneration.current;
+    setCommunityLoading(true);
+    setCommunityError("");
+    try {
+      const data = await request<{
+        letters: PublicLetter[];
+        nextCursor: string | null;
+      }>(
+        `/api/community${after ? `?cursor=${encodeURIComponent(after)}` : ""}`,
+      );
+      if (token !== communityGeneration.current) return;
+      setCommunity((previous) =>
+        after
+          ? [
+              ...previous,
+              ...data.letters.filter(
+                (item) => !previous.some((old) => old.id === item.id),
+              ),
+            ]
+          : data.letters,
+      );
+      setCursor(data.nextCursor);
+    } catch {
+      if (token === communityGeneration.current)
+        setCommunityError(
+          "Community letters could not be reached. Your connection may be interrupted.",
+        );
+    } finally {
+      if (token === communityGeneration.current) setCommunityLoading(false);
+    }
+  }, []);
+  useEffect(() => {
+    if (view.kind === "community") {
+      setCommunity([]);
+      void loadCommunity();
+    }
+    return () => {
+      communityGeneration.current++;
+    };
+  }, [view, refresh, loadCommunity]);
+
+  async function nextLetter() {
+    if (loading || rotation.current) return;
+    const controller = new AbortController();
+    rotation.current = controller;
+    const navigationAtStart = navigation.current;
+    const previousId = letter?.id;
+    const isCurrent = () =>
+      !controller.signal.aborted && navigation.current === navigationAtStart;
+    setLoading(true);
+    setLoadError(null);
+    setFeedback("");
+    try {
+      const path = previousId
+        ? `/api/rotation?exclude=${encodeURIComponent(previousId)}`
+        : "/api/rotation";
+      const data = await request<{ letter: PublicLetter | null }>(path, {
+        signal: controller.signal,
+      });
+      if (!isCurrent()) return;
+      if (data.letter) {
+        navigate({ kind: "read", id: data.letter.id }, false, data.letter);
+        setPaperMotion("turn");
+      } else if (previousId) {
+        setFeedback("You’re caught up for now.");
+      } else {
+        setLoadError("empty");
+        setLetter(null);
+      }
+    } catch {
+      if (isCurrent()) {
+        if (previousId) setFeedback("Could not open another letter. Please try again.");
+        else setLoadError("service");
+      }
+    } finally {
+      if (isCurrent()) setLoading(false);
+      if (rotation.current === controller) rotation.current = null;
+    }
+  }
+
+  function unfoldLetter() {
+    moveFocus.current = true;
+    setPaperMotion("unfold");
+    setOpened(true);
+    document.cookie = `${openedLetterCookie}; Path=/; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function openModal(next: "share" | "about" | "report") {
+    savedFocus.current = document.activeElement as HTMLElement;
+    setFeedback("");
+    if (next === "report") {
+      setReportReason("");
+      setReportSent(false);
+      setReportError("");
+      reportKey.current = crypto.randomUUID();
+    }
+    setModal(next);
+  }
+  function closeModal() {
+    dialog.current?.close();
+    setModal(null);
+    savedFocus.current?.focus({ preventScroll: true });
+  }
+  useEffect(() => {
+    if (modal) {
+      if (!dialog.current?.open) dialog.current?.showModal();
+      document.body.style.overflow = "hidden";
+    } else {
+      dialog.current?.close();
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modal]);
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setFeedback("Letter link copied.");
+    } catch {
+      document.getElementById("published-url")?.focus();
+      setFeedback("Select and copy your letter link above.");
+    }
+  }
+  async function submitReport(event: React.FormEvent) {
+    event.preventDefault();
+    if (!letter || reportBusy) return;
+    setReportBusy(true);
+    setReportError("");
+    try {
+      await request("/api/reports", {
+        method: "POST",
+        body: JSON.stringify({
+          letterId: letter.id,
+          reason: reportReason.trim(),
+          submissionKey: reportKey.current,
+        }),
+      });
+      setReportSent(true);
+    } catch (error) {
+      setReportError(
+        error instanceof Error
+          ? error.message
+          : "Your report could not be saved. Please try again.",
+      );
+    } finally {
+      setReportBusy(false);
+    }
+  }
+
+  return (
+    <div className="app">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <header className="masthead"><div className="masthead-inner">
+        <a
+          href="/"
+          className="brand-home"
+          aria-label="Read Letters to Grow"
+          onClick={(event) => {
+            event.preventDefault();
+            navigate({ kind: "read" });
+          }}
+        >
+          <Logo />
+        </a>
+        <nav aria-label="Main navigation">
+          <a
+            aria-current={view.kind === "community" ? "page" : undefined}
+            href="/?community"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate({ kind: "community" });
+            }}
+          >
+            Community letters
+          </a>
+          <a
+            className="nav-write"
+            aria-current={view.kind === "write" ? "page" : undefined}
+            href="/?write"
+            onClick={(event) => {
+              event.preventDefault();
+              navigate({ kind: "write" });
+            }}
+          >
+            <PencilSimple size={16} aria-hidden="true" />
+            Write a letter
+          </a>
+        </nav>
+      </div></header>
+      <main id="main" className={`layout${folded ? " layout-folded" : ""} layout-${view.kind}`}>
+        <div className="campaign-art" aria-hidden="true">
+          <img className="art-flower" src="/art/white-flower.webp" alt="" width="600" height="900" decoding="async" fetchPriority="high" />
+          <img className="art-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560" decoding="async" />
+        </div>
+        <div className="campaign-identity">
+          <p className="campaign-note">Still, We Grow.</p>
+          <p className="campaign-name">Letters<br /> to Grow<span>.</span></p>
+        </div>
+        <div className="content-column">
+          {view.kind === "read" && (
+            <>
+              {published && (
+                <div className="publication-success" role="status">
+                  <Check size={20} aria-hidden="true" />
+                  <div>
+                    <strong>Your letter is public.</strong>
+                    <p>
+                      It has joined Community letters. Keep its link or share a
+                      line.
+                    </p>
+                  </div>
+                </div>
+              )}
+              {loading && !letter ? (
+                <section className="paper state-paper" aria-busy="true">
+                  <p className="eyebrow">Letters to Grow</p>
+                  <h1>Opening a letter…</h1>
+                </section>
+              ) : loadError ? (
+                <section className="paper state-paper">
+                  <p className="eyebrow">Letters to Grow</p>
+                  <h1 ref={heading} tabIndex={-1}>
+                    {loadError === "missing"
+                      ? "This letter is unavailable."
+                      : loadError === "empty"
+                        ? "A little room for words."
+                        : "Letters are taking a moment."}
+                  </h1>
+                  <p>
+                    {loadError === "missing"
+                      ? "There are other letters waiting to be read."
+                      : loadError === "empty"
+                        ? "Be the first to leave a letter for someone."
+                        : "The collection could not be reached. Try again in a moment."}
+                  </p>
+                  <button
+                    className="btn primary"
+                    onClick={
+                      loadError === "service"
+                        ? () => setRefresh((n) => n + 1)
+                        : nextLetter
+                    }
+                  >
+                    {loadError === "service" ? "Retry" : "Read another"}
+                  </button>
+                  {loadError === "empty" && (
+                    <a
+                      className="btn secondary"
+                      href="/?write"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        navigate({ kind: "write" });
+                      }}
+                    >
+                      Write a letter
+                    </a>
+                  )}
+                </section>
+              ) : folded && letter ? (
+                <section className="folded-letter" aria-labelledby="letter-heading">
+                  <div className="folded-paper">
+                    <h1 id="letter-heading" ref={heading} tabIndex={-1}>{letter.salutation}</h1>
+                    <p>{openingLine(letter)}</p>
+                  </div>
+                  <div className="paper-fold" aria-hidden="true" />
+                  <img className="folded-sprig" src="/art/botanical-sprig.webp" alt="" width="840" height="560" />
+                  <a
+                    className="open-letter"
+                    href={`/?letter=${encodeURIComponent(letter.id)}`}
+                    onClick={(event) => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                      event.preventDefault();
+                      unfoldLetter();
+                    }}
+                  >
+                    Open letter <ArrowUpRight size={19} aria-hidden="true" />
+                  </a>
+                </section>
+              ) : (
+                letter && (
+                  <>
+                    <article
+                      key={letter.id}
+                      className={`paper letter${paperMotion ? ` letter-${paperMotion}` : ""}`}
+                      aria-labelledby="letter-heading"
+                    >
+                      <div className="letter-opening">
+                        <h1 id="letter-heading" ref={heading} tabIndex={-1}>{letter.salutation}</h1>
+                        <button className="letter-share" onClick={() => openModal("share")}>
+                          <ShareNetwork size={16} aria-hidden="true" />
+                          Share
+                        </button>
+                      </div>
+                      <div className="letter-body">
+                        {letter.paragraphs.map((paragraph, index) => (
+                          <p key={index}>{paragraph}</p>
+                        ))}
+                      </div>
+                      <p className="letter-signoff">{letter.signoff}</p>
+                      <div className="letter-end">
+                        {(sample || letter.origin === "editorial") && (
+                          <p className="letter-disclosure">{sample ? "Sample letter" : "Fictional letter"}</p>
+                        )}
+                        {letter.origin === "community" && !sample && (
+                          <button className="report-link" onClick={() => openModal("report")}>
+                            <Flag size={14} aria-hidden="true" /> Report this letter
+                          </button>
+                        )}
+                        <button className="next-letter" onClick={nextLetter} disabled={loading} aria-busy={loading}>
+                          {loading ? "Opening…" : "Read another"} <ArrowRight size={17} aria-hidden="true" />
+                        </button>
+                      </div>
+                      <p className="reader-feedback" role="status">{!published && feedback}</p>
+                    </article>
+                    {published && (
+                      <div className="public-link">
+                        <label htmlFor="published-url">
+                          Your permanent letter link
+                        </label>
+                        <input
+                          id="published-url"
+                          readOnly
+                          value={url}
+                          onFocus={(event) => event.currentTarget.select()}
+                        />
+                        <button className="text-link" onClick={onCopy}>
+                          Copy letter link
+                        </button>
+                        <p role="status">{feedback}</p>
+                      </div>
+                    )}
+                  </>
+                )
+              )}
+            </>
+          )}
+          {view.kind === "write" && (
+            <Suspense fallback={<p className="state-message" role="status">Opening the writer…</p>}>
+            <WriteLetter
+              onBack={() => navigate({ kind: "read" })}
+              onPublished={(item) => {
+                navigate({ kind: "read", id: item.id }, false, item);
+                setPublished(true);
+              }}
+            />
+            </Suspense>
+          )}
+          {view.kind === "community" && (
+            <section className="paper community" aria-labelledby="community-heading">
+              <div className="collection-heading">
+                <h1 id="community-heading" ref={heading} tabIndex={-1}>
+                  Community letters
+                </h1>
+              </div>
+              {community.length > 0 && <ul className="community-list">
+                {community.map((item, index) => {
+                  const isSample = isSampleLetter(item);
+                  const titleId = `community-letter-${index}`;
+                  return (
+                    <li key={item.id}>
+                      <a
+                        className="community-letter"
+                        aria-labelledby={titleId}
+                        aria-describedby={isSample ? `${titleId}-sample` : undefined}
+                        href={`/?letter=${encodeURIComponent(item.id)}`}
+                        onClick={(event) => {
+                          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                          event.preventDefault();
+                          navigate({ kind: "read", id: item.id });
+                        }}
+                      >
+                        <h2 id={titleId}>{item.salutation}</h2>
+                        <p>{openingLine(item)}</p>
+                        {isSample && <span className="sample-label" id={`${titleId}-sample`}>Sample letter</span>}
+                        <ArrowUpRight className="community-arrow" size={19} aria-hidden="true" />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>}
+              {communityLoading && (
+                <p className="state-message" role="status">
+                  Opening Community letters…
+                </p>
+              )}
+              {communityError && (
+                <div className="collection-state" role="alert">
+                  <p>{communityError}</p>
+                  <button
+                    className="btn primary"
+                    onClick={() => void loadCommunity()}
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
+              {!communityLoading &&
+                !communityError &&
+                community.length === 0 && (
+                  <div className="collection-state">
+                    <p>There are no community letters yet.</p>
+                    <a
+                      className="btn primary"
+                      href="/?write"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        navigate({ kind: "write" });
+                      }}
+                    >
+                      Write a letter
+                    </a>
+                  </div>
+                )}
+              {cursor && !communityError && (
+                <button
+                  className="btn secondary"
+                  disabled={communityLoading}
+                  onClick={() => void loadCommunity(cursor)}
+                >
+                  Read more letters
+                </button>
+              )}
+            </section>
+          )}
+        </div>
+      </main>
+      <footer className="site-footer">
+        <Logo />
+        <button onClick={() => openModal("about")}>
+          About
+        </button>
+      </footer>
+      <dialog
+        ref={dialog}
+        className={`dialog ${modal === "share" ? "share-dialog" : ""}`}
+        aria-labelledby={modal === "share" ? "share-builder-title" : "dialog-title"}
+        onCancel={(event) => {
+          event.preventDefault();
+          closeModal();
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            if (
+              event.clientX < rect.left ||
+              event.clientX > rect.right ||
+              event.clientY < rect.top ||
+              event.clientY > rect.bottom
+            )
+              closeModal();
+          }
+        }}
+      >
+        <button
+          className="close-dialog"
+          aria-label="Close dialog"
+          onClick={closeModal}
+        >
+          <X size={22} />
+        </button>
+        {modal === "share" && letter && (
+          <Suspense fallback={<h2 id="share-builder-title">Opening the card builder…</h2>}>
+            <ShareBuilder letter={letter} letterUrl={url} />
+          </Suspense>
+        )}
+        {modal === "about" && (
+          <div className="about-content">
+            <p className="eyebrow">Still, We Grow.</p>
+            <h2 id="dialog-title">
+              Letters to <em>Grow.</em>
+            </h2>
+            <p>
+              A place for the things we’re still figuring out. Read a letter,
+              leave your own, or carry a line into someone else’s day.
+            </p>
+            <p>
+              A campaign by TEDxUniversitasIndonesia 2027. The original twelve
+              letters are fictional. Community letters are public submissions.
+            </p>
+            <p>
+              Drafts stay on your device until you choose Publish letter.
+              Published letters can be read and shared by anyone. Staff review
+              reports and can remove letters from the collection.
+            </p>
+            <button className="btn primary" onClick={closeModal}>
+              Back to the letters
+            </button>
+          </div>
+        )}
+        {modal === "report" && (
+          <div className="report-content">
+            <p className="eyebrow">Help care for this space</p>
+            <h2 id="dialog-title">
+              {reportSent ? "Report received." : "Report this letter"}
+            </h2>
+            {reportSent ? (
+              <>
+                <p>Your report has been saved for the team to review.</p>
+                <button className="btn primary" onClick={closeModal}>
+                  Continue reading
+                </button>
+              </>
+            ) : (
+              <form onSubmit={submitReport}>
+                <label htmlFor="report-reason">
+                  What should the team know?
+                </label>
+                <textarea
+                  id="report-reason"
+                  required
+                  minLength={3}
+                  maxLength={500}
+                  value={reportReason}
+                  onChange={(event) => setReportReason(event.target.value)}
+                  placeholder="Tell us what concerns you about this letter."
+                />
+                <p>
+                  Your report goes to the team. The letter remains available
+                  while it is reviewed.
+                </p>
+                {reportError && (
+                  <p role="alert" className="share-error">
+                    {reportError}
+                  </p>
+                )}
+                <button className="btn primary" disabled={reportBusy}>
+                  {reportBusy ? "Sending report…" : "Send report"}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
+      </dialog>
+    </div>
+  );
+}
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

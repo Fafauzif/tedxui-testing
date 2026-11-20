@@ -1,0 +1,375 @@
+.share-builder {
+  --sb-paper: #fff7e6;
+  --sb-ink: #263324;
+  --sb-olive: #293923;
+  --sb-parchment: #eee2c9;
+  color: var(--sb-ink);
+  font-family: var(--sans, "Helvetica Neue", Arial, sans-serif);
+  padding: clamp(24px, 5vw, 48px);
+  background: var(--sb-paper);
+  text-align: left;
+}
+.share-builder *,
+.share-builder *::before,
+.share-builder *::after {
+  box-sizing: border-box;
+}
+.share-builder button,
+.share-builder input {
+  font: inherit;
+}
+.share-builder button {
+  cursor: pointer;
+}
+.share-builder button:disabled {
+  cursor: wait;
+  opacity: 0.48;
+}
+.share-builder button:focus-visible,
+.share-builder a:focus-visible,
+.share-builder summary:focus-visible,
+.share-builder input:focus-visible {
+  outline: 2px solid #b34931;
+  outline-offset: 4px;
+}
+.share-builder-heading {
+  margin: 0 0 22px;
+  padding-right: 36px;
+}
+.share-builder-heading h2 {
+  margin: 0;
+  font: 400 clamp(24px, 3vw, 37px) / 1.1 var(--display, Georgia, serif);
+  letter-spacing: -0.045em;
+}
+.share-builder-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(280px, 1fr);
+  gap: clamp(24px, 5vw, 48px);
+  align-items: start;
+}
+.share-builder-preview-column {
+  position: sticky;
+  top: 8px;
+}
+.share-builder-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 230px;
+  background: var(--sb-olive);
+  color: var(--sb-paper);
+  overflow: hidden;
+}
+.share-builder-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.share-builder-preview.format-story {
+  aspect-ratio: 9 / 16;
+  width: min(100%, 365px);
+  margin-inline: auto;
+}
+.share-builder-preview.format-square {
+  aspect-ratio: 1;
+}
+.share-builder-preview.format-portrait {
+  aspect-ratio: 4 / 5;
+}
+.share-builder-size {
+  text-align: center;
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #535a47;
+}
+.share-builder-loading,
+.share-builder-failed {
+  padding: 28px;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.share-builder-loading > span {
+  width: 22px;
+  height: 22px;
+  border: 1px solid #bcc0ad;
+  border-top-color: var(--sb-ink);
+  border-radius: 50%;
+  animation: share-builder-spin 1s linear infinite;
+}
+.share-builder-failed p {
+  margin: 0;
+}
+.share-builder-failed button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  min-height: 44px;
+  padding: 5px 0;
+  background: none;
+}
+.share-builder-quick-actions { margin-bottom: 22px; }
+.share-builder-group {
+  border: 0;
+  padding: 0;
+  margin: 0 0 24px;
+  min-width: 0;
+}
+.share-builder-group legend {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.share-builder-segments {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.share-builder-segments label {
+  position: relative;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  background: #f3e9d4;
+}
+.share-builder-segments label.is-selected {
+  background: var(--sb-olive);
+  color: var(--sb-paper);
+}
+.share-builder-segments input,
+.share-builder-styles input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.share-builder-segments label:has(input:focus-visible),
+.share-builder-styles label:has(input:focus-visible) {
+  outline: 2px solid #b34931;
+  outline-offset: 3px;
+}
+.share-builder-styles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+.share-builder-styles label {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 4px 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: center;
+}
+.share-builder-styles label.is-selected {
+  background: #e7e4cc;
+}
+.share-builder-swatch {
+  display: grid;
+  place-items: center;
+  height: 57px;
+  background: var(--sb-olive);
+  overflow: hidden;
+}
+.share-builder-swatch i {
+  display: block;
+  width: 42px;
+  height: 42px;
+  background: var(--sb-paper);
+}
+.share-builder-swatch.swatch-heart i {
+  width: 41px;
+  height: 41px;
+  background: url("/art/heart-paper.webp") center / contain no-repeat;
+}
+.share-builder-swatch.swatch-square i {
+  width: 35px;
+  height: 35px;
+}
+.share-builder-swatch.swatch-folded i {
+  width: 32px;
+  height: 41px;
+  background: var(--sb-parchment);
+  clip-path: polygon(0 0, 73% 0, 100% 23%, 100% 100%, 0 100%);
+}
+.share-builder-style-check {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  padding: 2px;
+  width: 18px;
+  height: 18px;
+  color: var(--sb-ink);
+  background: var(--sb-paper);
+  border-radius: 50%;
+}
+.share-builder-excerpts {
+  display: grid;
+  gap: 4px;
+}
+.share-builder-excerpts legend {
+  margin-bottom: 10px;
+}
+.share-builder-excerpts label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.share-builder-excerpts label.is-selected {
+  background: #e7e4cc;
+}
+.share-builder-excerpts input {
+  margin: 4px 0 0;
+  accent-color: var(--sb-olive);
+  flex: 0 0 13px;
+}
+.share-builder-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.share-builder-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 45px;
+  padding: 12px 10px;
+  font-size: 13px;
+  border: 1px solid var(--sb-olive);
+}
+.share-builder-primary {
+  background: var(--sb-olive);
+  color: var(--sb-paper);
+}
+.share-builder-secondary {
+  background: transparent;
+  color: var(--sb-ink);
+}
+.share-builder-actions .share-builder-copy {
+  grid-column: 1 / -1;
+  border: 0;
+  background: none;
+  color: var(--sb-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.share-builder-instruction,
+.share-builder-help {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.share-builder-instruction {
+  margin: 12px 0 0;
+  color: #5a6255;
+}
+.share-builder-feedback {
+  margin: 12px 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.share-builder-feedback:empty {
+  display: none;
+}
+.share-builder-manual {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  font-size: 12px;
+}
+.share-builder-manual input {
+  width: 100%;
+  padding: 12px;
+  color: var(--sb-ink);
+  border: 1px solid #a8ae9c;
+  background: transparent;
+}
+.share-builder-help {
+  margin-top: 12px;
+}
+.share-builder-help summary {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.share-builder-help a {
+  color: inherit;
+}
+@keyframes share-builder-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 680px) {
+  .share-builder {
+    padding: 28px 20px 24px;
+  }
+  .share-builder-heading {
+    margin-bottom: 22px;
+  }
+  .share-builder-layout {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .share-builder-preview-column {
+    position: static;
+  }
+  .share-builder-preview {
+    width: min(100%, 270px);
+    min-height: 0;
+    margin: 0 auto;
+  }
+  .share-builder-preview.format-story {
+    width: min(100%, 220px);
+  }
+  .share-builder-group {
+    margin-bottom: 20px;
+  }
+  .share-builder-actions button {
+    min-height: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .share-builder-loading > span {
+    animation: none;
+  }
+}
+/* This dialog treatment applies only while the card builder is mounted. */
+.share-dialog:has(.share-builder) {
+  width: min(calc(100% - 30px), 980px);
+  padding: 0;
+}
+.share-dialog:has(.share-builder) > .close-dialog {
+  position: sticky;
+  top: 9px;
+  right: 9px;
+  float: right;
+  margin: 9px 9px -53px 0;
+}
+@media (max-width: 680px) {
+  .share-dialog:has(.share-builder) {
+    width: calc(100% - 20px);
+    max-height: calc(100dvh - 20px);
+  }
+}
+.share-builder-segments input, .share-builder-styles input { z-index: 1; }
+.share-builder-segments label > span, .share-builder-styles label > span, .share-builder-styles label > svg { pointer-events: none; }
